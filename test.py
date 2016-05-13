@@ -1,10 +1,10 @@
 import unittest
 from aba_rule import ABA_Rule
-from aba_tree import ABA_Tree
+from aba_graph import ABA_Graph
 from aba import ABA
 
 
-class TestABATree(unittest.TestCase):
+class TestABAGraph(unittest.TestCase):
     """
     https://docs.python.org/3.4/library/unittest.html
     """
@@ -16,20 +16,17 @@ class TestABATree(unittest.TestCase):
         self.aba.rules.append(ABA_Rule(['a'], 'r'))
         self.aba.rules.append(ABA_Rule(['b'], 's'))
         
+        # TODO this shall be determned from the rules
         self.aba.assumptions.append(ABA_Rule(['a']))
         self.aba.assumptions.append(ABA_Rule(['b']))
         
+        # for each assumptions, what does it "attack"?
         self.aba.contraries['a'] = 's'
         self.aba.contraries['b'] = 'p'
         
-        self.tree = ABA_Tree()
-        self.tree.create_node("Root", "root")
-        self.tree.create_node("F1", "f1", parent='root', data = ABA_Rule("a", "b"))
-        self.tree.create_node("F2", "f2", parent='root', data = ABA_Rule("a"))
-        print(self.tree.to_json(with_data=True))
 
     def test_admissible(self):
-        self.assertEqual(self.tree.admissible('root'), True)
+        self.assertEqual(True, True)
 
 if __name__ == '__main__':
     unittest.main()

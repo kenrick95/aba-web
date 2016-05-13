@@ -1,4 +1,3 @@
-from aba_tree import ABA_Tree
 class ABA():
     """
     ABA: Assumption-based Argumentation, consists of

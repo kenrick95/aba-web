@@ -21,3 +21,5 @@ output: which argument is complete, grounded, admissible; with some visualizatio
 ### Testing
 - Python unittest framework
 
+Hmmm, from the Craven/Toni (2016) paper, Tree representation has issues (cyclic dependency)
+- maybe look into DAG instead of Tree, like what the paper describes.
