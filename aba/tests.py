@@ -1,6 +1,7 @@
 import unittest
 from aba_rule import ABA_Rule
 from aba import ABA
+from aba_parser import ABA_Parser
 import logging
 
 """
@@ -10,6 +11,23 @@ python -m unittest
 
 https://docs.python.org/3.4/library/unittest.html
 """
+
+class TestParser(unittest.TestCase):
+    def setUp(self):
+        text = """
+        x |-
+        a |- b
+        c , ded |- ef
+        """
+        self.parser = ABA_Parser(text)
+        self.parser.parse()
+        
+    def test_parser_rules(self):
+        self.assertEqual(self.parser.parsed_rules[0], ABA_Rule(['x']))
+        self.assertEqual(self.parser.parsed_rules[1], ABA_Rule(['a'], 'b'))
+        self.assertEqual(self.parser.parsed_rules[2], ABA_Rule(['c', 'ded'], 'ef'))
+    
+
 
 class TestCraven1(unittest.TestCase):
     """

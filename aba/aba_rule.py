@@ -15,3 +15,6 @@ class ABA_Rule(dict):
         
     def is_ground_truth(self):
         return self.symbols is [None]
+        
+    def __eq__(self, other):
+        return self.symbols == other.symbols and self.result == other.result
