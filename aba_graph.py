@@ -24,8 +24,6 @@ class ABA_Graph():
                 for symbol in rule.symbols:
                     self.graph.add_edge(node, symbol)
                     self.__propagate(symbol)
-                    # POTENTIAL TODO: may goes into infinite recursion
-                    # if finite, hence grounded
     
     def is_conflict_free(self):
         conflict_free = True

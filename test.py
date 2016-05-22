@@ -2,6 +2,7 @@ import unittest
 from aba_rule import ABA_Rule
 from aba_graph import ABA_Graph
 from aba import ABA
+from aba_dipute_tree import ABA_Dispute_Tree
 
 """
 activate fyp
@@ -34,6 +35,13 @@ class TestABAGraph(unittest.TestCase):
         
         for symbol in self.aba.symbols:
             self.aba_graphs.append(ABA_Graph(self.aba, symbol))
+        
+        
+        self.aba_dispute_trees = []
+        adt = ABA_Dispute_Tree(self.aba, self.aba_graphs[0])
+        print(adt.graph.nodes(data = True))
+        
+        self.aba_dispute_trees.append(adt)
         
 
     def test_conflict_free(self):
