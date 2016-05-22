@@ -3,6 +3,11 @@ from aba_rule import ABA_Rule
 from aba_graph import ABA_Graph
 from aba import ABA
 
+"""
+activate fyp
+
+python -m unittest
+"""
 
 class TestABAGraph(unittest.TestCase):
     """
@@ -12,7 +17,7 @@ class TestABAGraph(unittest.TestCase):
         self.aba = ABA()
         self.aba.symbols = ('p', 'q', 'r', 's', 'a', 'b')
         self.aba.rules.append(ABA_Rule(['q', 'r'], 'p'))
-        self.aba.rules.append(ABA_Rule(None, 'q')) # ground truth, not assumption
+        self.aba.rules.append(ABA_Rule([], 'q')) # ground truth, not assumption
         self.aba.rules.append(ABA_Rule(['a'], 'r'))
         self.aba.rules.append(ABA_Rule(['b'], 's'))
         
@@ -23,6 +28,12 @@ class TestABAGraph(unittest.TestCase):
         # for each assumptions, what does it "attack"?
         self.aba.contraries['a'] = 's'
         self.aba.contraries['b'] = 'p'
+        
+        # setup an argument
+        self.aba_graphs = []
+        
+        for symbol in self.aba.symbols:
+            self.aba_graphs.append(ABA_Graph(self.aba, symbol))
         
 
     def test_admissible(self):
