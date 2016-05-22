@@ -17,7 +17,7 @@ class TestABAGraph(unittest.TestCase):
         self.aba = ABA()
         self.aba.symbols = ('p', 'q', 'r', 's', 'a', 'b')
         self.aba.rules.append(ABA_Rule(['q', 'r'], 'p'))
-        self.aba.rules.append(ABA_Rule([], 'q')) # ground truth, not assumption
+        self.aba.rules.append(ABA_Rule([None], 'q')) # ground truth, not assumption
         self.aba.rules.append(ABA_Rule(['a'], 'r'))
         self.aba.rules.append(ABA_Rule(['b'], 's'))
         
@@ -25,7 +25,8 @@ class TestABAGraph(unittest.TestCase):
         self.aba.assumptions.append(ABA_Rule(['a']))
         self.aba.assumptions.append(ABA_Rule(['b']))
         
-        # for each assumptions, what does it "attack"?
+        # for each assumptions, what node can attack it?
+        # "total function": synonym for function, i.e. one assumption can only be attacked by one sentence
         self.aba.contraries['a'] = 's'
         self.aba.contraries['b'] = 'p'
         
@@ -36,8 +37,9 @@ class TestABAGraph(unittest.TestCase):
             self.aba_graphs.append(ABA_Graph(self.aba, symbol))
         
 
-    def test_admissible(self):
-        self.assertEqual(True, True)
+    def test_conflict_free(self):
+        for graph in self.aba_graphs:
+            self.assertEqual(graph.is_conflict_free(), True)
 
 if __name__ == '__main__':
     unittest.main()
