@@ -21,9 +21,8 @@ class TestABAGraph(unittest.TestCase):
         self.aba.rules.append(ABA_Rule(['a'], 'r'))
         self.aba.rules.append(ABA_Rule(['b'], 's'))
         
-        # TODO this shall be determned from the rules
-        self.aba.assumptions.append(ABA_Rule(['a']))
-        self.aba.assumptions.append(ABA_Rule(['b']))
+        # assumptions are determined from the rules
+        self.aba.infer_assumptions()
         
         # for each assumptions, what node can attack it?
         # "total function": synonym for function, i.e. one assumption can only be attacked by one sentence

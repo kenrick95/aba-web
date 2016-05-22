@@ -1,3 +1,5 @@
+from aba_rule import ABA_Rule
+
 class ABA():
     """
     ABA: Assumption-based Argumentation, consists of
@@ -12,3 +14,15 @@ class ABA():
         self.rules = []
         self.assumptions = []
         self.contraries = dict()
+        
+    def infer_assumptions(self):
+        assumptions = {}
+        for symbol in self.symbols:
+            assumptions[symbol] = True
+        
+        for rule in self.rules:
+            assumptions[rule.result] = False
+            
+        for symbol in assumptions:
+            if assumptions[symbol]:
+                self.assumptions.append(ABA_Rule([symbol]))

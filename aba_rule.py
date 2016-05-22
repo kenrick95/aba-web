@@ -12,3 +12,6 @@ class ABA_Rule(dict):
     
     def is_assumption(self):
         return self.result is None
+        
+    def is_ground_truth(self):
+        return self.symbols is [None]
