@@ -1,20 +1,23 @@
 import unittest
 from aba_rule import ABA_Rule
-from aba_graph import ABA_Graph
 from aba import ABA
-from aba_dipute_tree import ABA_Dispute_Tree
+import logging
 
 """
 activate fyp
 
 python -m unittest
+
+https://docs.python.org/3.4/library/unittest.html
 """
 
-class TestABAGraph(unittest.TestCase):
+class TestCraven1(unittest.TestCase):
     """
-    https://docs.python.org/3.4/library/unittest.html
+    This test is adapted from Example 1 of Craven, Toni (2016) paper
     """
     def setUp(self):
+        logging.basicConfig(filename='TestCraven1.log',level=logging.DEBUG) 
+    
         self.aba = ABA()
         self.aba.symbols = ('p', 'q', 'r', 's', 'a', 'b')
         self.aba.rules.append(ABA_Rule(['q', 'r'], 'p'))
@@ -30,23 +33,25 @@ class TestABAGraph(unittest.TestCase):
         self.aba.contraries['a'] = 's'
         self.aba.contraries['b'] = 'p'
         
-        # setup an argument
-        self.aba_graphs = []
+        self.aba.construct_arguments()
         
-        for symbol in self.aba.symbols:
-            self.aba_graphs.append(ABA_Graph(self.aba, symbol))
-        
-        
-        self.aba_dispute_trees = []
-        adt = ABA_Dispute_Tree(self.aba, self.aba_graphs[0])
-        print(adt.graph.nodes(data = True))
-        
-        self.aba_dispute_trees.append(adt)
+        self.aba.construct_dispute_trees()
         
 
     def test_conflict_free(self):
-        for graph in self.aba_graphs:
-            self.assertEqual(graph.is_conflict_free(), True)
+        for argument in self.aba.arguments:
+            self.assertEqual(argument.is_conflict_free(), True)
+            
+    def test_admissible(self):
+        for dispute_tree in self.aba.dispute_trees:
+            self.assertEqual(dispute_tree.is_admissible, True)
+    
+    def test_grounded(self):
+        for dispute_tree in self.aba.dispute_trees:
+            if dispute_tree.root_arg.root == 'q':
+                self.assertEqual(dispute_tree.is_grounded, True)
+            else:
+                self.assertEqual(dispute_tree.is_grounded, False)
 
 if __name__ == '__main__':
     unittest.main()

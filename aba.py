@@ -1,4 +1,6 @@
 from aba_rule import ABA_Rule
+from aba_graph import ABA_Graph
+from aba_dipute_tree import ABA_Dispute_Tree
 
 class ABA():
     """
@@ -15,6 +17,9 @@ class ABA():
         self.assumptions = []
         self.contraries = dict()
         
+        self.arguments = []
+        self.dispute_trees = []
+        
     def infer_assumptions(self):
         assumptions = {}
         for symbol in self.symbols:
@@ -26,3 +31,14 @@ class ABA():
         for symbol in assumptions:
             if assumptions[symbol]:
                 self.assumptions.append(ABA_Rule([symbol]))
+                
+    def construct_arguments(self):
+        for symbol in self.symbols:
+            self.arguments.append(ABA_Graph(self, symbol))
+            
+    def construct_dispute_trees(self):
+        for symbol in self.symbols:
+            self.dispute_trees.append(ABA_Dispute_Tree(self, self.get_argument(symbol)))
+            
+    def get_argument(self, symbol):
+        return [x for x in self.arguments if x.root == symbol][0]
