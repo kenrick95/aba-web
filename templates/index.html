@@ -54,7 +54,7 @@ footer {
     </header>
     <main class="container">
         <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
                 <form id="form">
                     <div class="form-group">
                         <textarea id="source_code" class="form-control" rows="5">
@@ -75,7 +75,7 @@ contrary(b, p).
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8 col-sm-offset-2" id="tab-output">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 fade" id="tab-output">
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" id="tab-output-list">
@@ -119,6 +119,8 @@ contrary(b, p).
                 dataType: "json",
                 method: "POST",
                 success: function (data) {
+                    $("#tab-output").addClass("in");
+                    
                     $("#debug").text(JSON.stringify(data));
                     global_data = data;
                     console.log(data);
@@ -213,7 +215,7 @@ contrary(b, p).
         }
         function show_dt_text(name) {
             var properties = ['is_conflict_free', 'is_admissible', 'is_grounded'],
-                prop_text = ["conflict free", "admissible", "drounded"]
+                prop_text = ["conflict free", "admissible", "grounded"]
                 shown_text = [];
             for (var i = 0; i < properties.length; i++) {
                 if (global_data.dispute_trees_data[name][properties[i]])
@@ -231,7 +233,7 @@ contrary(b, p).
             return "#FF4136";
         }
         function drawD3(graph, el_name) {
-            var width = 960,
+            var width = 750,
                 height = 500;
 
             var color = d3.scale.category20();
@@ -307,9 +309,6 @@ contrary(b, p).
                 
             });
         }
-        
-
-
     });
     
     </script>
