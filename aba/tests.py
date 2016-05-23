@@ -20,9 +20,9 @@ class TestParser(unittest.TestCase):
         c , ded |- ef
         """
         self.parser = ABA_Parser(text)
-        self.parser.parse()
         
     def test_parser_rules(self):
+        self.assertEqual(self.parser.parse(), [])
         self.assertEqual(self.parser.parsed_rules[0], ABA_Rule(['x']))
         self.assertEqual(self.parser.parsed_rules[1], ABA_Rule(['a'], 'b'))
         self.assertEqual(self.parser.parsed_rules[2], ABA_Rule(['c', 'ded'], 'ef'))

@@ -8,7 +8,8 @@ class ABA_Rule(dict):
         """
         Meaning that set of symbols can derive result
         """
-        return self.symbols + " |- " + self.result
+        
+        return ", ".join(self.symbols) + " |- " + self.result
     
     def is_assumption(self):
         return self.result is None
