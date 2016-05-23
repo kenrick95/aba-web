@@ -88,7 +88,9 @@ contrary(b, p).
                 method: "POST",
                 success: function (data) {
                     $("#debug").text(JSON.stringify(data));
-                    drawD3(data.arguments);
+                    console.log(data);
+                    drawD3(data.arguments)
+                    //drawD3(JSON.parse(data.dispute_trees.p));
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR);

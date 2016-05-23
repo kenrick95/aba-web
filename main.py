@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 from aba.aba_parser import ABA_Parser
 from networkx.readwrite import json_graph
 import json
+import jsonpickle
 import logging
 
 app = Flask(__name__)
@@ -24,9 +25,9 @@ def api():
     data = dict()
     data['arguments'] = json_graph.node_link_data(arg_graph)
     
-    #data['dispute_trees'] = dict()
-    #for symbol in aba.symbols:
-    #    data['dispute_trees'][symbol] = json_graph.node_link_data(aba.get_dispute_tree(symbol).graph)
+    data['dispute_trees'] = dict()
+    for symbol in aba.symbols:
+       data['dispute_trees'][symbol] = jsonpickle.encode(json_graph.node_link_data(aba.get_dispute_tree(symbol).graph), unpicklable = False, max_depth = 6, make_refs = False)
     
     return json.dumps(data)
 
