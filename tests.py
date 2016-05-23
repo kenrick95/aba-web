@@ -1,7 +1,7 @@
 import unittest
-from aba_rule import ABA_Rule
-from aba import ABA
-from aba_parser import ABA_Parser
+from aba.aba_rule import ABA_Rule
+from aba.aba import ABA
+from aba.aba_parser import ABA_Parser
 import logging
 
 """
@@ -15,9 +15,9 @@ https://docs.python.org/3.4/library/unittest.html
 class TestParser(unittest.TestCase):
     def setUp(self):
         text = """
-        x |-
-        a |- b
-        c , ded |- ef
+        x |-.
+        a |- b.
+        c , ded |- ef.
         """
         self.parser = ABA_Parser(text)
         
@@ -34,7 +34,7 @@ class TestCraven1(unittest.TestCase):
     This test is adapted from Example 1 of Craven, Toni (2016) paper
     """
     def setUp(self):
-        logging.basicConfig(filename='TestCraven1.log',level=logging.DEBUG) 
+        # logging.basicConfig(filename='TestCraven1.log',level=logging.DEBUG) 
     
         self.aba = ABA()
         self.aba.symbols = ('p', 'q', 'r', 's', 'a', 'b')

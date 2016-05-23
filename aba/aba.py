@@ -1,6 +1,6 @@
-from aba_rule import ABA_Rule
-from aba_graph import ABA_Graph
-from aba_dipute_tree import ABA_Dispute_Tree
+from .aba_rule import ABA_Rule
+from .aba_graph import ABA_Graph
+from .aba_dispute_tree import ABA_Dispute_Tree
 
 class ABA():
     """

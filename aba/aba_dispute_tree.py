@@ -1,5 +1,5 @@
 import networkx as nx
-from aba_constants import *
+from .aba_constants import *
 import logging
 
 class ABA_Dispute_Tree():
