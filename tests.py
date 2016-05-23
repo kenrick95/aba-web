@@ -19,6 +19,8 @@ class TestParser(unittest.TestCase):
         a |- b.
         c , ded |- ef.
         |- g.
+        contrary(a, z).
+        contrary(ded, pos).
         """
         self.parser = ABA_Parser(text)
         
@@ -28,6 +30,7 @@ class TestParser(unittest.TestCase):
         self.assertEqual(self.parser.parsed_rules[1], ABA_Rule(['a'], 'b'))
         self.assertEqual(self.parser.parsed_rules[2], ABA_Rule(['c', 'ded'], 'ef'))
         self.assertEqual(self.parser.parsed_rules[3], ABA_Rule([None], 'g'))
+        self.assertEqual(self.parser.parsed_contraries['a'], 'z')
     
 
 

@@ -5,14 +5,16 @@ from .aba import ABA
 class ABA_Parser():
     def __init__(self, raw):
         self.raw = raw
-        self.__regex = re.compile('\s*(?P<symbols>[a-zA-Z0-9 ,]+)?\s*\|-\s*(?P<result>\S+)?\.')
-        # TODO: add syntax for defining contraries
+        self.__regex_rule = re.compile('\s*(?P<symbols>[a-zA-Z0-9 ,]+)?\s*\|-\s*(?P<result>\S+)?\.')
+        self.__regex_contrary = re.compile('\s*contrary\(\s*(?P<assumption>\S+)\s*,\s*(?P<symbol>\S+)\s*\)\.')
+        
         self.parsed_rules = []
+        self.parsed_contraries = dict()
         
     def parse(self):
         errors = []
         
-        for matched_rule in self.__regex.finditer(self.raw):
+        for matched_rule in self.__regex_rule.finditer(self.raw):
             err = 0
             
             raw_symbols = matched_rule.group('symbols')
@@ -29,6 +31,24 @@ class ABA_Parser():
             if err == 0:
                 self.parsed_rules.append(ABA_Rule(symbols, result))
             
+        
+        for matched_rule in self.__regex_contrary.finditer(self.raw):
+            err = 0
+            
+            symbol = matched_rule.group('symbol')
+            assumption = matched_rule.group('assumption')
+            
+            if symbol and ',' in symbol:
+                errors.append("<%s> symbol must be atomic." % symbol)
+                err += 1
+            if assumption and ',' in assumption:
+                errors.append("<%s> assumption must be atomic." % assumption)
+                err += 1
+            
+            if err == 0:
+                self.parsed_contraries[assumption] = symbol
+            
+        
         return errors
         
     def __get_aba_symbols(self):
@@ -48,6 +68,9 @@ class ABA_Parser():
         
         for rule in self.parsed_rules:
             aba.rules.append(rule)
+            
+        for assumption, symbol in self.parsed_contraries.items():
+            aba.contraries[assumption] = symbol
         
         aba.infer_assumptions()
         
