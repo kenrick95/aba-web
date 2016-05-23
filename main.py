@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 from aba.aba_parser import ABA_Parser
 from networkx.readwrite import json_graph
 import json
+import logging
 
 app = Flask(__name__)
 
@@ -12,13 +13,20 @@ def main():
     
 @app.route("/api", methods=['POST'])
 def api():
+    # logging.basicConfig(filename='main.log',level=logging.DEBUG) 
+    
     source_code =request.form['source_code']
     parser = ABA_Parser(source_code)
     parse_result = parser.parse()
     aba = parser.construct_aba()
     
-    graph = aba.get_combined_argument_graph()
-    data = json_graph.node_link_data(graph)
+    arg_graph = aba.get_combined_argument_graph()
+    data = dict()
+    data['arguments'] = json_graph.node_link_data(arg_graph)
+    
+    #data['dispute_trees'] = dict()
+    #for symbol in aba.symbols:
+    #    data['dispute_trees'][symbol] = json_graph.node_link_data(aba.get_dispute_tree(symbol).graph)
     
     return json.dumps(data)
 

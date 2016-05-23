@@ -26,7 +26,7 @@ class ABA_Dispute_Tree():
         self.__history = []
         
         logging.debug("Dispute tree for '%s'" % root_arg.root)
-        self.__propagate_tree(root_arg)
+        self.__propagate_tree_proponent(root_arg)
         
         logging.debug(self.graph.nodes(data = True))
         logging.debug(self.graph.edges())
@@ -35,13 +35,6 @@ class ABA_Dispute_Tree():
         logging.debug("Admissible?      %s" % self.is_admissible)
         logging.debug("Grounded?        %s" % self.is_grounded)
         logging.debug('End dispute tree\n\n')
-        
-        
-    def __propagate_tree(self, node):
-        if self.graph.node[node]['label'] == DT_PROPONENT:
-            self.__propagate_tree_proponent(node)
-        else:
-            self.__propagate_tree_opponent(node)
     
     
     def __propagate_tree_proponent(self, node):
@@ -104,5 +97,4 @@ class ABA_Dispute_Tree():
             if self.graph[node]['label'] != label:
                 logging.debug("Changing label of node <%s> from <%s> to <%s>" % (node.root, self.graph[node]['label'], label))
                 self.is_admissible = False
-        else:
-            self.graph[node]['label'] = label
+        self.graph.node[node]['label'] = label

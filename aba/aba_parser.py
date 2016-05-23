@@ -75,5 +75,6 @@ class ABA_Parser():
         aba.infer_assumptions()
         
         aba.construct_arguments()
+        aba.construct_dispute_trees()
         
         return aba

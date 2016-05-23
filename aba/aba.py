@@ -43,6 +43,9 @@ class ABA():
             
     def get_argument(self, symbol):
         return [x for x in self.arguments if x.root == symbol][0]
+    
+    def get_dispute_tree(self, symbol):
+        return [x for x in self.dispute_trees if x.root_arg.root == symbol][0]
         
     def get_combined_argument_graph(self):
         combined = nx.DiGraph()
@@ -63,3 +66,4 @@ class ABA():
                 combined.add_edge(edge0 + "_" + arg_root, edge1 + "_" + arg_root)
             
         return combined
+        

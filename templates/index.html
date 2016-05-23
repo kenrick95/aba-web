@@ -50,6 +50,8 @@ q, r |- p.
 |- q.
 a |- r.
 b |- s.
+contrary(a, s).
+contrary(b, p).
                     </textarea>
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
@@ -86,7 +88,7 @@ b |- s.
                 method: "POST",
                 success: function (data) {
                     $("#debug").text(JSON.stringify(data));
-                    drawD3(data);
+                    drawD3(data.arguments);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR);
