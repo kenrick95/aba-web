@@ -26,6 +26,13 @@ text {
   font: 10px sans-serif;
   pointer-events: none;
 }
+svg {
+    display: block;
+    margin: 0 auto;
+}
+#debug {
+    display: none;
+}
     </style>
 </head>
 <body>
@@ -39,18 +46,21 @@ text {
             <form id="form">
                 <div class="form-group">
                     <textarea id="source_code" class="form-control" rows="5">
-a |- b.
-c |- d.
-e,f |- g.
+q, r |- p.
+|- q.
+a |- r.
+b |- s.
                     </textarea>
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
-            <div id="output">
+            <div id="debug">
                 
             </div>
         </div>
-
+        <div id="output">
+            
+        </div>
     </main>
     <footer>
         <div class="container"> 
@@ -75,14 +85,14 @@ e,f |- g.
                 dataType: "json",
                 method: "POST",
                 success: function (data) {
-                    $("#output").text(JSON.stringify(data));
+                    $("#debug").text(JSON.stringify(data));
                     drawD3(data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR);
                     console.error(textStatus);
                     console.error(errorThrown);
-                    $("#output").text(textStatus);
+                    $("#debug").text(textStatus);
                 }
             });
         });
