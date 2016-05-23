@@ -24,7 +24,8 @@ class ABA_Graph():
             if rule.result == node:
                 for symbol in rule.symbols:
                     self.graph.add_edge(node, symbol)
-                    self.__propagate(symbol)
+                    if symbol is not None:
+                        self.__propagate(symbol)
                     
     def __propagate_assumptions(self):
         for assumption, symbol in self.aba.contraries.items():

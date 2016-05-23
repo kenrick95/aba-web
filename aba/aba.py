@@ -1,6 +1,7 @@
 from .aba_rule import ABA_Rule
 from .aba_graph import ABA_Graph
 from .aba_dispute_tree import ABA_Dispute_Tree
+import networkx as nx
 
 class ABA():
     """
@@ -42,3 +43,23 @@ class ABA():
             
     def get_argument(self, symbol):
         return [x for x in self.arguments if x.root == symbol][0]
+        
+    def get_combined_argument_graph(self):
+        combined = nx.DiGraph()
+        for argument in self.arguments:
+            arg_root = argument.root
+            if arg_root is None:
+                arg_root = "τ"
+            for node in argument.graph.nodes():
+                if node is None:
+                    node = "τ"
+                combined.add_node(node + "_" + arg_root, group = arg_root)
+            for edge in argument.graph.edges():
+                edge0, edge1 = edge
+                if edge0 is None:
+                    edge0 = "τ"
+                if edge1 is None:
+                    edge1 = "τ"
+                combined.add_edge(edge0 + "_" + arg_root, edge1 + "_" + arg_root)
+            
+        return combined

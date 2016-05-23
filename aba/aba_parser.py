@@ -5,8 +5,7 @@ from .aba import ABA
 class ABA_Parser():
     def __init__(self, raw):
         self.raw = raw
-        self.__regex = re.compile('\s*(?P<symbols>.*\S)?\s*\|-\s*(?P<result>\S+)?\.')
-        # TODO: handle ground truth
+        self.__regex = re.compile('\s*(?P<symbols>[a-zA-Z0-9 ,]+)?\s*\|-\s*(?P<result>\S+)?\.')
         # TODO: add syntax for defining contraries
         self.parsed_rules = []
         
@@ -17,8 +16,12 @@ class ABA_Parser():
             err = 0
             
             raw_symbols = matched_rule.group('symbols')
-            symbols = [x.strip() for x in raw_symbols.split(',')]
+            if raw_symbols:
+                symbols = [x.strip() for x in raw_symbols.split(',')]
+            else:
+                symbols = [None]
             result = matched_rule.group('result')
+            
             if result and ',' in result:
                 errors.append("<%s> result symbol must be atomic." % result)
                 err += 1

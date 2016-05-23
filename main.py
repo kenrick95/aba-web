@@ -19,7 +19,7 @@ class ApiHandler(tornado.web.RequestHandler):
         parse_result = parser.parse()
         aba = parser.construct_aba()
         
-        graph = aba.arguments[0].graph
+        graph = aba.get_combined_argument_graph()
         data = json_graph.node_link_data(graph)
         
         self.write(json.dumps(data))
