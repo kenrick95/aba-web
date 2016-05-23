@@ -1,38 +1,26 @@
-import tornado.ioloop
-import tornado.web
+from flask import Flask, render_template, request
+
 from aba.aba_parser import ABA_Parser
-import networkx as nx
 from networkx.readwrite import json_graph
 import json
 
-class IndexHandler(tornado.web.RequestHandler):
-    @tornado.web.asynchronous
-    def get(self):
-        self.render("views/index.html")
+app = Flask(__name__)
 
-
-class ApiHandler(tornado.web.RequestHandler):
-    @tornado.web.asynchronous
-    def post(self):
-        source_code = self.get_argument('source_code')
-        parser = ABA_Parser(source_code)
-        parse_result = parser.parse()
-        aba = parser.construct_aba()
-        
-        graph = aba.get_combined_argument_graph()
-        data = json_graph.node_link_data(graph)
-        
-        self.write(json.dumps(data))
-        self.flush()
-        self.finish()
-
-def make_app():
-    return tornado.web.Application([
-        (r"/", IndexHandler),
-        (r"/api/?", ApiHandler),
-    ])
+@app.route("/")
+def main():
+    return render_template("index.html")
+    
+@app.route("/api", methods=['POST'])
+def api():
+    source_code =request.form['source_code']
+    parser = ABA_Parser(source_code)
+    parse_result = parser.parse()
+    aba = parser.construct_aba()
+    
+    graph = aba.get_combined_argument_graph()
+    data = json_graph.node_link_data(graph)
+    
+    return json.dumps(data)
 
 if __name__ == "__main__":
-    app = make_app()
-    app.listen(8888)
-    tornado.ioloop.IOLoop.current().start()
+    app.run()
