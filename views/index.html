@@ -12,7 +12,7 @@
     font-family: monospace;
 }
 /* http://bl.ocks.org/mbostock/4062045 GNU GPL v3, Mike Bostock */
-.node {
+.node_circle {
   stroke: #fff;
   stroke-width: 1.5px;
 }
@@ -20,6 +20,11 @@
 .link {
   stroke: #999;
   stroke-opacity: .6;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
 }
     </style>
 </head>
@@ -33,7 +38,11 @@
         <div class="col-sm-8 col-sm-offset-2">
             <form id="form">
                 <div class="form-group">
-                    <textarea id="source_code" class="form-control" rows="5"></textarea>
+                    <textarea id="source_code" class="form-control" rows="5">
+a |- b.
+c |- d.
+e,f |- g.
+                    </textarea>
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
@@ -52,6 +61,9 @@
     <script src="//tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="//d3js.org/d3.v3.min.js"></script>
     <script>
+        // http://bl.ocks.org/mbostock/4062045
+        // http://bl.ocks.org/mbostock/2706022
+        // http://bl.ocks.org/d3noob/5141278
     $(document).ready(function () {
         $("#form").submit(function (e) {
             e.preventDefault();
@@ -95,31 +107,61 @@
                 .links(graph.links)
                 .start();
 
-            var link = svg.selectAll(".link")
-                .data(graph.links)
-                .enter().append("line")
-                .attr("class", "link")
-                .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+            // build the arrow.
+            svg.append("svg:defs").selectAll("marker")
+                .data(["end"])
+                .enter().append("svg:marker")
+                .attr("id", String)
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 15)
+                .attr("refY", -1.5)
+                .attr("markerWidth", 8)
+                .attr("markerHeight", 8)
+                .attr("orient", "auto")
+                .append("svg:path")
+                .attr("d", "M0,-5L10,0L0,5");
 
+            var link = svg.append("svg:g").selectAll("path")
+                .data(graph.links)
+                .enter().append("svg:path")
+                .attr("class", "link")
+                .attr("marker-end", "url(#end)");
+            
             var node = svg.selectAll(".node")
                 .data(graph.nodes)
-                .enter().append("circle")
+                .enter().append("g")
                 .attr("class", "node")
+                .call(force.drag);
+                
+                
+            node.append("circle")
+                .attr("class", "node_circle")
                 .attr("r", 5)
                 .style("fill", function(d) { return color(d.group); })
-                .call(force.drag);
 
             node.append("title")
-                .text(function(d) { return d.name; });
+                .text(function(d) { return d.id; });
+            node.append("text")
+                .attr("x", 12)
+                .attr("dy", ".35em")
+                .text(function(d) { return d.id; });
 
             force.on("tick", function() {
-                link.attr("x1", function(d) { return d.source.x; })
-                    .attr("y1", function(d) { return d.source.y; })
-                    .attr("x2", function(d) { return d.target.x; })
-                    .attr("y2", function(d) { return d.target.y; });
-
-                node.attr("cx", function(d) { return d.x; })
-                    .attr("cy", function(d) { return d.y; });
+                link.attr("d", function(d) {
+                    var dx = d.target.x - d.source.x,
+                        dy = d.target.y - d.source.y,
+                        dr = 0;
+                    return "M" + 
+                        d.source.x + "," + 
+                        d.source.y + "A" + 
+                        dr + "," + dr + " 0 0,1 " + 
+                        d.target.x + "," + 
+                        d.target.y;
+                });
+                
+                node
+                    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+                
             });
         }
         
