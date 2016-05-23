@@ -12,20 +12,26 @@
     font-family: monospace;
 }
 /* http://bl.ocks.org/mbostock/4062045 GNU GPL v3, Mike Bostock */
-.node_circle {
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+  stroke-opacity: .6;
+}
+circle {
+  fill: #ccc;
   stroke: #fff;
   stroke-width: 1.5px;
 }
-
-.link {
-  stroke: #999;
-  stroke-opacity: .6;
-}
-
 text {
-  font: 10px sans-serif;
+  font: 12px sans-serif;
   pointer-events: none;
 }
+
+
+
+
 svg {
     display: block;
     margin: 0 auto;
@@ -33,35 +39,60 @@ svg {
 #debug {
     display: none;
 }
+footer {
+    margin-top: 50px;
+    padding-top: 25px;
+    border-top: 1px solid #EEEEEE;
+}
     </style>
 </head>
 <body>
     <header class="container">
         <div class="page-header">
-            <h1>aba-web</h1>
+            <h1>aba-web <small>Assumption-Based Argumentation on Web</small></h1>
         </div>
     </header>
     <main class="container">
-        <div class="col-sm-8 col-sm-offset-2">
-            <form id="form">
-                <div class="form-group">
-                    <textarea id="source_code" class="form-control" rows="5">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <form id="form">
+                    <div class="form-group">
+                        <textarea id="source_code" class="form-control" rows="5">
 q, r |- p.
 |- q.
 a |- r.
 b |- s.
 contrary(a, s).
 contrary(b, p).
-                    </textarea>
+                        </textarea>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+                <div id="debug">
+                    
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-            <div id="debug">
-                
+                <br />
             </div>
         </div>
-        <div id="output">
-            
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2" id="tab-output">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" id="tab-output-list">
+                <li class="active"><a href="#output-argument" data-toggle="tab">Arguments</a></li>
+                <li class="dropdown">
+                    <a id="output-dropdown-toggle" href="#" data-target="output-dropdown-dt" class="dropdown-toggle" data-toggle="dropdown">Dispute Trees <span class="caret"></span></a>
+                    <ul class="dropdown-menu" id="output-dropdown-dt">
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content" id="tab-output-content">
+                <div class="tab-pane active fade in" id="output-argument"></div>
+            </div>
+
+            </div>
         </div>
     </main>
     <footer>
@@ -77,6 +108,7 @@ contrary(b, p).
         // http://bl.ocks.org/mbostock/2706022
         // http://bl.ocks.org/d3noob/5141278
     $(document).ready(function () {
+        var global_data = null;
         $("#form").submit(function (e) {
             e.preventDefault();
             $.ajax({
@@ -88,9 +120,15 @@ contrary(b, p).
                 method: "POST",
                 success: function (data) {
                     $("#debug").text(JSON.stringify(data));
+                    global_data = data;
                     console.log(data);
-                    drawD3(data.arguments)
-                    //drawD3(JSON.parse(data.dispute_trees.p));
+                    drawD3_arg_adapter(data.arguments, "argument");
+                    for (var key in data.dispute_trees) {
+                        if (data.dispute_trees.hasOwnProperty(key)) {
+                            add_tab_dt(key, data.dispute_trees);
+                        }
+                    }
+                    
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR);
@@ -101,18 +139,109 @@ contrary(b, p).
             });
         });
         
-        function drawD3(graph) {
+        function add_tab_dt(name) {
+            var tab_list_new = $("<li/>", {
+                html: $("<a/>", {
+                    href: "#output-dt-" + name,
+                    "data-toggle": "tab",
+                    text: "Dispute Tree for " + name
+                })
+            });
+            
+            $("#output-dropdown-dt").append(tab_list_new);
+            $(tab_list_new).find('a').tab();
+            $("#output-dropdown-toggle").dropdown();
+            
+            $("#tab-output-content").append($("<div/>", {
+                class: "tab-pane fade",
+                id: "output-dt-" + name,
+                html: $("<div/>", {
+                    id: "output-dt-text-" + name
+                })
+            })).promise().done(function () {
+                drawD3_dt_adapter(global_data.dispute_trees[name], name);
+            });
+            
+            
+        }
+        function drawD3_arg_adapter(graph, el_name) {
+            for (var i = 0; i < graph.nodes.length; i++) {
+                graph.nodes[i].text_label = graph.nodes[i].id.substring(0, graph.nodes[i].id.lastIndexOf(graph.nodes[i].group) - 1);
+                graph.nodes[i].id = graph.nodes[i].text_label + "\nSupporting " + graph.nodes[i].group;
+            }
+            for (var i = 0; i < graph.nodes.length; i++) {
+                if (graph.nodes[i].id.lastIndexOf(graph.nodes[i].group) ===
+                        graph.nodes[i].id.length - graph.nodes[i].group.length
+                    &&
+                        graph.nodes[i].id.indexOf(graph.nodes[i].group) === 0) {
+                    graph.nodes[i].group = "root";
+                }
+            }
+            for (var i = 0; i < graph.nodes.length; i++) {
+                if (graph.nodes[i].group == "root") {
+                    graph.nodes[i].id = graph.nodes[i].text_label + "\n(Root)";
+                }
+            }
+            drawD3(graph, el_name);
+        }
+        function drawD3_dt_adapter(raw_graph, name) {
+            var graph = JSON.parse(raw_graph);
+            for (var i = 0; i < graph.nodes.length; i++) {
+                var new_id = "Argument " + graph.nodes[i].id.root;
+                var new_label = graph.nodes[i].id.root;
+                
+                var assumptions = Object.keys(graph.nodes[i].id.assumptions).join(", ");
+                if (assumptions.length > 0) {
+                    new_id = new_id + "\n" + "with assumptions: " + assumptions;
+                }
+                new_id = "(" + graph.nodes[i].label + ") " +  new_id;
+                new_label = "(" + graph.nodes[i].label + ") " +  new_label;
+                
+                
+                if (graph.nodes[i].id.root == name) {
+                    // console.log(graph.nodes[i]);
+                    graph.nodes[i].group = "root";
+                }
+                
+                graph.nodes[i].id = new_id;
+                graph.nodes[i].text_label = new_label;
+                
+            }
+            drawD3(graph, "dt-" + name);
+            
+            show_dt_text(name);
+        }
+        function show_dt_text(name) {
+            var properties = ['is_conflict_free', 'is_admissible', 'is_grounded'],
+                prop_text = ["conflict free", "admissible", "drounded"]
+                shown_text = [];
+            for (var i = 0; i < properties.length; i++) {
+                if (global_data.dispute_trees_data[name][properties[i]])
+                {
+                    shown_text.push(prop_text[i])
+                }
+            }
+            shown_text = shown_text.join(', ');
+            shown_text = shown_text.charAt(0).toUpperCase() + shown_text.slice(1);
+            
+            $("#output-dt-text-" + name).text(shown_text);  
+        };
+        
+        function rootColor() {
+            return "#FF4136";
+        }
+        function drawD3(graph, el_name) {
             var width = 960,
                 height = 500;
 
             var color = d3.scale.category20();
 
             var force = d3.layout.force()
-                .charge(-120)
-                .linkDistance(30)
+                .charge(-300)
+                .linkDistance(100)
                 .size([width, height]);
 
-            var svg = d3.select("#output").append("svg")
+            var svg = d3.select("#output-" + el_name).append("svg")
                 .attr("width", width)
                 .attr("height", height);
 
@@ -123,14 +252,14 @@ contrary(b, p).
 
             // build the arrow.
             svg.append("svg:defs").selectAll("marker")
-                .data(["end"])
+                .data(["end-" + el_name ])
                 .enter().append("svg:marker")
                 .attr("id", String)
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 16)
+                .attr("refX", 15)
                 .attr("refY", -1.5)
-                .attr("markerWidth", 8)
-                .attr("markerHeight", 8)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
                 .attr("orient", "auto")
                 .append("svg:path")
                 .attr("d", "M0,-5L10,0L0,5");
@@ -139,7 +268,7 @@ contrary(b, p).
                 .data(graph.links)
                 .enter().append("svg:path")
                 .attr("class", "link")
-                .attr("marker-end", "url(#end)");
+                .attr("marker-end", "url(#end-" + el_name + ")");
             
             var node = svg.selectAll(".node")
                 .data(graph.nodes)
@@ -150,21 +279,21 @@ contrary(b, p).
                 
             node.append("circle")
                 .attr("class", "node_circle")
-                .attr("r", 5)
-                .style("fill", function(d) { return color(d.group); })
+                .attr("r", function(d) { return d.group == "root" ? 7 : 5; })
+                .style("fill", function(d) { return d.group == "root" ? rootColor(d.group) : color(d.group); })
 
             node.append("title")
                 .text(function(d) { return d.id; });
             node.append("text")
                 .attr("x", 12)
                 .attr("dy", ".35em")
-                .text(function(d) { return d.id; });
+                .text(function(d) { return 'text_label' in d ? d.text_label : d.id; });
 
             force.on("tick", function() {
                 link.attr("d", function(d) {
                     var dx = d.target.x - d.source.x,
                         dy = d.target.y - d.source.y,
-                        dr = 0;
+                        dr = Math.sqrt(dx * dx + dy * dy);
                     return "M" + 
                         d.source.x + "," + 
                         d.source.y + "A" + 
