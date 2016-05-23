@@ -1,4 +1,2 @@
-python=3.4
-pip
-tornado
-networkx
+tornado==4.3
+networkx==1.11
