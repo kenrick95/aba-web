@@ -29,8 +29,34 @@ text {
   pointer-events: none;
 }
 
-
-
+/* http://bl.ocks.org/Caged/6476579 */
+.d3-tip {
+  line-height: 1.2em;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 4px;
+  text-align: center;
+}
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 12px;
+  width: 100%;
+  line-height: 10px;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -2px 0 0 0;
+  top: 100%;
+  left: 0;
+}
 
 svg {
     display: block;
@@ -103,6 +129,7 @@ contrary(b, p).
     <script src="//cdn.jsdelivr.net/jquery/2.2.0/jquery.min.js"></script>
     <script src="//cdn.jsdelivr.net/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="//cdn.jsdelivr.net/d3js/3.5.17/d3.min.js"></script>
+    <script src="//cdn.rawgit.com/Caged/d3-tip/master/index.js"></script>
     <script>
         // http://bl.ocks.org/mbostock/4062045
         // http://bl.ocks.org/mbostock/2706022
@@ -111,6 +138,8 @@ contrary(b, p).
         var global_data = null;
         $("#form").submit(function (e) {
             e.preventDefault();
+            
+            clearOutput();
             $.ajax({
                 url: "api",
                 data: {
@@ -120,6 +149,7 @@ contrary(b, p).
                 method: "POST",
                 success: function (data) {
                     $("#tab-output").addClass("in");
+                    $("#tab-output").height("auto");
                     
                     $("#debug").text(JSON.stringify(data));
                     global_data = data;
@@ -141,8 +171,18 @@ contrary(b, p).
             });
         });
         
+        function clearOutput() {
+            $("#tab-output").removeClass("in");
+            $("#tab-output").height($("#tab-output").height());
+            $(".li-dt").remove();
+            $(".output-dt").remove();
+            $("svg").remove();
+            $('#tab-output-list a:first').tab('show');
+        }
+        
         function add_tab_dt(name) {
             var tab_list_new = $("<li/>", {
+                class: "li-dt",
                 html: $("<a/>", {
                     href: "#output-dt-" + name,
                     "data-toggle": "tab",
@@ -155,7 +195,7 @@ contrary(b, p).
             $("#output-dropdown-toggle").dropdown();
             
             $("#tab-output-content").append($("<div/>", {
-                class: "tab-pane fade",
+                class: "tab-pane fade output-dt",
                 id: "output-dt-" + name,
                 html: $("<div/>", {
                     id: "output-dt-text-" + name
@@ -242,10 +282,26 @@ contrary(b, p).
                 .charge(-300)
                 .linkDistance(100)
                 .size([width, height]);
+                
+            var tip = d3.tip()
+                .offset([-10, 0])
+                .attr('class', 'd3-tip').html(function(d) {
+                    return d.id.replace("\n", "<br />");
+                });
+            var tipEdge = d3.tip()
+                .offset(function() {
+                    return [this.getBBox().height / 2 - 10, 0]
+                })
+                .attr('class', 'd3-tip').html(function(d) {
+                    console.log(d);
+                    return d;
+                });
 
             var svg = d3.select("#output-" + el_name).append("svg")
                 .attr("width", width)
-                .attr("height", height);
+                .attr("height", height)
+                .call(tip)
+                .call(tipEdge);
 
             force
                 .nodes(graph.nodes)
@@ -271,6 +327,8 @@ contrary(b, p).
                 .enter().append("svg:path")
                 .attr("class", "link")
                 .attr("marker-end", "url(#end-" + el_name + ")");
+                // .on('mouseover', tipEdge.show)
+                // .on('mouseout', tipEdge.hide);
             
             var node = svg.selectAll(".node")
                 .data(graph.nodes)
@@ -284,8 +342,9 @@ contrary(b, p).
                 .attr("r", function(d) { return d.group == "root" ? 7 : 5; })
                 .style("fill", function(d) { return d.group == "root" ? rootColor(d.group) : color(d.group); })
 
-            node.append("title")
-                .text(function(d) { return d.id; });
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
+            
             node.append("text")
                 .attr("x", 12)
                 .attr("dy", ".35em")
