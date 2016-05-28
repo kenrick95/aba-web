@@ -18,7 +18,7 @@ class ABA_Dispute_Tree():
         self.__aba = aba
         
         self.graph.add_node(root_arg)
-        self.graph.node[root_arg]['label'] = DT_PROPONENT
+        self.__add_label(root_arg, DT_PROPONENT)
         
         self.is_grounded = True
         self.is_admissible = True
@@ -45,10 +45,10 @@ class ABA_Dispute_Tree():
         """
         for assumption, symbol in node.assumptions.items():
             opponent_node = self.__aba.get_argument(symbol)
-            logging.debug("Opp Node: <%s> attacking assumption <%s> of Pro node <%s>" % (opponent_node.root, assumption, node.root))
+            logging.debug("Opp node <%s> attacking assumption <%s> of Pro node <%s>" % (opponent_node.root, assumption, node.root))
             
             
-            self.graph.add_edge(node, opponent_node)
+            self.graph.add_edge(node, opponent_node, text_label = "Opponent node <%s> attacking assumption <%s> of Proponent node <%s>" % (opponent_node.root, assumption, node.root))
             self.__add_label(opponent_node, DT_OPPONENT)
             
             
@@ -66,13 +66,13 @@ class ABA_Dispute_Tree():
         """
         for assumption, symbol in node.assumptions.items():
             proponent_node = self.__aba.get_argument(symbol)
-            logging.debug("Pro Node: <%s> attacking assumption <%s> of Opp node <%s>" % (proponent_node.root, assumption, node.root))
+            logging.debug("Pro node <%s> attacking assumption <%s> of Opp node <%s>" % (proponent_node.root, assumption, node.root))
             
             if self.__is_infinity(proponent_node, DT_PROPONENT):
                 break
             
             
-            self.graph.add_edge(node, proponent_node)
+            self.graph.add_edge(node, proponent_node, text_label = "Proponent node <%s> attacking assumption <%s> of Opponent node <%s>" % (proponent_node.root, assumption, node.root))
             self.__add_label(proponent_node, DT_PROPONENT)
             
             
@@ -98,3 +98,6 @@ class ABA_Dispute_Tree():
                 logging.debug("Changing label of node <%s> from <%s> to <%s>" % (node.root, self.graph[node]['label'], label))
                 self.is_admissible = False
         self.graph.node[node]['label'] = label
+        self.graph.node[node]['text_label'] = "(%s) Argument %s" % (label, node.root)
+        if len(node.assumptions) > 0:
+            self.graph.node[node]['text_label'] += "\nwith assumption(s): %s" % (", ".join(node.assumptions))

@@ -228,26 +228,17 @@ contrary(b, p).
         }
         function drawD3_dt_adapter(raw_graph, name) {
             var graph = JSON.parse(raw_graph);
+            // console.log(graph);
             for (var i = 0; i < graph.nodes.length; i++) {
-                var new_id = "Argument " + graph.nodes[i].id.root;
-                var new_label = graph.nodes[i].id.root;
-                
-                var assumptions = Object.keys(graph.nodes[i].id.assumptions).join(", ");
-                if (assumptions.length > 0) {
-                    new_id = new_id + "\n" + "with assumptions: " + assumptions;
-                }
-                new_id = "(" + graph.nodes[i].label + ") " +  new_id;
-                new_label = "(" + graph.nodes[i].label + ") " +  new_label;
+                var new_label = "(" + graph.nodes[i].label + ") " +  graph.nodes[i].id.root;
                 
                 
                 if (graph.nodes[i].id.root == name) {
-                    // console.log(graph.nodes[i]);
                     graph.nodes[i].group = "root";
                 }
                 
-                graph.nodes[i].id = new_id;
+                graph.nodes[i].id = graph.nodes[i].text_label;
                 graph.nodes[i].text_label = new_label;
-                
             }
             drawD3(graph, "dt-" + name);
             
