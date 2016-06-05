@@ -7,6 +7,7 @@
     <title>aba-web</title>
     <!-- CSS -->
     <link href="//cdn.jsdelivr.net/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.jsdelivr.net/codemirror/4.5.0/codemirror.css" rel="stylesheet">
     <style>
 #source_code {
     font-family: monospace;
@@ -70,6 +71,39 @@ footer {
     padding-top: 25px;
     border-top: 1px solid #EEEEEE;
 }
+
+.CodeMirror {
+    /* Bootstrap Settings */
+    box-sizing: border-box;
+    margin: 1em 0;
+    font: inherit;
+    overflow: auto;
+    font-family: inherit;
+    display: block;
+    width: 100%;
+    padding: 0px 12px 0px 0px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    /* Code Mirror Settings */
+    font-family: monospace;
+    position: relative;
+    overflow: hidden;
+}
+
+.CodeMirror-focused {
+    /* Bootstrap Settings */
+    border-color: #66afe9;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
     </style>
 </head>
 <body>
@@ -82,18 +116,17 @@ footer {
         <div class="row">
             <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
                 <form id="form">
-                    <div class="form-group">
-                        <textarea id="source_code" class="form-control" rows="5">
+                    <textarea id="source_code" rows="5">
 q, r |- p.
 |- q.
 a |- r.
 b |- s.
 contrary(a, s).
 contrary(b, p).
-                        </textarea>
-                    </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    </textarea>
+                    <button type="submit" class="btn btn-default" id="form-submit">Submit</button>
                 </form>
+                <div id="parse-errors" class="text-danger"></div>
                 <div id="debug">
                     
                 </div>
@@ -129,6 +162,7 @@ contrary(b, p).
     <script src="//cdn.jsdelivr.net/jquery/2.2.0/jquery.min.js"></script>
     <script src="//cdn.jsdelivr.net/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="//cdn.jsdelivr.net/d3js/3.5.17/d3.min.js"></script>
+    <script src="//cdn.jsdelivr.net/codemirror/4.5.0/codemirror.min.js"></script>
     <script src="//cdn.rawgit.com/Caged/d3-tip/master/index.js"></script>
     <script>
         // http://bl.ocks.org/mbostock/4062045
@@ -136,6 +170,15 @@ contrary(b, p).
         // http://bl.ocks.org/d3noob/5141278
     $(document).ready(function () {
         var global_data = null;
+        var code_mirror = CodeMirror.fromTextArea($("#source_code")[0], {
+            indentUnit: 2,
+            lineNumbers: true,
+            tabindex: -1,
+            autofocus: true,
+            showCursorWhenSelecting: true,
+            viewportMargin: Infinity
+        });
+
         $("#form").submit(function (e) {
             e.preventDefault();
             
@@ -161,6 +204,9 @@ contrary(b, p).
                         }
                     }
                     
+                    if (data.parse_errors.length > 0) {
+                        $("#parse-errors").html(data.parse_errors.join("<br/>"))
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR);

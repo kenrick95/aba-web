@@ -11,44 +11,77 @@ class ABA_Parser():
         self.parsed_rules = []
         self.parsed_contraries = dict()
         
+    def __process_parse_rule(self, rule_match):
+        errors = []
+        raw_symbols = rule_match[0]
+        result = rule_match[1]
+        
+        if raw_symbols:
+            symbols = [x.strip() for x in raw_symbols.split(',')]
+        else:
+            symbols = [None]
+        
+        if result and ',' in result:
+            errors.append("result symbol <%s> must be atomic." % result)
+        
+        if len(errors) == 0:
+            self.parsed_rules.append(ABA_Rule(symbols, result))
+        
+        return errors
+        
+    def __process_parse_contrary(self, contary_match):
+        errors = []
+        print(contary_match)
+            
+        assumption = contary_match[0]
+        symbol = contary_match[1]
+        
+        if symbol and ',' in symbol:
+            errors.append("symbol <%s> must be atomic." % symbol)
+        if assumption and ',' in assumption:
+            errors.append("assumption <%s> must be atomic." % assumption)
+        
+        if len(errors) == 0:
+            self.parsed_contraries[assumption] = symbol
+
+        return errors
+
     def parse(self):
         errors = []
         
-        for matched_rule in self.__regex_rule.finditer(self.raw):
-            err = 0
+        for i, raw_line in enumerate(self.raw.splitlines()):
+            line = raw_line.strip()
             
-            raw_symbols = matched_rule.group('symbols')
-            if raw_symbols:
-                symbols = [x.strip() for x in raw_symbols.split(',')]
-            else:
-                symbols = [None]
-            result = matched_rule.group('result')
+            if len(line) == 0: # after stripping spaces, nothing left
+                continue
             
-            if result and ',' in result:
-                errors.append("<%s> result symbol must be atomic." % result)
-                err += 1
+            line_errors = []
+            rule_matches = self.__regex_rule.findall(line)
+            contrary_matches = self.__regex_contrary.findall(line)
             
-            if err == 0:
-                self.parsed_rules.append(ABA_Rule(symbols, result))
+            if len(rule_matches) + len(contrary_matches) == 0: # no match
+                line_errors.append("Error: Line %d is neither a rule nor contrary: %s" % (i, line))
+            elif len(rule_matches) * len(contrary_matches) > 0: # match more than one type
+                line_errors.append("Error: Line %d should not contain both rule and contrary: %s" % (i, line))
+            elif len(rule_matches) + len(contrary_matches) > 1:  # match more than one in a line
+                line_errors.append("Error: Line %d should not contain more than one rule or contrary: %s" % (i, line))
             
-        
-        for matched_rule in self.__regex_contrary.finditer(self.raw):
-            err = 0
+            if len(line_errors) > 0:
+                errors.extend(line_errors)
+                continue
             
-            symbol = matched_rule.group('symbol')
-            assumption = matched_rule.group('assumption')
             
-            if symbol and ',' in symbol:
-                errors.append("<%s> symbol must be atomic." % symbol)
-                err += 1
-            if assumption and ',' in assumption:
-                errors.append("<%s> assumption must be atomic." % assumption)
-                err += 1
+            if len(rule_matches) == 1:
+                process_errors = self.__process_parse_rule(rule_matches[0])
+                line_errors.extend(["Error: Line %d %s" %(i, x) for x in process_errors])
+                
+            elif len(contrary_matches) == 1:
+                process_errors = self.__process_parse_contrary(contrary_matches[0])
+                line_errors.extend(["Error: Line %d %s" %(i, x) for x in process_errors])
             
-            if err == 0:
-                self.parsed_contraries[assumption] = symbol
+            errors.extend(line_errors)
             
-        
+            
         return errors
         
     def __get_aba_symbols(self):

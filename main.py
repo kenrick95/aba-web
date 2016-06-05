@@ -18,11 +18,13 @@ def api():
     
     source_code =request.form['source_code']
     parser = ABA_Parser(source_code)
-    parse_result = parser.parse()
+    parse_errors = parser.parse()
+    
     aba = parser.construct_aba()
     
     arg_graph = aba.get_combined_argument_graph()
     data = dict()
+    data['parse_errors'] = parse_errors
     data['arguments'] = json_graph.node_link_data(arg_graph)
     
     data['dispute_trees'] = dict()
