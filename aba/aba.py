@@ -22,16 +22,8 @@ class ABA():
         self.dispute_trees = []
         
     def infer_assumptions(self):
-        assumptions = {}
-        for symbol in self.symbols:
-            assumptions[symbol] = True
-        
-        for rule in self.rules:
-            assumptions[rule.result] = False
-            
-        for symbol in assumptions:
-            if assumptions[symbol]:
-                self.assumptions.append(ABA_Rule([symbol]))
+        for key in self.contraries:
+            self.assumptions.append(ABA_Rule([key]))
                 
     def construct_arguments(self):
         for symbol in self.symbols:
