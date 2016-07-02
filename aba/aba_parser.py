@@ -49,8 +49,9 @@ class ABA_Parser():
     def parse(self):
         errors = []
         
-        for i, raw_line in enumerate(self.raw.splitlines()):
+        for j, raw_line in enumerate(self.raw.splitlines()):
             line = raw_line.strip()
+            i = j + 1
             
             if len(line) == 0: # after stripping spaces, nothing left
                 continue
@@ -90,7 +91,7 @@ class ABA_Parser():
         for rule in self.parsed_rules:
             symbols.add(rule.result)
             for symbol in rule.symbols:
-                symbols.add(rule.result)
+                symbols.add(symbol)
         
         return tuple(x for x in iter(symbols))
         
