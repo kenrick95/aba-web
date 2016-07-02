@@ -29,7 +29,8 @@ def api():
     
     data['dispute_trees'] = dict()
     data['dispute_trees_data'] = dict()
-    for symbol in aba.symbols:
+
+    for symbol in aba.nonassumptions:
        data['dispute_trees'][symbol] = jsonpickle.encode(json_graph.node_link_data(aba.get_dispute_tree(symbol).graph), unpicklable = False, max_depth = 6, make_refs = False)
        data['dispute_trees_data'][symbol] = dict()
        data['dispute_trees_data'][symbol]['is_conflict_free'] = aba.get_argument(symbol).is_conflict_free()

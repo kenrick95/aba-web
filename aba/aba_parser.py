@@ -5,11 +5,13 @@ from .aba import ABA
 class ABA_Parser():
     def __init__(self, raw):
         self.raw = raw
-        self.__regex_rule = re.compile('\s*(?P<symbols>[a-zA-Z0-9 ,]+)?\s*\|-\s*(?P<result>\S+)?\.')
-        self.__regex_contrary = re.compile('\s*contrary\(\s*(?P<assumption>\S+)\s*,\s*(?P<symbol>\S+)\s*\)\.')
+        self.__regex_rule = re.compile(r'\s*(?P<symbols>[a-zA-Z0-9 ,]+)?\s*\|-\s*(?P<result>\S+)?\.')
+        self.__regex_contrary = re.compile(r'\s*contrary\(\s*(?P<assumption>\S+)\s*,\s*(?P<symbol>\S+)\s*\)\.')
+        self.__regex_assumption = re.compile(r'\s*assumption\(\s*(?P<assumption>\S+)\s*\)\.')
         
         self.parsed_rules = []
         self.parsed_contraries = dict()
+        self.parsed_assumptions = []
         
     def __process_parse_rule(self, rule_match):
         errors = []
@@ -28,11 +30,10 @@ class ABA_Parser():
             self.parsed_rules.append(ABA_Rule(symbols, result))
         
         return errors
-        
+
     def __process_parse_contrary(self, contary_match):
         errors = []
-        print(contary_match)
-            
+
         assumption = contary_match[0]
         symbol = contary_match[1]
         
@@ -43,6 +44,21 @@ class ABA_Parser():
         
         if len(errors) == 0:
             self.parsed_contraries[assumption] = symbol
+
+        return errors
+
+    def __process_parse_assumption(self, assumption_match):
+        errors = []
+        
+        assumption = assumption_match
+        
+        if assumption and ',' in assumption:
+            errors.append("assumption <%s> must be atomic." % assumption)
+        if assumption in self.parsed_assumptions:
+            errors.append("assumption <%s> has already existed on another statement" % assumption)
+        
+        if len(errors) == 0:
+            self.parsed_assumptions.append(assumption)
 
         return errors
 
@@ -59,13 +75,16 @@ class ABA_Parser():
             line_errors = []
             rule_matches = self.__regex_rule.findall(line)
             contrary_matches = self.__regex_contrary.findall(line)
+            assumption_matches = self.__regex_assumption.findall(line)
+
+            error_types = (len(rule_matches) > 0) ^ (len(contrary_matches) > 0) ^ (len(assumption_matches) > 0)
             
-            if len(rule_matches) + len(contrary_matches) == 0: # no match
-                line_errors.append("Error: Line %d is neither a rule nor contrary: %s" % (i, line))
-            elif len(rule_matches) * len(contrary_matches) > 0: # match more than one type
-                line_errors.append("Error: Line %d should not contain both rule and contrary: %s" % (i, line))
-            elif len(rule_matches) + len(contrary_matches) > 1:  # match more than one in a line
-                line_errors.append("Error: Line %d should not contain more than one rule or contrary: %s" % (i, line))
+            if error_types == 0: # no match
+                line_errors.append("Error: Line %d is neither a rule, a contrary, nor an assumption: %s" % (i, line))
+            elif error_types > 1: # match more than one type
+                line_errors.append("Error: Line %d should not contain more than one type of statements: %s" % (i, line))
+            elif len(rule_matches) + len(contrary_matches) + len(assumption_matches) > 1:  # match more than one in a line
+                line_errors.append("Error: Line %d should not contain more than one statements: %s" % (i, line))
             
             if len(line_errors) > 0:
                 errors.extend(line_errors)
@@ -79,6 +98,10 @@ class ABA_Parser():
             elif len(contrary_matches) == 1:
                 process_errors = self.__process_parse_contrary(contrary_matches[0])
                 line_errors.extend(["Error: Line %d %s" %(i, x) for x in process_errors])
+
+            elif len(assumption_matches) == 1:
+                process_errors = self.__process_parse_assumption(assumption_matches[0])
+                line_errors.extend(["Error: Line %d %s" %(i, x) for x in process_errors])
             
             errors.extend(line_errors)
             
@@ -91,7 +114,8 @@ class ABA_Parser():
         for rule in self.parsed_rules:
             symbols.add(rule.result)
             for symbol in rule.symbols:
-                symbols.add(symbol)
+                if symbol is not None:
+                    symbols.add(symbol)
         
         return tuple(x for x in iter(symbols))
         
@@ -105,6 +129,9 @@ class ABA_Parser():
             
         for assumption, symbol in self.parsed_contraries.items():
             aba.contraries[assumption] = symbol
+
+        for assumption in self.parsed_assumptions:
+            aba.assumptions.append(assumption)
         
         aba.infer_assumptions()
         

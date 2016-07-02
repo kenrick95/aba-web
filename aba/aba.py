@@ -17,13 +17,20 @@ class ABA():
         self.rules = []
         self.assumptions = []
         self.contraries = dict()
+        self.nonassumptions = []
         
         self.arguments = []
         self.dispute_trees = []
         
     def infer_assumptions(self):
+        self.nonassumptions = list(self.symbols)
+
         for key in self.contraries:
-            self.assumptions.append(ABA_Rule([key]))
+            self.assumptions.append(key)
+        
+        for assumption in self.assumptions:
+            if assumption in self.nonassumptions:
+                self.nonassumptions.remove(assumption)
                 
     def construct_arguments(self):
         for symbol in self.symbols:

@@ -8,11 +8,9 @@ class ABA_Rule(dict):
         """
         Meaning that set of symbols can derive result
         """
-        
+        if None in self.symbols:
+            return "|- " + self.result
         return ", ".join(self.symbols) + " |- " + self.result
-    
-    def is_assumption(self):
-        return self.result is None
         
     def is_ground_truth(self):
         return self.symbols is [None]

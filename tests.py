@@ -15,7 +15,7 @@ https://docs.python.org/3.4/library/unittest.html
 class TestParser(unittest.TestCase):
     def setUp(self):
         text = """
-        x |- y.
+        assumption(xz).
         a |- b.
         c , ded |- ef.
         |- g.
@@ -26,10 +26,10 @@ class TestParser(unittest.TestCase):
         
     def test_parser_rules(self):
         self.assertEqual(self.parser.parse(), [])
-        self.assertEqual(self.parser.parsed_rules[0], ABA_Rule(['x'], 'y'))
-        self.assertEqual(self.parser.parsed_rules[1], ABA_Rule(['a'], 'b'))
-        self.assertEqual(self.parser.parsed_rules[2], ABA_Rule(['c', 'ded'], 'ef'))
-        self.assertEqual(self.parser.parsed_rules[3], ABA_Rule([None], 'g'))
+        self.assertEqual(self.parser.parsed_assumptions, ['xz'])
+        self.assertEqual(self.parser.parsed_rules[0], ABA_Rule(['a'], 'b'))
+        self.assertEqual(self.parser.parsed_rules[1], ABA_Rule(['c', 'ded'], 'ef'))
+        self.assertEqual(self.parser.parsed_rules[2], ABA_Rule([None], 'g'))
         self.assertEqual(self.parser.parsed_contraries['a'], 'z')
     
 
