@@ -12,6 +12,32 @@ python -m unittest
 https://docs.python.org/3.4/library/unittest.html
 """
 
+class TestPotentialArgument(unittest.TestCase):
+    def setUp(self):
+        text = """
+        a |- b.
+        """
+        self.parser = ABA_Parser(text)
+        
+    def test_parser_rules(self):
+        self.assertEqual(self.parser.parse(), [])
+        self.assertEqual(self.parser.parsed_assumptions, [])
+        self.assertEqual(self.parser.parsed_rules, [ABA_Rule(['a'], 'b')])
+        self.assertEqual(self.parser.parsed_contraries, {})
+
+    def test_aba(self):
+        self.parser.parse()
+        aba = self.parser.construct_aba()
+
+        self.assertListEqual(aba.symbols, ['a', 'b'])
+        self.assertEqual(aba.rules, [ABA_Rule(['a'], 'b')])
+        self.assertEqual(aba.assumptions, [])
+        self.assertEqual(aba.contraries, {})
+        self.assertListEqual(aba.nonassumptions, ['a', 'b'])
+        self.assertEqual(aba.arguments, [])
+        self.assertEqual(aba.dispute_trees, [])
+        
+
 class TestParser(unittest.TestCase):
     def setUp(self):
         text = """
@@ -31,12 +57,18 @@ class TestParser(unittest.TestCase):
         self.assertEqual(self.parser.parsed_rules[1], ABA_Rule(['c', 'ded'], 'ef'))
         self.assertEqual(self.parser.parsed_rules[2], ABA_Rule([None], 'g'))
         self.assertEqual(self.parser.parsed_contraries['a'], 'z')
-    
-
 
 class TestCraven1(unittest.TestCase):
     """
     This test is adapted from Example 1 of Craven, Toni (2016) paper
+
+    |- q.
+    q, r |- p.
+    a |- r.
+    b |- s.
+    contrary(a, s).
+    contrary(b, p).
+
     """
     def setUp(self):
         # logging.basicConfig(filename='TestCraven1.log',level=logging.DEBUG) 

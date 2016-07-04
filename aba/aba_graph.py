@@ -43,7 +43,22 @@ class ABA_Graph():
                 conflict_free = False
                 break
         return conflict_free
+
+    def __process_is_actual_argument(self, node):
+        neighbors = self.graph.successors(node)
+        if len(neighbors) == 0: # leaf node
+            if node is None or node in self.__aba.assumptions:
+                return True
+            return False
         
+        ret = True
+        for neighbor in neighbors:
+            ret = ret and self.__process_is_actual_argument(neighbor)
+        return ret
+
+    def is_actual_argument(self):
+        return self.__process_is_actual_argument(self.root)
+
     def __str__(self):
         return "Argument '%s'" % self.root
         

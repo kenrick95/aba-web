@@ -122,7 +122,7 @@ class ABA_Parser():
     def construct_aba(self):
         aba = ABA()
         
-        aba.symbols = self.__get_aba_symbols()
+        aba.symbols = list(self.__get_aba_symbols())
         
         for rule in self.parsed_rules:
             aba.rules.append(rule)

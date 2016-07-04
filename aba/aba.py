@@ -34,17 +34,27 @@ class ABA():
                 
     def construct_arguments(self):
         for symbol in self.symbols:
-            self.arguments.append(ABA_Graph(self, symbol))
+            potential_argument = ABA_Graph(self, symbol)
+            if potential_argument.is_actual_argument():
+                self.arguments.append(potential_argument)
             
     def construct_dispute_trees(self):
         for symbol in self.symbols:
-            self.dispute_trees.append(ABA_Dispute_Tree(self, self.get_argument(symbol)))
+            argument = self.get_argument(symbol)
+            if argument:
+                self.dispute_trees.append(ABA_Dispute_Tree(self, argument))
             
     def get_argument(self, symbol):
-        return [x for x in self.arguments if x.root == symbol][0]
+        argument = [x for x in self.arguments if x.root == symbol]
+        if len(argument) > 0:
+            return argument[0]
+        return None
     
     def get_dispute_tree(self, symbol):
-        return [x for x in self.dispute_trees if x.root_arg.root == symbol][0]
+        dispute_tree = [x for x in self.arguments if x.root == symbol]
+        if len(dispute_tree) > 0:
+            return dispute_tree[0]
+        return None
         
     def get_combined_argument_graph(self):
         combined = nx.DiGraph()
