@@ -288,7 +288,7 @@ assumption(c).
                 graph.nodes[i].id = graph.nodes[i].text_label;
                 graph.nodes[i].text_label = new_label;
             }
-            drawD3(graph, "dt-" + name);
+            drawD3(graph, "dt-" + name, true);
             
             show_dt_text(name);
         }
@@ -313,7 +313,11 @@ assumption(c).
         }
         function drawD3(graph, el_name) {
             var width = 750,
-                height = 500;
+                height = 500,
+                curvy = false;
+            if (arguments.length === 3) {
+                curvy = arguments[2];
+            }
 
             var color = d3.scale.category20();
 
@@ -396,10 +400,6 @@ assumption(c).
                     d.source.y -= k;
                     d.target.y += k;
                 });
-                // link.attr("x1", function(d) { return d.source.x; })
-                //     .attr("y1", function(d) { return d.source.y; })
-                //     .attr("x2", function(d) { return d.target.x; })
-                //     .attr("y2", function(d) { return d.target.y; });
 
                 node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
@@ -407,6 +407,9 @@ assumption(c).
                     var dx = d.target.x - d.source.x,
                         dy = d.target.y - d.source.y,
                         dr = Math.sqrt(dx * dx + dy * dy);
+                    if (!curvy) {
+                        dr = 0;
+                    }
                     return "M" + 
                         d.source.x + "," + 
                         d.source.y + "A" + 
@@ -414,10 +417,6 @@ assumption(c).
                         d.target.x + "," + 
                         d.target.y;
                 });
-                
-                // node
-                //     .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-                
             });
         }
     });
