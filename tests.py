@@ -29,11 +29,11 @@ class TestPotentialArgument(unittest.TestCase):
         self.parser.parse()
         aba = self.parser.construct_aba()
 
-        self.assertListEqual(aba.symbols, ['a', 'b'])
+        self.assertCountEqual(aba.symbols, ['a', 'b'])
         self.assertEqual(aba.rules, [ABA_Rule(['a'], 'b')])
         self.assertEqual(aba.assumptions, [])
         self.assertEqual(aba.contraries, {})
-        self.assertListEqual(aba.nonassumptions, ['a', 'b'])
+        self.assertCountEqual(aba.nonassumptions, ['a', 'b'])
         self.assertEqual(aba.arguments, [])
         self.assertEqual(aba.dispute_trees, [])
         
