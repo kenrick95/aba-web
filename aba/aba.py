@@ -51,7 +51,7 @@ class ABA():
         return None
     
     def get_dispute_tree(self, symbol):
-        dispute_tree = [x for x in self.arguments if x.root == symbol]
+        dispute_tree = [x for x in self.dispute_trees if x.root_arg.root == symbol]
         if len(dispute_tree) > 0:
             return dispute_tree[0]
         return None
