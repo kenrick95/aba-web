@@ -71,7 +71,7 @@ class TestCraven1(unittest.TestCase):
 
     """
     def setUp(self):
-        # logging.basicConfig(filename='TestCraven1.log',level=logging.DEBUG) 
+        logging.basicConfig(filename='TestCraven1.log',level=logging.DEBUG) 
     
         self.aba = ABA()
         self.aba.symbols = ('p', 'q', 'r', 's', 'a', 'b')

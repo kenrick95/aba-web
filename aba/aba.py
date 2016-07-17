@@ -46,6 +46,7 @@ class ABA():
             if argument:
                 self.dispute_trees.append(ABA_Dispute_Tree(self, argument))
         self.__determine_dispute_tree_is_ideal()
+        self.__determine_dispute_tree_is_complete()
 
     def __determine_dispute_tree_is_ideal(self):
         for tree in self.dispute_trees:
@@ -60,6 +61,51 @@ class ABA():
                             break
             tree.is_ideal = ideal
             logging.debug("Dispute Tree <%s> is ideal: %s", tree.root_arg.root, tree.is_ideal)
+
+    def __determine_dispute_tree_is_complete(self):
+        for tree in self.dispute_trees:
+            complete = False
+            if tree.is_admissible:
+                complete = True
+                if not tree.is_grounded: # if tree is grounded, it is guaranteed to be complete
+                    attackers = tree.graph.successors(tree.root_arg)
+                    defendable_attackers = []
+                    # TODO: I feel uneasy about this loop
+                    # Maybe what I should do is to get all arguments root_arg can attack --> let x
+                    # Then get all arguments that can be attacked by x --> let y
+                    # If ALL y inside root_arg, then complete
+                    for attacker in attackers:
+                        defenders = tree.graph.successors(attacker)
+                        if defenders and defenders[0].root in tree.root_arg.graph.nodes():
+                            defendable_attackers.append(attacker)
+                    logging.debug("DT<%s> Defendable attackers: %s", tree.root_arg.root, defendable_attackers)
+                    
+                    defendable_arguments = []
+                    for attacker in defendable_attackers:
+                        # given an argument, which other arguments it can attack?
+                        for argument in self.arguments:
+                            if attacker.root == argument.root:
+                                continue
+                            attackable = False
+                            for assumption, symbol in argument.assumptions.items():
+                                if symbol == attacker.root:
+                                    attackable = True
+                                    break
+                            if attackable:
+                                defendable_arguments.append(argument)
+
+                    all_in_argument = True
+                    for argument in defendable_arguments:
+                        if argument.root not in tree.root_arg.graph.nodes():
+                            all_in_argument = False
+                            break
+                    complete = all_in_argument
+                    logging.debug("DT<%s> Defendable arguments: %s", tree.root_arg.root, defendable_arguments)
+
+
+            tree.is_complete = complete
+            logging.debug("Dispute Tree <%s> is complete: %s", tree.root_arg.root, tree.is_complete)
+
             
     def get_argument(self, symbol):
         argument = [x for x in self.arguments if x.root == symbol]

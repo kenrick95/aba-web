@@ -22,6 +22,7 @@ class ABA_Dispute_Tree():
         
         self.is_grounded = True
         self.is_admissible = True
+        self.is_complete = None
         self.is_ideal = None
         
         self.__history = []

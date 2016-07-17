@@ -106,6 +106,8 @@ an admissible set of arguments is complete if it contains all arguments that it
 defends, where a set of arguments Arg defends an argument arg if Arg attacks all
 arguments that attack {arg};
 
+--> complete iff it is admissible and contains all arguments it can defend(by attacking all arguments attacking them);
+
 https://en.wikipedia.org/wiki/Argumentation_framework
 Stable:  iff the set of assumptions does not attack itself [conflict-free] and it attacks every assumption not in the set.
 Preferred: A set of assumptions is a preferred argument iff it is a maximal (with respect to set inclusion) admissible argument. ???
