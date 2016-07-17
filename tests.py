@@ -95,7 +95,7 @@ class TestCraven1(unittest.TestCase):
 
     def test_conflict_free(self):
         for argument in self.aba.arguments:
-            self.assertEqual(argument.is_conflict_free(), True)
+            self.assertEqual(argument.is_conflict_free, True)
             
     def test_admissible(self):
         for dispute_tree in self.aba.dispute_trees:

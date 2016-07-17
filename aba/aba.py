@@ -59,7 +59,7 @@ class ABA():
                             ideal = False
                             break
             tree.is_ideal = ideal
-            logging.debug("Dispute Tree <%s> is ideal: <%s>" % (tree.root_arg.root, tree.is_ideal))
+            logging.debug("Dispute Tree <%s> is ideal: %s", tree.root_arg.root, tree.is_ideal)
             
     def get_argument(self, symbol):
         argument = [x for x in self.arguments if x.root == symbol]

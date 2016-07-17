@@ -1,4 +1,5 @@
 import networkx as nx
+import logging
 
 class ABA_Graph():
     """
@@ -14,9 +15,15 @@ class ABA_Graph():
         
         self.graph.add_node(root)
         self.__propagate(root)
-        
+
         self.assumptions = {}
         self.__propagate_assumptions()
+
+        self.is_conflict_free = None
+        self.__determine_is_conflict_free()
+
+        self.is_stable = None
+        self.__determine_is_stable()
         
     def __propagate(self, node):
         # find rule in aba.rule to support node
@@ -30,9 +37,10 @@ class ABA_Graph():
     def __propagate_assumptions(self):
         for assumption, symbol in self.__aba.contraries.items():
             if assumption in self.graph.nodes():
+                # `assumption` is being attacked by `symbol`
                 self.assumptions[assumption] = symbol
     
-    def is_conflict_free(self):
+    def __determine_is_conflict_free(self):
         conflict_free = True
         for assumption, attacker in self.__aba.contraries.items():
             if attacker not in self.graph.nodes():
@@ -42,7 +50,21 @@ class ABA_Graph():
             if assumption in neighbors:
                 conflict_free = False
                 break
-        return conflict_free
+        self.is_conflict_free = conflict_free
+        logging.debug("Argument <%s> is conflict free: %s", self.root, self.is_conflict_free)
+
+    def __determine_is_stable(self):
+        stable = False
+        if self.is_conflict_free:
+            stable = True
+            for assumption, attacker in self.__aba.contraries.items():
+                if assumption not in self.graph.nodes():
+                    if attacker not in self.graph.nodes():
+                        stable = False
+                        break
+        
+        self.is_stable = stable
+        logging.debug("Argument <%s> is stable: %s", self.root, self.is_stable)
 
     def __process_is_actual_argument(self, node):
         neighbors = self.graph.successors(node)

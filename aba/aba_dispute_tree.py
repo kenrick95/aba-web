@@ -26,15 +26,15 @@ class ABA_Dispute_Tree():
         
         self.__history = []
         
-        logging.debug("Dispute tree for '%s'" % root_arg.root)
+        logging.debug("Dispute tree for '%s'", root_arg.root)
         self.__propagate_tree_proponent(root_arg)
         
         logging.debug(self.graph.nodes(data = True))
         logging.debug(self.graph.edges())
         
         logging.debug("\n")
-        logging.debug("Admissible?      %s" % self.is_admissible)
-        logging.debug("Grounded?        %s" % self.is_grounded)
+        logging.debug("Admissible?      %s", self.is_admissible)
+        logging.debug("Grounded?        %s", self.is_grounded)
         logging.debug('End dispute tree\n\n')
     
     
@@ -46,7 +46,7 @@ class ABA_Dispute_Tree():
         """
         for assumption, symbol in node.assumptions.items():
             opponent_node = self.__aba.get_argument(symbol)
-            logging.debug("Opp node <%s> attacking assumption <%s> of Pro node <%s>" % (opponent_node.root, assumption, node.root))
+            logging.debug("Opp node <%s> attacking assumption <%s> of Pro node <%s>", opponent_node.root, assumption, node.root)
             
             
             self.graph.add_edge(node, opponent_node, text_label = "Opponent node <%s> attacking assumption <%s> of Proponent node <%s>" % (opponent_node.root, assumption, node.root))
@@ -68,7 +68,7 @@ class ABA_Dispute_Tree():
         """
         for assumption, symbol in node.assumptions.items():
             proponent_node = self.__aba.get_argument(symbol)
-            logging.debug("Pro node <%s> attacking assumption <%s> of Opp node <%s>" % (proponent_node.root, assumption, node.root))
+            logging.debug("Pro node <%s> attacking assumption <%s> of Opp node <%s>", proponent_node.root, assumption, node.root)
             
             if self.__is_infinity(proponent_node, DT_PROPONENT):
                 break
@@ -87,7 +87,7 @@ class ABA_Dispute_Tree():
     def __is_infinity(self, node, label):
         value = (node, label) in self.__history
         if value:
-            logging.debug("Infinity detected in node <%s> of <%s>"% (node.root, label))
+            logging.debug("Infinity detected in node <%s> of <%s>", node.root, label)
             self.is_grounded = False
             
         return value
@@ -95,9 +95,9 @@ class ABA_Dispute_Tree():
         
     def __add_label(self, node, label):
         if 'label' in self.graph[node]:
-            logging.debug("Label already present in node <%s>" % (node.root))
+            logging.debug("Label already present in node <%s>", node.root)
             if self.graph[node]['label'] != label:
-                logging.debug("Changing label of node <%s> from <%s> to <%s>" % (node.root, self.graph[node]['label'], label))
+                logging.debug("Changing label of node <%s> from <%s> to <%s>", node.root, self.graph[node]['label'], label)
                 self.is_admissible = False
         self.graph.node[node]['label'] = label
         self.graph.node[node]['text_label'] = "(%s) Argument %s" % (label, node.root)
