@@ -99,3 +99,9 @@ set of arguments containing 'a'
 
 Definition 3.3. An admissible dispute tree T is ideal if and only if for no opponent node O in T there exists an
 admissible tree with root O..
+
+
+
+an admissible set of arguments is complete if it contains all arguments that it
+defends, where a set of arguments Arg defends an argument arg if Arg attacks all
+arguments that attack {arg};
