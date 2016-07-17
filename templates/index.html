@@ -293,8 +293,8 @@ assumption(c).
             show_dt_text(name);
         }
         function show_dt_text(name) {
-            var properties = ['is_conflict_free', 'is_admissible', 'is_grounded'],
-                prop_text = ["conflict free", "admissible", "grounded"]
+            var properties = ['is_conflict_free', 'is_stable', 'is_admissible', 'is_grounded', 'is_ideal'],
+                prop_text = ["conflict free", "stable", "admissible", "grounded", "ideal"]
                 shown_text = [];
             for (var i = 0; i < properties.length; i++) {
                 if (global_data.dispute_trees_data[name][properties[i]])

@@ -36,8 +36,10 @@ def api():
             data['dispute_trees'][symbol] = jsonpickle.encode(json_graph.node_link_data(dispute_tree.graph), unpicklable=False, max_depth=6, make_refs=False)
             data['dispute_trees_data'][symbol] = dict()
             data['dispute_trees_data'][symbol]['is_conflict_free'] = aba.get_argument(symbol).is_conflict_free
+            data['dispute_trees_data'][symbol]['is_stable'] = aba.get_argument(symbol).is_stable
             data['dispute_trees_data'][symbol]['is_admissible'] = dispute_tree.is_admissible
             data['dispute_trees_data'][symbol]['is_grounded'] = dispute_tree.is_grounded
+            data['dispute_trees_data'][symbol]['is_ideal'] = dispute_tree.is_ideal
     
     return json.dumps(data)
 
