@@ -1,7 +1,9 @@
 from .aba_rule import ABA_Rule
 from .aba_graph import ABA_Graph
 from .aba_dispute_tree import ABA_Dispute_Tree
+from .aba_constants import *
 import networkx as nx
+import logging
 
 class ABA():
     """
@@ -43,6 +45,21 @@ class ABA():
             argument = self.get_argument(symbol)
             if argument:
                 self.dispute_trees.append(ABA_Dispute_Tree(self, argument))
+        self.__determine_dispute_tree_is_stable()
+
+    def __determine_dispute_tree_is_stable(self):
+        for tree in self.dispute_trees:
+            stable = False
+            if tree.is_admissible:
+                stable = True
+                for node in tree.graph.nodes(data = True):
+                    if node[1]['label'] == DT_OPPONENT:
+                        opponent_dispute_tree = self.get_dispute_tree(node[0].root)
+                        if opponent_dispute_tree and opponent_dispute_tree.is_admissible:
+                            stable = False
+                            break
+            tree.is_stable = stable
+            logging.debug("Dispute Tree <%s> is stable: <%s>" % (tree.root_arg.root, tree.is_stable))
             
     def get_argument(self, symbol):
         argument = [x for x in self.arguments if x.root == symbol]

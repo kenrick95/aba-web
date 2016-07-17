@@ -22,6 +22,7 @@ class ABA_Dispute_Tree():
         
         self.is_grounded = True
         self.is_admissible = True
+        self.is_stable = None
         
         self.__history = []
         
@@ -62,7 +63,8 @@ class ABA_Dispute_Tree():
         
         Add one Proponent_node to Opponent_node as a child
         
-        TODO Question: should we choose a proponent child such that infinity tree is avoided?
+        Question: should we choose a proponent child such that infinity tree is avoided?
+            >> Will not happen, as the ABA contraries is a "total function", meaning that for one assumption, it is guaranteed that there is only one argument that can attack this assumption.
         """
         for assumption, symbol in node.assumptions.items():
             proponent_node = self.__aba.get_argument(symbol)
