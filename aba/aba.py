@@ -62,37 +62,34 @@ class ABA():
             tree.is_ideal = ideal
             logging.debug("Dispute Tree <%s> is ideal: %s", tree.root_arg.root, tree.is_ideal)
 
+    def __get_arguments_attackable(self, arg):
+        """
+        Given an argument, which other arguments it can attack?
+        """
+        attackables = []
+        for argument in self.arguments:
+            attackable = arg.root in argument.assumptions.values()
+
+            if attackable:
+                attackables.append(argument)
+        return attackables
+
     def __determine_dispute_tree_is_complete(self):
         for tree in self.dispute_trees:
             complete = False
             if tree.is_admissible:
                 complete = True
                 if not tree.is_grounded: # if tree is grounded, it is guaranteed to be complete
-                    attackers = tree.graph.successors(tree.root_arg)
-                    defendable_attackers = []
-                    # TODO: I feel uneasy about this loop
-                    # Maybe what I should do is to get all arguments root_arg can attack --> let x
-                    # Then get all arguments that can be attacked by x --> let y
-                    # If ALL y inside root_arg, then complete
-                    for attacker in attackers:
-                        defenders = tree.graph.successors(attacker)
-                        if defenders and defenders[0].root in tree.root_arg.graph.nodes():
-                            defendable_attackers.append(attacker)
-                    logging.debug("DT<%s> Defendable attackers: %s", tree.root_arg.root, defendable_attackers)
                     
+                    # 1. Get all arguments root_arg can attack --> assign as x
+                    # 2. Get all arguments that can be attacked by x --> assign as y
+                    # 3. If ALL y inside root_arg, then complete
+                    attackables_by_root = self.__get_arguments_attackable(tree.root_arg)
+                    # Note: since root_arg is admissible, then it is conflict-free, i.e. root_arg is guaranteed not to be inside attackables_by_root
+
                     defendable_arguments = []
-                    for attacker in defendable_attackers:
-                        # given an argument, which other arguments it can attack?
-                        for argument in self.arguments:
-                            if attacker.root == argument.root:
-                                continue
-                            attackable = False
-                            for assumption, symbol in argument.assumptions.items():
-                                if symbol == attacker.root:
-                                    attackable = True
-                                    break
-                            if attackable:
-                                defendable_arguments.append(argument)
+                    for attackable in attackables_by_root:
+                        defendable_arguments.extend(self.__get_arguments_attackable(attackable))
 
                     all_in_argument = True
                     for argument in defendable_arguments:
