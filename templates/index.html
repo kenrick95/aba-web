@@ -293,8 +293,8 @@ assumption(c).
             show_dt_text(name);
         }
         function show_dt_text(name) {
-            var properties = ['is_conflict_free', 'is_stable', 'is_admissible', 'is_grounded', 'is_ideal'],
-                prop_text = ["conflict free", "stable", "admissible", "grounded", "ideal"]
+            var properties = ['is_conflict_free', 'is_stable', 'is_admissible', 'is_grounded', 'is_ideal', 'is_complete'],
+                prop_text = ["conflict free", "stable", "admissible", "grounded", "ideal", "complete"],
                 shown_text = [];
             for (var i = 0; i < properties.length; i++) {
                 if (global_data.dispute_trees_data[name][properties[i]])
@@ -393,12 +393,22 @@ assumption(c).
                 .attr("x", 12)
                 .attr("dy", ".35em")
                 .text(function(d) { return 'text_label' in d ? d.text_label : d.id; });
-
+            
             force.on("tick", function(e) {
                 var k = 6 * e.alpha;
                 graph.links.forEach(function(d, i) {
-                    d.source.y -= k;
-                    d.target.y += k;
+                    if ('depth' in d.source && 'depth' in d.target) {
+                        if (d.source.depth < d.target.depth) {
+                            d.source.y -= k;
+                            d.target.y += k;
+                        } else {
+                            d.source.y += k;
+                            d.target.y -= k;
+                        }
+                    } else {
+                        d.source.y -= k;
+                        d.target.y += k;
+                    }
                 });
 
                 node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });

@@ -14,7 +14,7 @@ def main():
     
 @app.route("/api", methods=['POST'])
 def api():
-    # logging.basicConfig(filename='main.log',level=logging.DEBUG) 
+    logging.basicConfig(filename='main.log',level=logging.DEBUG) 
     
     source_code =request.form['source_code']
     parser = ABA_Parser(source_code)
@@ -40,6 +40,7 @@ def api():
             data['dispute_trees_data'][symbol]['is_admissible'] = dispute_tree.is_admissible
             data['dispute_trees_data'][symbol]['is_grounded'] = dispute_tree.is_grounded
             data['dispute_trees_data'][symbol]['is_ideal'] = dispute_tree.is_ideal
+            data['dispute_trees_data'][symbol]['is_complete'] = dispute_tree.is_complete
     
     return json.dumps(data)
 

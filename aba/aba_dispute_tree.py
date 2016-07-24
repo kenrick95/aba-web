@@ -17,15 +17,17 @@ class ABA_Dispute_Tree():
         self.root_arg = root_arg
         self.__aba = aba
         
+        self.__history = []
+        self.__depth = 0
+
         self.graph.add_node(root_arg)
         self.__add_label(root_arg, DT_PROPONENT)
+        self.__depth += 1
         
         self.is_grounded = True
         self.is_admissible = True
         self.is_complete = None
         self.is_ideal = None
-        
-        self.__history = []
         
         logging.debug("Dispute tree for '%s'", root_arg.root)
         self.__propagate_tree_proponent(root_arg)
@@ -53,10 +55,11 @@ class ABA_Dispute_Tree():
             self.graph.add_edge(node, opponent_node, text_label = "Opponent node <%s> attacking assumption <%s> of Proponent node <%s>" % (opponent_node.root, assumption, node.root))
             self.__add_label(opponent_node, DT_OPPONENT)
             
-            
+            self.__depth += 1
             self.__history.append((opponent_node, DT_OPPONENT))
             self.__propagate_tree_opponent(opponent_node)
             self.__history.pop()
+            self.__depth -= 1
         
     def __propagate_tree_opponent(self, node):
         """
@@ -79,9 +82,11 @@ class ABA_Dispute_Tree():
             self.__add_label(proponent_node, DT_PROPONENT)
             
             
+            self.__depth += 1
             self.__history.append((proponent_node, DT_PROPONENT))
             self.__propagate_tree_proponent(proponent_node)
             self.__history.pop()
+            self.__depth -= 1
             
             break
         
@@ -95,12 +100,15 @@ class ABA_Dispute_Tree():
             
         
     def __add_label(self, node, label):
-        if 'label' in self.graph[node]:
+        if 'label' in self.graph.node[node]:
             logging.debug("Label already present in node <%s>", node.root)
-            if self.graph[node]['label'] != label:
+            if self.graph.node[node]['label'] != label:
                 logging.debug("Changing label of node <%s> from <%s> to <%s>", node.root, self.graph[node]['label'], label)
                 self.is_admissible = False
         self.graph.node[node]['label'] = label
         self.graph.node[node]['text_label'] = "(%s) Argument %s" % (label, node.root)
         if len(node.assumptions) > 0:
             self.graph.node[node]['text_label'] += "\nwith assumption(s): %s" % (", ".join(node.assumptions))
+        if 'depth' not in self.graph.node[node]:
+            self.graph.node[node]['depth'] = self.__depth
+            logging.debug("Tree depth of node <%s> is <%s>", node.root, self.__depth)
