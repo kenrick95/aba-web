@@ -57,16 +57,15 @@ Meaning
 
 
 ## Argument semantics
-### Implemented
-- Admissible
-- Grounded
 - Conflict-free
-
-### Planned
+- Admissible
 - Complete
+- Grounded
 - Stable
 - Ideal
 
+### TODO
+- preffered
 
 ## Some other notes
 This work is based on the paper Dung, Kowalski, Toni titled "Assumption-based Argumentation".
