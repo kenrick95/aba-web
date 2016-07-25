@@ -111,3 +111,12 @@ arguments that attack {arg};
 https://en.wikipedia.org/wiki/Argumentation_framework
 Stable:  iff the set of assumptions does not attack itself [conflict-free] and it attacks every assumption not in the set.
 Preferred: A set of assumptions is a preferred argument iff it is a maximal (with respect to set inclusion) admissible argument. ???
+
+
+http://math.stackexchange.com/questions/1034014/how-are-inclusion-wise-maximal-and-minimal-sets-defined
+An inclusion-wise maximal set among a collection of sets is a set that is not a subset of some other set in the collection. An inclusion-wise minimal set among a collection of sets is a set in the collection that is not a superset of any other set in the collection.
+
+http://www.sciencedirect.com/science/article/pii/000437029400041X
+> A preferred extension of an argumentation framework (AF) is a maximal (w.r.t. set inclusion) admissible set of AF.
+
+http://logcom.oxfordjournals.org.ezlibproxy1.ntu.edu.sg/content/13/3/377.short 
