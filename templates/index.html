@@ -147,11 +147,13 @@ contrary(c, r).
                     <ul class="dropdown-menu" id="output-dropdown-dt">
                     </ul>
                 </li>
+                <li><a href="#statistics" data-toggle="tab">Statistics</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content" id="tab-output-content">
                 <div class="tab-pane active fade in" id="output-argument"></div>
+                <div class="tab-pane active fade in" id="statistics"></div>
             </div>
 
             </div>
@@ -199,6 +201,23 @@ contrary(c, r).
                         $("#parse-errors").text(data.errors);
                         return false;
                     }
+
+                    $("#statistics").html("");
+                    var stats = [
+                        "# Symbols: " + data.statistics.symbols,
+                        "# Potential arguments: " + data.statistics.potential_arguments,
+                        "# Arguments: " + data.statistics.arguments,
+                        "# Assumptions: " + data.statistics.assumptions,
+                        "# Conflict-free arguments: " + data.statistics.is_conflict_free,
+                        "# Admissible arguments: " + data.statistics.is_admissible,
+                        "# Complete arguments: " + data.statistics.is_complete,
+                        "# Grounded arguments: " + data.statistics.is_grounded,
+                        "# Ideal arguments: " + data.statistics.is_ideal,
+                        "# Stable arguments: " + data.statistics.is_stable,
+                        "Wall time: " + data.statistics.wall_time + "s",
+                        "CPU time: " + data.statistics.cpu_time + "s",
+                    ];
+                    $("#statistics").html(stats.join("<br/>"))
 
                     $("#tab-output").addClass("in");
                     $("#tab-output").height("auto");

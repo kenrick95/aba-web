@@ -40,7 +40,8 @@ class ABA():
         self.nonassumptions = list(self.symbols)
 
         for key in self.contraries:
-            self.assumptions.append(key)
+            if key not in self.assumptions:
+                self.assumptions.append(key)
         
         for assumption in self.assumptions:
             if assumption in self.nonassumptions:
