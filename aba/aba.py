@@ -58,8 +58,7 @@ class ABA():
         if not self.is_all_assumption_have_contrary():
             raise Exception("All assumptions must have contrary")
         
-        for symbol in self.arguments:
-            argument = self.get_argument(symbol)
+        for argument in self.arguments:
             if argument:
                 self.dispute_trees.append(ABA_Dispute_Tree(self, argument))
         self.__determine_dispute_tree_is_ideal()
