@@ -82,6 +82,16 @@ class TestAssumptionWithoutContrary(unittest.TestCase):
         aba = parser.construct_aba()
 
         self.assertCountEqual([x.root for x in aba.arguments], ['a', 'b'])
+    
+    def test_4(self):
+        raw = """
+        assumption(a).
+        contrary(a, b).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x.root for x in aba.arguments], ['a'])
 
 
 class TestAssumptionOnlyArguments(unittest.TestCase):

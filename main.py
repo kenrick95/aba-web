@@ -19,11 +19,16 @@ def api():
     source_code =request.form['source_code']
     parser = ABA_Parser(source_code)
     parse_errors = parser.parse()
+    aba = None
     
-    aba = parser.construct_aba()
-    
-    arg_graph = aba.get_combined_argument_graph()
     data = dict()
+    try:
+        aba = parser.construct_aba()
+    except Exception as exp:
+        data['errors'] = str(exp)
+        return json.dumps(data)
+
+    arg_graph = aba.get_combined_argument_graph()
     data['parse_errors'] = parse_errors
     data['arguments'] = json_graph.node_link_data(arg_graph)
     
