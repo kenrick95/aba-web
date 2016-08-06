@@ -380,27 +380,49 @@ contrary(c, r).
 
             // build the arrow.
             // Note: http://jsfiddle.net/5qaL886d/1/ ; this breaks IE10
-            svg.append("svg:defs").selectAll("marker")
-                .data(["start-" + el_name ])
-                .enter().append("svg:marker")
-                .attr("id", String)
-                .attr("viewBox", "-10 -5 10 10")
-                .attr("refX", -15)
-                .attr("refY", 0)
-                .attr("markerWidth", 6)
-                .attr("markerHeight", 6)
-                .attr("orient", "auto")
-                .append("svg:path")
-                .attr("d", "M0,5L-10,0L0,-5");
 
-            var link = svg.append("svg:g").selectAll("path")
-                .data(graph.links)
-                .enter().append("svg:path")
-                .attr("class", "link")
-                .attr("marker-start", "url(#start-" + el_name + ")");
-                // .on('mouseover', tipEdge.show)
-                // .on('mouseout', tipEdge.hide);
-            
+            var link = null;
+            if (el_name === "argument") {
+                svg.append("svg:defs").selectAll("marker")
+                    .data(["end-" + el_name ])
+                    .enter().append("svg:marker")
+                    .attr("id", String)
+                    .attr("viewBox", "-7 -7 14 14")
+                    .attr("refX", 14)
+                    .attr("refY", 0)
+                    .attr("markerWidth", 6)
+                    .attr("markerHeight", 6)
+                    .attr("orient", "auto")
+                    .append("svg:circle")
+                        .attr("r", 5)
+                        .style("fill", "#000")
+                link = svg.append("svg:g").selectAll("path")
+                    .data(graph.links)
+                    .enter().append("svg:path")
+                    .attr("class", "link")
+                    .attr("marker-end", "url(#end-" + el_name + ")");
+
+            } else { // Dispute tree
+
+                svg.append("svg:defs").selectAll("marker")
+                    .data(["start-" + el_name ])
+                    .enter().append("svg:marker")
+                    .attr("id", String)
+                    .attr("viewBox", "-10 -5 10 10")
+                    .attr("refX", -15)
+                    .attr("refY", 0)
+                    .attr("markerWidth", 6)
+                    .attr("markerHeight", 6)
+                    .attr("orient", "auto")
+                    .append("svg:path")
+                    .attr("d", "M0,5L-10,0L0,-5");
+                link = svg.append("svg:g").selectAll("path")
+                    .data(graph.links)
+                    .enter().append("svg:path")
+                    .attr("class", "link")
+                    .attr("marker-start", "url(#start-" + el_name + ")");
+            }
+
             var node = svg.selectAll(".node")
                 .data(graph.nodes)
                 .enter().append("g")
