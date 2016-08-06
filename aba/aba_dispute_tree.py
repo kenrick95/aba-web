@@ -78,13 +78,11 @@ class ABA_Dispute_Tree():
                 continue
             logging.debug("Pro node <%s> attacking assumption <%s> of Opp node <%s>", proponent_node.root, assumption, node.root)
             
-            if self.__is_infinity(proponent_node, DT_PROPONENT):
-                break
-            
-            
             self.graph.add_edge(node, proponent_node, text_label = "Proponent node <%s> attacking assumption <%s> of Opponent node <%s>" % (proponent_node.root, assumption, node.root))
             self.__add_label(proponent_node, DT_PROPONENT)
             
+            if self.__is_infinity(proponent_node, DT_PROPONENT):
+                break
             
             self.__depth += 1
             self.__history.append((proponent_node, DT_PROPONENT))
