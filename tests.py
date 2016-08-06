@@ -36,7 +36,52 @@ class TestPotentialArgument(unittest.TestCase):
         self.assertCountEqual(aba.nonassumptions, ['a', 'b'])
         self.assertEqual(aba.arguments, [])
         self.assertEqual(aba.dispute_trees, [])
+
+class TestCircularOneSymbol(unittest.TestCase):
+    def setUp(self):
+        self.aba = ABA()
+        self.aba.symbols = ('a')
+        self.aba.rules.append(ABA_Rule(['a'], 'a'))
+
+        self.aba.infer_assumptions()
+    
+    def test_successful_inference(self):
+        self.aba.construct_arguments()
+        self.aba.construct_dispute_trees()
         
+        self.assertEqual(self.aba.arguments, [])
+
+class TestCircularTwoSymbols(unittest.TestCase):
+    def setUp(self):
+        self.aba = ABA()
+        self.aba.symbols = ('a', 'b')
+        self.aba.rules.append(ABA_Rule(['a'], 'b'))
+        self.aba.rules.append(ABA_Rule(['b'], 'a'))
+
+        self.aba.infer_assumptions()
+    
+    def test_successful_inference(self):
+        self.aba.construct_arguments()
+        self.aba.construct_dispute_trees()
+
+        self.assertEqual(self.aba.arguments, [])
+        
+class TestCircularTwoSymbolsAndOneRealArgument(unittest.TestCase):
+    def setUp(self):
+        self.aba = ABA()
+        self.aba.symbols = ('a', 'b', 'c')
+        self.aba.rules.append(ABA_Rule(['a'], 'b'))
+        self.aba.rules.append(ABA_Rule(['b'], 'a'))
+        self.aba.rules.append(ABA_Rule([None], 'c'))
+
+        self.aba.infer_assumptions()
+    
+    def test_successful_inference(self):
+        self.aba.construct_arguments()
+        self.aba.construct_dispute_trees()
+
+        self.assertEqual(self.aba.arguments[0].root, 'c')
+
 
 class TestParser(unittest.TestCase):
     def setUp(self):
@@ -71,7 +116,7 @@ class TestCraven1(unittest.TestCase):
 
     """
     def setUp(self):
-        logging.basicConfig(filename='TestCraven1.log',level=logging.DEBUG) 
+        #logging.basicConfig(filename='TestCraven1.log',level=logging.DEBUG) 
     
         self.aba = ABA()
         self.aba.symbols = ('p', 'q', 'r', 's', 'a', 'b')

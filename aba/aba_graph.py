@@ -13,8 +13,13 @@ class ABA_Graph():
         self.root = root
         self.__aba = aba
         
+        self.__history = []
+        self.__is_cyclical = False
+
         self.graph.add_node(root)
+        self.__history.append(root)
         self.__propagate(root)
+        self.__history.pop()
 
         self.assumptions = {}
         self.__propagate_assumptions()
@@ -32,7 +37,14 @@ class ABA_Graph():
                 for symbol in rule.symbols:
                     self.graph.add_edge(node, symbol)
                     if symbol is not None:
+                        if symbol in self.__history:
+                            self.__is_cyclical = True
+                            break
+                        self.__history.append(symbol)
                         self.__propagate(symbol)
+                        self.__history.pop()
+            if self.__is_cyclical:
+                break
                     
     def __propagate_assumptions(self):
         for assumption, symbol in self.__aba.contraries.items():
@@ -67,6 +79,9 @@ class ABA_Graph():
         logging.debug("Argument <%s> is stable: %s", self.root, self.is_stable)
 
     def __process_is_actual_argument(self, node):
+        if self.__is_cyclical:
+            return False
+
         neighbors = self.graph.successors(node)
         if len(neighbors) == 0: # leaf node
             if node is None or node in self.__aba.assumptions:
