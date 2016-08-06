@@ -103,7 +103,7 @@ class ABA_Dispute_Tree():
         if 'label' in self.graph.node[node]:
             logging.debug("Label already present in node <%s>", node.root)
             if self.graph.node[node]['label'] != label:
-                logging.debug("Changing label of node <%s> from <%s> to <%s>", node.root, self.graph[node]['label'], label)
+                logging.debug("Changing label of node <%s> from <%s> to <%s>", node.root, self.graph.node[node]['label'], label)
                 self.is_admissible = False
         self.graph.node[node]['label'] = label
         self.graph.node[node]['text_label'] = "(%s) Argument %s" % (label, node.root)

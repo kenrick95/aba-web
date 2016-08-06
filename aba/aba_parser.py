@@ -116,6 +116,10 @@ class ABA_Parser():
             for symbol in rule.symbols:
                 if symbol is not None:
                     symbols.add(symbol)
+
+        for assumption in self.parsed_assumptions:
+            if assumption is not None:
+                symbols.add(assumption)
         
         return tuple(x for x in iter(symbols))
         

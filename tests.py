@@ -51,6 +51,26 @@ class TestCircularOneSymbol(unittest.TestCase):
         
         self.assertEqual(self.aba.arguments, [])
 
+class TestAssumptionOnlyArguments(unittest.TestCase):
+    def setUp(self):
+        raw = """
+        assumption(a).
+        assumption(b).
+        assumption(c).
+
+        contrary(a, b).
+        contrary(b, c).
+        contrary(c, a).
+        """
+
+        parser = ABA_Parser(raw)
+        parser.parse()
+        self.aba = parser.construct_aba()
+
+    def test_arguments(self):
+        self.assertCountEqual([x.root for x in self.aba.arguments], ['a', 'b', 'c'])
+
+
 class TestCircularTwoSymbols(unittest.TestCase):
     def setUp(self):
         self.aba = ABA()
