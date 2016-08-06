@@ -23,6 +23,17 @@ class ABA():
         
         self.arguments = []
         self.dispute_trees = []
+    
+    def is_all_assumption_have_contrary(self):
+        """
+        Each assumption must have a contrary.
+        """
+        all_assumption_have_contrary = True
+        for assumption in self.assumptions:
+            if assumption not in self.contraries.keys():
+                all_assumption_have_contrary = False
+                break
+        return all_assumption_have_contrary
         
     def infer_assumptions(self):
         self.nonassumptions = list(self.symbols)
@@ -35,12 +46,18 @@ class ABA():
                 self.nonassumptions.remove(assumption)
                 
     def construct_arguments(self):
+        if not self.is_all_assumption_have_contrary():
+            raise Exception("All assumptions must have contrary")
+
         for symbol in self.symbols:
             potential_argument = ABA_Graph(self, symbol)
             if potential_argument.is_actual_argument():
                 self.arguments.append(potential_argument)
             
     def construct_dispute_trees(self):
+        if not self.is_all_assumption_have_contrary():
+            raise Exception("All assumptions must have contrary")
+        
         for symbol in self.symbols:
             argument = self.get_argument(symbol)
             if argument:

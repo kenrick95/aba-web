@@ -51,6 +51,39 @@ class TestCircularOneSymbol(unittest.TestCase):
         
         self.assertEqual(self.aba.arguments, [])
 
+class TestAssumptionWithoutContrary(unittest.TestCase):
+    def test_1(self):
+        raw = """
+        assumption(a).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        self.assertRaises(Exception, parser.construct_aba)
+    
+    def test_2(self):
+        raw = """
+        assumption(a).
+        assumption(b).
+        contrary(a, b).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        self.assertRaises(Exception, parser.construct_aba)
+
+    def test_3(self):
+        raw = """
+        assumption(a).
+        assumption(b).
+        contrary(a, b).
+        contrary(b, a).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+
+        self.assertCountEqual([x.root for x in aba.arguments], ['a', 'b'])
+
+
 class TestAssumptionOnlyArguments(unittest.TestCase):
     def setUp(self):
         raw = """
