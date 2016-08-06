@@ -49,6 +49,8 @@ class ABA_Dispute_Tree():
         """
         for assumption, symbol in node.assumptions.items():
             opponent_node = self.__aba.get_argument(symbol)
+            if opponent_node is None:
+                continue
             logging.debug("Opp node <%s> attacking assumption <%s> of Pro node <%s>", opponent_node.root, assumption, node.root)
             
             
@@ -72,6 +74,8 @@ class ABA_Dispute_Tree():
         """
         for assumption, symbol in node.assumptions.items():
             proponent_node = self.__aba.get_argument(symbol)
+            if proponent_node is None:
+                continue
             logging.debug("Pro node <%s> attacking assumption <%s> of Opp node <%s>", proponent_node.root, assumption, node.root)
             
             if self.__is_infinity(proponent_node, DT_PROPONENT):

@@ -22,6 +22,7 @@ class ABA():
         self.nonassumptions = []
         
         self.arguments = []
+        self.potential_arguments = []
         self.dispute_trees = []
     
     def is_all_assumption_have_contrary(self):
@@ -51,6 +52,7 @@ class ABA():
 
         for symbol in self.symbols:
             potential_argument = ABA_Graph(self, symbol)
+            self.potential_arguments.append(potential_argument)
             if potential_argument.is_actual_argument():
                 self.arguments.append(potential_argument)
             
@@ -120,8 +122,12 @@ class ABA():
             logging.debug("Dispute Tree <%s> is complete: %s", tree.root_arg.root, tree.is_complete)
 
             
-    def get_argument(self, symbol):
-        argument = [x for x in self.arguments if x.root == symbol]
+
+    def get_argument(self, symbol, allow_potential = False):
+        source = self.arguments
+        if allow_potential:
+            source = self.potential_arguments
+        argument = [x for x in source if x.root == symbol]
         if len(argument) > 0:
             return argument[0]
         return None
@@ -134,15 +140,21 @@ class ABA():
         
     def get_combined_argument_graph(self):
         combined = nx.DiGraph()
-        for argument in self.arguments:
-            arg_root = argument.root
-            if arg_root is None:
+        for symbol in self.symbols:
+            argument = self.get_argument(symbol, allow_potential = True)
+            
+            if argument is None:
                 arg_root = "τ"
+                combined.add_node(symbol + "_" + arg_root, group = arg_root)
+                continue
+            
+            arg_root = argument.root
             for node in argument.graph.nodes():
                 if node is None:
                     node = "τ"
                 combined.add_node(node + "_" + arg_root, group = arg_root)
-            for edge in argument.graph.edges():
+
+            for edge in argument.graph.edges_iter():
                 edge0, edge1 = edge
                 if edge0 is None:
                     edge0 = "τ"

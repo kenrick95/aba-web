@@ -37,6 +37,26 @@ class TestPotentialArgument(unittest.TestCase):
         self.assertEqual(aba.arguments, [])
         self.assertEqual(aba.dispute_trees, [])
 
+class TestRealAndPartialArguments(unittest.TestCase):
+    def setUp(self):
+        self.aba = ABA()
+        self.aba.symbols = ('a', 'b', 'c')
+        self.aba.rules.append(ABA_Rule(['b'], 'a'))
+        self.aba.rules.append(ABA_Rule(['c'], 'a'))
+        self.aba.rules.append(ABA_Rule([None], 'b'))
+
+        self.aba.infer_assumptions()
+    
+    def test_successful_inference(self):
+        self.aba.construct_arguments()
+        self.aba.construct_dispute_trees()
+        
+        self.assertEqual(self.aba.potential_arguments[0].root, 'a')
+        self.assertEqual(self.aba.potential_arguments[1].root, 'b')
+        self.assertEqual(self.aba.potential_arguments[2].root, 'c')
+        self.assertEqual(self.aba.arguments[0].root, 'b')
+
+
 class TestCircularOneSymbol(unittest.TestCase):
     def setUp(self):
         self.aba = ABA()
