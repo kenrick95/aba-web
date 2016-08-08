@@ -55,11 +55,7 @@ class ABA_Graph():
     def __determine_is_conflict_free(self):
         conflict_free = True
         for assumption, attacker in self.__aba.contraries.items():
-            if attacker not in self.graph.nodes():
-                continue
-            neighbors = self.graph.successors(attacker)
-
-            if assumption in neighbors:
+            if attacker in self.graph.nodes() and assumption in self.graph.nodes():
                 conflict_free = False
                 break
         self.is_conflict_free = conflict_free

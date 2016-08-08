@@ -186,6 +186,50 @@ class TestParser(unittest.TestCase):
         self.assertEqual(self.parser.parsed_rules[2], ABA_Rule([None], 'g'))
         self.assertEqual(self.parser.parsed_contraries['a'], 'z')
 
+class TestDungMancarellaToni(unittest.TestCase):
+    def test_1(self):
+        raw = """
+        assumption(a).
+        assumption(b).
+        contrary(a, b).
+        contrary(b, a).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        for argument in aba.arguments:
+            self.assertEqual(argument.is_conflict_free, True)
+            self.assertEqual(argument.is_stable, True)
+        for dt in aba.dispute_trees:
+            self.assertEqual(dt.is_admissible, True)
+            self.assertEqual(dt.is_complete, True)
+            self.assertEqual(dt.is_grounded, False)
+            self.assertEqual(dt.is_ideal, False)
+
+    def test_2(self):
+        raw = """
+        assumption(a).
+        assumption(b).
+        contrary(a, a).
+        contrary(b, a).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+
+        self.assertEqual(aba.get_argument('a').is_conflict_free, False)
+        self.assertEqual(aba.get_argument('a').is_stable, False)
+        self.assertEqual(aba.get_argument('b').is_conflict_free, True)
+        self.assertEqual(aba.get_argument('b').is_stable, False)
+
+        for dt in aba.dispute_trees:
+            self.assertEqual(dt.is_admissible, False)
+            self.assertEqual(dt.is_complete, False)
+            self.assertEqual(dt.is_grounded, False)
+            self.assertEqual(dt.is_ideal, False)
+
+        
+
 class TestCraven1(unittest.TestCase):
     """
     This test is adapted from Example 1 of Craven, Toni (2016) paper
