@@ -125,11 +125,11 @@ class ABA():
 
             
 
-    def get_argument(self, symbol, allow_potential = False):
+    def get_argument(self, symbol, index = 0, allow_potential = False):
         source = self.arguments
         if allow_potential:
             source = self.potential_arguments
-        argument = [x for x in source if x[0].root == symbol]
+        argument = [x for x in source if x[0].root == symbol and x[1] == index]
 
         if len(argument) > 0:
             return argument[0]
@@ -143,8 +143,9 @@ class ABA():
         
     def get_combined_argument_graph(self):
         combined = nx.DiGraph()
-        for symbol in self.symbols:
-            argument, i = self.get_argument(symbol, allow_potential = True)
+        for potential_argument, index in self.potential_arguments:
+            symbol = potential_argument.root
+            argument, i = self.get_argument(symbol, index = index, allow_potential = True)
             
             if argument is None:
                 arg_root = "τ"

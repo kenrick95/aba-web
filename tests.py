@@ -58,6 +58,13 @@ class TestRealAndPartialArguments(unittest.TestCase):
         self.assertEqual(self.aba.arguments[0][0].root, 'a')
         self.assertEqual(self.aba.arguments[1][0].root, 'b')
 
+# TODO buggy:
+"""
+b |- a.
+c |- a.
+|- b.
+contrary(c, b).
+"""
 
 class TestCircularOneSymbol(unittest.TestCase):
     def setUp(self):
