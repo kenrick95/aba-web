@@ -54,7 +54,8 @@ class TestRealAndPartialArguments(unittest.TestCase):
         self.assertEqual(self.aba.potential_arguments[0].root, 'a')
         self.assertEqual(self.aba.potential_arguments[1].root, 'b')
         self.assertEqual(self.aba.potential_arguments[2].root, 'c')
-        self.assertEqual(self.aba.arguments[0].root, 'b')
+        self.assertEqual(self.aba.arguments[0].root, 'a')
+        self.assertEqual(self.aba.arguments[1].root, 'b')
 
 
 class TestCircularOneSymbol(unittest.TestCase):
@@ -217,10 +218,10 @@ class TestDungMancarellaToni(unittest.TestCase):
         parser.parse()
         aba = parser.construct_aba()
 
-        self.assertEqual(aba.get_argument('a').is_conflict_free, False)
-        self.assertEqual(aba.get_argument('a').is_stable, False)
-        self.assertEqual(aba.get_argument('b').is_conflict_free, True)
-        self.assertEqual(aba.get_argument('b').is_stable, False)
+        self.assertEqual(aba.get_argument('a').is_conflict_free, [False])
+        self.assertEqual(aba.get_argument('a').is_stable, [False])
+        self.assertEqual(aba.get_argument('b').is_conflict_free, [True])
+        self.assertEqual(aba.get_argument('b').is_stable, [False])
 
         for dt in aba.dispute_trees:
             self.assertEqual(dt.is_admissible, False)
@@ -267,7 +268,7 @@ class TestCraven1(unittest.TestCase):
 
     def test_conflict_free(self):
         for argument in self.aba.arguments:
-            self.assertEqual(argument.is_conflict_free, True)
+            self.assertEqual(argument.is_conflict_free, [True])
             
     def test_admissible(self):
         for dispute_tree in self.aba.dispute_trees:

@@ -87,7 +87,7 @@ class ABA():
         """
         attackables = []
         for argument in self.arguments:
-            attackable = arg.root in argument.assumptions.values()
+            attackable = arg.root in argument.assumptions[0].values() # TODO handle index > 0
 
             if attackable:
                 attackables.append(argument)
@@ -112,7 +112,7 @@ class ABA():
 
                     all_in_argument = True
                     for argument in defendable_arguments:
-                        if argument.root not in tree.root_arg.graph.nodes():
+                        if argument.root not in tree.root_arg.graphs[0].nodes(): # TODO handle index > 0
                             all_in_argument = False
                             break
                     complete = all_in_argument

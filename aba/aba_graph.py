@@ -33,9 +33,6 @@ class ABA_Graph():
         self.__propagate_assumptions()
         self.__determine_is_conflict_free()
         self.__determine_is_stable()
-        print(self.assumptions)
-        print(self.is_conflict_free)
-        print(self.is_stable)
         
     def __propagate(self, index, node):
         for i, rule in enumerate([x for x in self.__aba.rules if x.result == node]):
