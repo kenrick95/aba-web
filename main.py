@@ -39,14 +39,14 @@ def api():
     data['dispute_trees'] = dict()
     data['dispute_trees_data'] = dict()
 
-    for argument in aba.arguments:
+    for argument, i in aba.arguments:
         symbol = argument.root
-        dispute_tree = aba.get_dispute_tree(symbol)
+        dispute_tree = aba.get_dispute_tree(symbol, i)
         if dispute_tree is not None:
             data['dispute_trees'][symbol] = jsonpickle.encode(json_graph.node_link_data(dispute_tree.graph), unpicklable=False, max_depth=6, make_refs=False)
             data['dispute_trees_data'][symbol] = dict()
-            data['dispute_trees_data'][symbol]['is_conflict_free'] = argument.is_conflict_free
-            data['dispute_trees_data'][symbol]['is_stable'] = argument.is_stable
+            data['dispute_trees_data'][symbol]['is_conflict_free'] = argument.is_conflict_free[i]
+            data['dispute_trees_data'][symbol]['is_stable'] = argument.is_stable[i]
             data['dispute_trees_data'][symbol]['is_admissible'] = dispute_tree.is_admissible
             data['dispute_trees_data'][symbol]['is_grounded'] = dispute_tree.is_grounded
             data['dispute_trees_data'][symbol]['is_ideal'] = dispute_tree.is_ideal

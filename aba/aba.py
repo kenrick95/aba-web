@@ -135,8 +135,8 @@ class ABA():
             return argument[0]
         return None, None
     
-    def get_dispute_tree(self, symbol):
-        dispute_tree = [x for x in self.dispute_trees if x.root_arg.root == symbol]
+    def get_dispute_tree(self, symbol, index = 0):
+        dispute_tree = [x for x in self.dispute_trees if x.root_arg.root == symbol and x.index == index]
         if len(dispute_tree) > 0:
             return dispute_tree[0]
         return None
@@ -144,7 +144,7 @@ class ABA():
     def get_combined_argument_graph(self):
         combined = nx.DiGraph()
         for symbol in self.symbols:
-            argument = self.get_argument(symbol, allow_potential = True)
+            argument, i = self.get_argument(symbol, allow_potential = True)
             
             if argument is None:
                 arg_root = "τ"
@@ -152,12 +152,12 @@ class ABA():
                 continue
             
             arg_root = argument.root
-            for node in argument.graph.nodes():
+            for node in argument.graphs[i].nodes():
                 if node is None:
                     node = "τ"
                 combined.add_node(node + "_" + arg_root, group = arg_root)
 
-            for edge in argument.graph.edges_iter():
+            for edge in argument.graphs[i].edges_iter():
                 edge0, edge1 = edge
                 if edge0 is None:
                     edge0 = "τ"
