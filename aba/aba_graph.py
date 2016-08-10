@@ -24,7 +24,7 @@ class ABA_Graph():
 
         self.graphs.append(nx.DiGraph())
         self.__branches = 1
-        
+
         self.graphs[0].add_node(root)
         self.__history[0].append(root)
         self.__propagate(0, root)
@@ -33,6 +33,9 @@ class ABA_Graph():
         self.__propagate_assumptions()
         self.__determine_is_conflict_free()
         self.__determine_is_stable()
+        print(self.assumptions)
+        print(self.is_conflict_free)
+        print(self.is_stable)
         
     def __propagate(self, index, node):
         for i, rule in enumerate([x for x in self.__aba.rules if x.result == node]):
@@ -87,12 +90,10 @@ class ABA_Graph():
 
     def __process_is_actual_argument(self, index, node):
         graph = self.graphs[index]
-        print(index, node, self)
         if self.__is_cyclical[index]:
             return False
 
         neighbors = graph.successors(node)
-        print(".. ", neighbors)
         if len(neighbors) == 0: # leaf node
             if node is None or node in self.__aba.assumptions:
                 return True
