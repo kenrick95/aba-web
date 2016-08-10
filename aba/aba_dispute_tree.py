@@ -11,7 +11,7 @@ class ABA_Dispute_Tree():
     
     """
         
-    def __init__(self, aba = None, root_arg = None):
+    def __init__(self, aba = None, root_arg = None, index = 0):
         self.graph = nx.DiGraph() # Directed graph
         
         self.root_arg = root_arg
@@ -21,7 +21,7 @@ class ABA_Dispute_Tree():
         self.__depth = 0
 
         self.graph.add_node(root_arg)
-        self.__add_label(root_arg, DT_PROPONENT, 0) # TODO handle index > 0
+        self.__add_label(root_arg, DT_PROPONENT, index)
         self.__depth += 1
         
         self.is_grounded = True
@@ -30,7 +30,7 @@ class ABA_Dispute_Tree():
         self.is_ideal = None
         
         logging.debug("Dispute tree for '%s'", root_arg.root)
-        self.__propagate_tree_proponent(root_arg, 0) # TODO handle index > 0
+        self.__propagate_tree_proponent(root_arg, index)
         
         logging.debug(self.graph.nodes(data = True))
         logging.debug(self.graph.edges())
@@ -48,7 +48,7 @@ class ABA_Dispute_Tree():
         Add (zero or more) Opponent_nodes to Proponent_node as a child
         """
         for assumption, symbol in node.assumptions[index].items():
-            opponent_node = self.__aba.get_argument(symbol)
+            opponent_node, i = self.__aba.get_argument(symbol)
             if opponent_node is None:
                 continue
             logging.debug("Opp node <%s> attacking assumption <%s> of Pro node <%s>", opponent_node.root, assumption, node.root)
@@ -73,7 +73,7 @@ class ABA_Dispute_Tree():
             >> Will not happen, as the ABA contraries is a "total function", meaning that for one assumption, it is guaranteed that there is only one argument that can attack this assumption.
         """
         for assumption, symbol in node.assumptions[index].items():
-            proponent_node = self.__aba.get_argument(symbol)
+            proponent_node, i = self.__aba.get_argument(symbol)
             if proponent_node is None:
                 continue
             logging.debug("Pro node <%s> attacking assumption <%s> of Opp node <%s>", proponent_node.root, assumption, node.root)
@@ -95,7 +95,7 @@ class ABA_Dispute_Tree():
     def __is_infinity(self, node, label, index):
         value = (node, label, index) in self.__history
         if value:
-            logging.debug("Infinity detected in node <%s> of <%s>", node.root, label, index)
+            logging.debug("Infinity detected in node <%s> of <%s, %s>", node.root, label, index)
             self.is_grounded = False
             
         return value

@@ -51,11 +51,12 @@ class TestRealAndPartialArguments(unittest.TestCase):
         self.aba.construct_arguments()
         self.aba.construct_dispute_trees()
         
-        self.assertEqual(self.aba.potential_arguments[0].root, 'a')
-        self.assertEqual(self.aba.potential_arguments[1].root, 'b')
-        self.assertEqual(self.aba.potential_arguments[2].root, 'c')
-        self.assertEqual(self.aba.arguments[0].root, 'a')
-        self.assertEqual(self.aba.arguments[1].root, 'b')
+        self.assertEqual(self.aba.potential_arguments[0][0].root, 'a')
+        self.assertEqual(self.aba.potential_arguments[1][0].root, 'a')
+        self.assertEqual(self.aba.potential_arguments[2][0].root, 'b')
+        self.assertEqual(self.aba.potential_arguments[3][0].root, 'c')
+        self.assertEqual(self.aba.arguments[0][0].root, 'a')
+        self.assertEqual(self.aba.arguments[1][0].root, 'b')
 
 
 class TestCircularOneSymbol(unittest.TestCase):
@@ -102,7 +103,7 @@ class TestAssumptionWithoutContrary(unittest.TestCase):
         parser.parse()
         aba = parser.construct_aba()
 
-        self.assertCountEqual([x.root for x in aba.arguments], ['a', 'b'])
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['a', 'b'])
     
     def test_4(self):
         raw = """
@@ -112,7 +113,7 @@ class TestAssumptionWithoutContrary(unittest.TestCase):
         parser = ABA_Parser(raw)
         parser.parse()
         aba = parser.construct_aba()
-        self.assertCountEqual([x.root for x in aba.arguments], ['a'])
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['a'])
 
 
 class TestAssumptionOnlyArguments(unittest.TestCase):
@@ -132,7 +133,7 @@ class TestAssumptionOnlyArguments(unittest.TestCase):
         self.aba = parser.construct_aba()
 
     def test_arguments(self):
-        self.assertCountEqual([x.root for x in self.aba.arguments], ['a', 'b', 'c'])
+        self.assertCountEqual([x[0].root for x in self.aba.arguments], ['a', 'b', 'c'])
 
 
 class TestCircularTwoSymbols(unittest.TestCase):
@@ -164,7 +165,7 @@ class TestCircularTwoSymbolsAndOneRealArgument(unittest.TestCase):
         self.aba.construct_arguments()
         self.aba.construct_dispute_trees()
 
-        self.assertEqual(self.aba.arguments[0].root, 'c')
+        self.assertEqual(self.aba.arguments[0][0].root, 'c')
 
 
 class TestParser(unittest.TestCase):
@@ -198,7 +199,7 @@ class TestDungMancarellaToni(unittest.TestCase):
         parser = ABA_Parser(raw)
         parser.parse()
         aba = parser.construct_aba()
-        for argument in aba.arguments:
+        for argument, i in aba.arguments:
             self.assertEqual(argument.is_conflict_free, [True])
             self.assertEqual(argument.is_stable, [True])
         for dt in aba.dispute_trees:
@@ -218,10 +219,10 @@ class TestDungMancarellaToni(unittest.TestCase):
         parser.parse()
         aba = parser.construct_aba()
 
-        self.assertEqual(aba.get_argument('a').is_conflict_free, [False])
-        self.assertEqual(aba.get_argument('a').is_stable, [False])
-        self.assertEqual(aba.get_argument('b').is_conflict_free, [True])
-        self.assertEqual(aba.get_argument('b').is_stable, [False])
+        self.assertEqual(aba.get_argument('a')[0].is_conflict_free, [False])
+        self.assertEqual(aba.get_argument('a')[0].is_stable, [False])
+        self.assertEqual(aba.get_argument('b')[0].is_conflict_free, [True])
+        self.assertEqual(aba.get_argument('b')[0].is_stable, [False])
 
         for dt in aba.dispute_trees:
             self.assertEqual(dt.is_admissible, False)
@@ -267,7 +268,7 @@ class TestCraven1(unittest.TestCase):
         
 
     def test_conflict_free(self):
-        for argument in self.aba.arguments:
+        for argument, i in self.aba.arguments:
             self.assertEqual(argument.is_conflict_free, [True])
             
     def test_admissible(self):

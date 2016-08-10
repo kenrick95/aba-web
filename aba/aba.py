@@ -53,17 +53,18 @@ class ABA():
 
         for symbol in self.symbols:
             potential_argument = ABA_Graph(self, symbol)
-            self.potential_arguments.append(potential_argument)
-            if potential_argument.is_actual_argument():
-                self.arguments.append(potential_argument)
+            for i in range(len(potential_argument.graphs)):
+                self.potential_arguments.append((potential_argument, i))
+                if potential_argument.is_actual_argument(i):
+                    self.arguments.append((potential_argument, i))
             
     def construct_dispute_trees(self):
         if not self.is_all_assumption_have_contrary():
             raise Exception("All assumptions must have contrary")
         
-        for argument in self.arguments:
+        for argument, i in self.arguments:
             if argument:
-                self.dispute_trees.append(ABA_Dispute_Tree(self, argument))
+                self.dispute_trees.append(ABA_Dispute_Tree(self, argument, i))
         self.__determine_dispute_tree_is_ideal()
         self.__determine_dispute_tree_is_complete()
 
@@ -86,11 +87,11 @@ class ABA():
         Given an argument, which other arguments it can attack?
         """
         attackables = []
-        for argument in self.arguments:
-            attackable = arg.root in argument.assumptions[0].values() # TODO handle index > 0
+        for argument, i in self.arguments:
+            attackable = arg.root in argument.assumptions[i].values()
 
             if attackable:
-                attackables.append(argument)
+                attackables.append((argument, i))
         return attackables
 
     def __determine_dispute_tree_is_complete(self):
@@ -107,12 +108,12 @@ class ABA():
                     # Note: since root_arg is admissible, then it is conflict-free, i.e. root_arg is guaranteed not to be inside attackables_by_root
 
                     defendable_arguments = []
-                    for attackable in attackables_by_root:
+                    for attackable, i in attackables_by_root:
                         defendable_arguments.extend(self.__get_arguments_attackable(attackable))
 
                     all_in_argument = True
-                    for argument in defendable_arguments:
-                        if argument.root not in tree.root_arg.graphs[0].nodes(): # TODO handle index > 0
+                    for argument, i in defendable_arguments:
+                        if argument.root not in tree.root_arg.graphs[i].nodes():
                             all_in_argument = False
                             break
                     complete = all_in_argument
@@ -128,10 +129,11 @@ class ABA():
         source = self.arguments
         if allow_potential:
             source = self.potential_arguments
-        argument = [x for x in source if x.root == symbol]
+        argument = [x for x in source if x[0].root == symbol]
+
         if len(argument) > 0:
             return argument[0]
-        return None
+        return None, None
     
     def get_dispute_tree(self, symbol):
         dispute_tree = [x for x in self.dispute_trees if x.root_arg.root == symbol]
