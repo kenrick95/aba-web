@@ -199,8 +199,8 @@ class TestDungMancarellaToni(unittest.TestCase):
         parser.parse()
         aba = parser.construct_aba()
         for argument in aba.arguments:
-            self.assertEqual(argument.is_conflict_free, True)
-            self.assertEqual(argument.is_stable, True)
+            self.assertEqual(argument.is_conflict_free, [True])
+            self.assertEqual(argument.is_stable, [True])
         for dt in aba.dispute_trees:
             self.assertEqual(dt.is_admissible, True)
             self.assertEqual(dt.is_complete, True)

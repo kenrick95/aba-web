@@ -74,7 +74,7 @@ class ABA_Graph():
     def __determine_is_stable(self):
         for index, graph in enumerate(self.graphs):
             stable = False
-            if self.is_conflict_free:
+            if self.is_conflict_free[index]:
                 stable = True
                 for assumption, attacker in self.__aba.contraries.items():
                     if assumption not in graph.nodes():
