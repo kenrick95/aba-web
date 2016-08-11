@@ -58,13 +58,32 @@ class TestRealAndPartialArguments(unittest.TestCase):
         self.assertEqual(self.aba.arguments[0][0].root, 'a')
         self.assertEqual(self.aba.arguments[1][0].root, 'b')
 
-# TODO buggy:
-"""
-b |- a.
-c |- a.
-|- b.
-contrary(c, b).
-"""
+class TestRealAndPartialArgumentsWithContrary(unittest.TestCase):
+    # TODO; when inferring dispute trees, need to handle case when Arg_A_1 attacked by Arg_B_0 and Arg_B_1
+    # Copy tree from current to top, add some more
+    # So DT is now DT_X_Y_Z, where X: arg name, Y: arg index, Z: DT index. WTF
+
+    def setUp(self):
+        self.aba = ABA()
+        self.aba.symbols = ('a', 'b', 'c')
+        self.aba.rules.append(ABA_Rule(['b'], 'a'))
+        self.aba.rules.append(ABA_Rule(['c'], 'a'))
+        self.aba.rules.append(ABA_Rule([None], 'b'))
+        self.aba.contraries['c'] = 'b'
+
+        self.aba.infer_assumptions()
+    
+    def test_successful_inference(self):
+        self.aba.construct_arguments()
+        self.aba.construct_dispute_trees()
+        
+        self.assertEqual(self.aba.potential_arguments[0][0].root, 'a')
+        self.assertEqual(self.aba.potential_arguments[1][0].root, 'a')
+        self.assertEqual(self.aba.potential_arguments[2][0].root, 'b')
+        self.assertEqual(self.aba.potential_arguments[3][0].root, 'c')
+        self.assertEqual(self.aba.arguments[0][0].root, 'a')
+        self.assertEqual(self.aba.arguments[1][0].root, 'b')
+
 
 class TestCircularOneSymbol(unittest.TestCase):
     def setUp(self):
