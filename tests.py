@@ -73,15 +73,8 @@ class TestRealAndPartialArgumentsWithContrary(unittest.TestCase):
         self.aba.construct_arguments()
         self.aba.construct_dispute_trees()
         
-        self.assertEqual(self.aba.potential_arguments[0][0].root, 'a')
-        self.assertEqual(self.aba.potential_arguments[1][0].root, 'a')
-        self.assertEqual(self.aba.potential_arguments[2][0].root, 'b')
-        self.assertEqual(self.aba.potential_arguments[3][0].root, 'c')
-        self.assertEqual(self.aba.arguments[0][0].root, 'a')
-        self.assertEqual(self.aba.arguments[1][0].root, 'a')
-        self.assertEqual(self.aba.arguments[2][0].root, 'b')
-        # 'c' should not be a real argument
-        self.assertEqual(len(self.aba.arguments), 3)
+        self.assertEqual([x[0].root for x in self.aba.potential_arguments], ['a', 'a', 'b', 'c'])
+        self.assertEqual([x[0].root for x in self.aba.arguments], ['a', 'a', 'b', 'c'])
 
 
 class TestCircularOneSymbol(unittest.TestCase):
