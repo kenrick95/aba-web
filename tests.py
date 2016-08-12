@@ -59,10 +59,6 @@ class TestRealAndPartialArguments(unittest.TestCase):
         self.assertEqual(self.aba.arguments[1][0].root, 'b')
 
 class TestRealAndPartialArgumentsWithContrary(unittest.TestCase):
-    # TODO; when inferring dispute trees, need to handle case when Arg_A_1 attacked by Arg_B_0 and Arg_B_1
-    # Copy tree from current to top, add some more
-    # So DT is now DT_X_Y_Z, where X: arg name, Y: arg index, Z: DT index. WTF
-
     def setUp(self):
         self.aba = ABA()
         self.aba.symbols = ('a', 'b', 'c')
@@ -82,7 +78,10 @@ class TestRealAndPartialArgumentsWithContrary(unittest.TestCase):
         self.assertEqual(self.aba.potential_arguments[2][0].root, 'b')
         self.assertEqual(self.aba.potential_arguments[3][0].root, 'c')
         self.assertEqual(self.aba.arguments[0][0].root, 'a')
-        self.assertEqual(self.aba.arguments[1][0].root, 'b')
+        self.assertEqual(self.aba.arguments[1][0].root, 'a')
+        self.assertEqual(self.aba.arguments[2][0].root, 'b')
+        # 'c' should not be a real argument
+        self.assertEqual(len(self.aba.arguments), 3)
 
 
 class TestCircularOneSymbol(unittest.TestCase):
@@ -229,10 +228,10 @@ class TestDungMancarellaToni(unittest.TestCase):
             self.assertEqual(argument.is_conflict_free, [True])
             self.assertEqual(argument.is_stable, [True])
         for dt in aba.dispute_trees:
-            self.assertEqual(dt.is_admissible, True)
-            self.assertEqual(dt.is_complete, True)
-            self.assertEqual(dt.is_grounded, False)
-            self.assertEqual(dt.is_ideal, False)
+            self.assertEqual(dt.is_admissible, [True])
+            self.assertEqual(dt.is_complete, [True])
+            self.assertEqual(dt.is_grounded, [False])
+            self.assertEqual(dt.is_ideal, [False])
 
     def test_2(self):
         raw = """
@@ -251,10 +250,10 @@ class TestDungMancarellaToni(unittest.TestCase):
         self.assertEqual(aba.get_argument('b')[0].is_stable, [False])
 
         for dt in aba.dispute_trees:
-            self.assertEqual(dt.is_admissible, False)
-            self.assertEqual(dt.is_complete, False)
-            self.assertEqual(dt.is_grounded, False)
-            self.assertEqual(dt.is_ideal, False)
+            self.assertEqual(dt.is_admissible, [False])
+            self.assertEqual(dt.is_complete, [False])
+            self.assertEqual(dt.is_grounded, [False])
+            self.assertEqual(dt.is_ideal, [False])
 
         
 
@@ -299,14 +298,14 @@ class TestCraven1(unittest.TestCase):
             
     def test_admissible(self):
         for dispute_tree in self.aba.dispute_trees:
-            self.assertEqual(dispute_tree.is_admissible, True)
+            self.assertEqual(dispute_tree.is_admissible, [True])
     
     def test_grounded(self):
         for dispute_tree in self.aba.dispute_trees:
             if dispute_tree.root_arg.root == 'q':
-                self.assertEqual(dispute_tree.is_grounded, True)
+                self.assertEqual(dispute_tree.is_grounded, [True])
             else:
-                self.assertEqual(dispute_tree.is_grounded, False)
+                self.assertEqual(dispute_tree.is_grounded, [False])
 
 if __name__ == '__main__':
     unittest.main()
