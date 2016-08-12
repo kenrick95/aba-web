@@ -42,16 +42,17 @@ def api():
     for argument, i in aba.arguments:
         symbol = argument.root
         dispute_tree = aba.get_dispute_tree(symbol, i)
-        symbol_and_index = symbol + "_" + str(i)
         if dispute_tree is not None:
-            data['dispute_trees'][symbol_and_index] = jsonpickle.encode(json_graph.node_link_data(dispute_tree.graph), unpicklable=False, max_depth=6, make_refs=False)
-            data['dispute_trees_data'][symbol_and_index] = dict()
-            data['dispute_trees_data'][symbol_and_index]['is_conflict_free'] = argument.is_conflict_free[i]
-            data['dispute_trees_data'][symbol_and_index]['is_stable'] = argument.is_stable[i]
-            data['dispute_trees_data'][symbol_and_index]['is_admissible'] = dispute_tree.is_admissible
-            data['dispute_trees_data'][symbol_and_index]['is_grounded'] = dispute_tree.is_grounded
-            data['dispute_trees_data'][symbol_and_index]['is_ideal'] = dispute_tree.is_ideal
-            data['dispute_trees_data'][symbol_and_index]['is_complete'] = dispute_tree.is_complete
+            for dt_index, dt_graph in enumerate(dispute_tree.graphs):
+                dt_name = "%s_%s_%s" % (symbol, i, dt_index)
+                data['dispute_trees'][dt_name] = jsonpickle.encode(json_graph.node_link_data(dt_graph), unpicklable=False, max_depth=6, make_refs=False)
+                data['dispute_trees_data'][dt_name] = dict()
+                data['dispute_trees_data'][dt_name]['is_conflict_free'] = argument.is_conflict_free[i]
+                data['dispute_trees_data'][dt_name]['is_stable'] = argument.is_stable[i]
+                data['dispute_trees_data'][dt_name]['is_admissible'] = dispute_tree.is_admissible[dt_index]
+                data['dispute_trees_data'][dt_name]['is_grounded'] = dispute_tree.is_grounded[dt_index]
+                data['dispute_trees_data'][dt_name]['is_ideal'] = dispute_tree.is_ideal[dt_index]
+                data['dispute_trees_data'][dt_name]['is_complete'] = dispute_tree.is_complete[dt_index]
     
     wall_time_end = time.perf_counter()
     cpu_time_end = time.process_time()
