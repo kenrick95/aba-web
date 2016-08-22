@@ -107,6 +107,10 @@ footer {
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+
+.tab-pane {
+    min-height: 500px;
+}
     </style>
 </head>
 <body>
@@ -242,6 +246,8 @@ contrary(c, r).
         $(window).on('hashchange', onHashChange);
 
         var global_data = null;
+        var lazy_graph_data = {},
+            lazy_properties = {};
         var code_mirror = CodeMirror.fromTextArea($("#source_code")[0], {
             indentUnit: 2,
             lineNumbers: true,
@@ -302,6 +308,8 @@ contrary(c, r).
                     if (data.parse_errors.length > 0) {
                         $("#parse-errors").html(data.parse_errors.join("<br/>"))
                     }
+                    $('a[data-toggle="tab"]').off('shown.bs.tab', handleTabShown);
+                    $('a[data-toggle="tab"]').on('shown.bs.tab', handleTabShown);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR);
@@ -311,7 +319,22 @@ contrary(c, r).
                 }
             });
         });
-        
+        function handleTabShown(e) {
+            var el_name = e.target.hash.replace("#output-", ""),
+                graph = lazy_graph_data[el_name],
+                curvy = lazy_properties[el_name].curvy;
+
+            drawD3(graph, el_name, curvy);
+            if (lazy_properties[el_name].hasOwnProperty("properties")) {
+                $("#output-dt-text-" + el_name).text(lazy_properties[el_name].properties);
+            }
+
+            if (e.relatedTarget) {
+                var old_el_name = e.relatedTarget.hash;
+                $(old_el_name).html("");
+            }
+            
+        }
         function clearOutput() {
             $("#tab-output").removeClass("in");
             $("#tab-output").height($("#tab-output").height());
@@ -339,7 +362,7 @@ contrary(c, r).
                 class: "tab-pane fade output-dt",
                 id: "output-dt-" + name,
                 html: $("<div/>", {
-                    id: "output-dt-text-" + name
+                    id: "output-dt-text-dt-" + name
                 })
             })).promise().done(function () {
                 drawD3_dt_adapter(global_data.dispute_trees[name], name);
@@ -365,11 +388,15 @@ contrary(c, r).
                     graph.nodes[i].id = graph.nodes[i].text_label + "\n(Root)";
                 }
             }
+            lazy_graph_data[el_name] = graph;
+            lazy_properties[el_name] = {
+                'curvy': false
+            };
+            
             drawD3(graph, el_name);
         }
         function drawD3_dt_adapter(raw_graph, name) {
             var graph = JSON.parse(raw_graph);
-            // console.log(graph);
             for (var i = 0; i < graph.nodes.length; i++) {
                 var new_label = "(" + graph.nodes[i].label + ") " +  graph.nodes[i].id.root;
                 
@@ -381,7 +408,11 @@ contrary(c, r).
                 graph.nodes[i].id = graph.nodes[i].text_label;
                 graph.nodes[i].text_label = new_label;
             }
-            drawD3(graph, "dt-" + name, true);
+
+            lazy_graph_data["dt-" + name] = graph;
+            lazy_properties["dt-" + name] = {
+                'curvy': true
+            };
             
             show_dt_text(name);
         }
@@ -398,7 +429,10 @@ contrary(c, r).
             shown_text = shown_text.join(', ');
             shown_text = shown_text.charAt(0).toUpperCase() + shown_text.slice(1);
             
-            $("#output-dt-text-" + name).text(shown_text);  
+            lazy_properties["dt-" + name] = {
+                'curvy': true,
+                'properties': shown_text,
+            };
         };
         
         function rootColor() {
