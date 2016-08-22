@@ -1,6 +1,7 @@
 import networkx as nx
 import logging
 import copy
+import time
 
 class ABA_Graph():
     """
@@ -32,7 +33,33 @@ class ABA_Graph():
 
         self.__propagate_assumptions()
         self.__determine_is_conflict_free()
+
+        wall_time_start = time.perf_counter()
+        cpu_time_start = time.process_time()
+
+        self.__determine_is_conflict_free()
+
+        wall_time_end = time.perf_counter()
+        cpu_time_end = time.process_time()
+        wall_time = wall_time_end - wall_time_start
+        cpu_time = cpu_time_end - cpu_time_start
+        logging.debug("__determine_is_conflict_free <arg %s> wall_time %s seconds", root, wall_time)
+        logging.debug("__determine_is_conflict_free <arg %s> cpu_time  %s seconds", root, cpu_time)
+
+
+        wall_time_start = time.perf_counter()
+        cpu_time_start = time.process_time()
+
         self.__determine_is_stable()
+
+        wall_time_end = time.perf_counter()
+        cpu_time_end = time.process_time()
+        wall_time = wall_time_end - wall_time_start
+        cpu_time = cpu_time_end - cpu_time_start
+        logging.debug("__determine_is_stable <arg %s> wall_time %s seconds", root, wall_time)
+        logging.debug("__determine_is_stable <arg %s> cpu_time  %s seconds", root, cpu_time)
+        
+        
         
     def __propagate(self, index, node):
         self.__current_index = index

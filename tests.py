@@ -11,9 +11,12 @@ python -m unittest
 
 https://docs.python.org/3.4/library/unittest.html
 """
+logging.basicConfig(filename='Tests.log',level=logging.DEBUG) 
 
 class TestPotentialArgument(unittest.TestCase):
     def setUp(self):
+        logging.debug(self.id())
+
         text = """
         a |- b.
         """
@@ -39,6 +42,8 @@ class TestPotentialArgument(unittest.TestCase):
 
 class TestRealAndPartialArguments(unittest.TestCase):
     def setUp(self):
+        logging.debug(self.id())
+
         self.aba = ABA()
         self.aba.symbols = ('a', 'b', 'c')
         self.aba.rules.append(ABA_Rule(['b'], 'a'))
@@ -60,6 +65,8 @@ class TestRealAndPartialArguments(unittest.TestCase):
 
 class TestRealAndPartialArgumentsWithContrary(unittest.TestCase):
     def setUp(self):
+        logging.debug(self.id())
+
         self.aba = ABA()
         self.aba.symbols = ('a', 'b', 'c')
         self.aba.rules.append(ABA_Rule(['b'], 'a'))
@@ -79,6 +86,8 @@ class TestRealAndPartialArgumentsWithContrary(unittest.TestCase):
 
 class TestCircularOneSymbol(unittest.TestCase):
     def setUp(self):
+        logging.debug(self.id())
+        
         self.aba = ABA()
         self.aba.symbols = ('a')
         self.aba.rules.append(ABA_Rule(['a'], 'a'))
@@ -92,6 +101,9 @@ class TestCircularOneSymbol(unittest.TestCase):
         self.assertEqual(self.aba.arguments, [])
 
 class TestAssumptionWithoutContrary(unittest.TestCase):
+    def setUp(self):
+        logging.debug(self.id())
+
     def test_1(self):
         raw = """
         assumption(a).
@@ -136,6 +148,8 @@ class TestAssumptionWithoutContrary(unittest.TestCase):
 
 class TestAssumptionOnlyArguments(unittest.TestCase):
     def setUp(self):
+        logging.debug(self.id())
+
         raw = """
         assumption(a).
         assumption(b).
@@ -156,6 +170,8 @@ class TestAssumptionOnlyArguments(unittest.TestCase):
 
 class TestCircularTwoSymbols(unittest.TestCase):
     def setUp(self):
+        logging.debug(self.id())
+
         self.aba = ABA()
         self.aba.symbols = ('a', 'b')
         self.aba.rules.append(ABA_Rule(['a'], 'b'))
@@ -171,6 +187,8 @@ class TestCircularTwoSymbols(unittest.TestCase):
         
 class TestCircularTwoSymbolsAndOneRealArgument(unittest.TestCase):
     def setUp(self):
+        logging.debug(self.id())
+        
         self.aba = ABA()
         self.aba.symbols = ('a', 'b', 'c')
         self.aba.rules.append(ABA_Rule(['a'], 'b'))
@@ -188,6 +206,8 @@ class TestCircularTwoSymbolsAndOneRealArgument(unittest.TestCase):
 
 class TestParser(unittest.TestCase):
     def setUp(self):
+        logging.debug(self.id())
+        
         text = """
         assumption(xz).
         a |- b.
@@ -207,6 +227,9 @@ class TestParser(unittest.TestCase):
         self.assertEqual(self.parser.parsed_contraries['a'], 'z')
 
 class TestDungMancarellaToni(unittest.TestCase):
+    def setUp(self):
+        logging.debug(self.id())
+        
     def test_1(self):
         raw = """
         assumption(a).
@@ -263,6 +286,7 @@ class TestCraven1(unittest.TestCase):
 
     """
     def setUp(self):
+        logging.debug(self.id())
         #logging.basicConfig(filename='TestCraven1.log',level=logging.DEBUG) 
     
         self.aba = ABA()

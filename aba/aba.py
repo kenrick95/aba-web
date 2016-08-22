@@ -4,6 +4,7 @@ from .aba_dispute_tree import ABA_Dispute_Tree
 from .aba_constants import *
 import networkx as nx
 import logging
+import time
 
 class ABA():
     """
@@ -64,9 +65,42 @@ class ABA():
         
         for argument, i in self.arguments:
             if argument:
+                wall_time_start = time.perf_counter()
+                cpu_time_start = time.process_time()
+
                 self.dispute_trees.append(ABA_Dispute_Tree(self, argument, i))
+
+                wall_time_end = time.perf_counter()
+                cpu_time_end = time.process_time()
+                wall_time = wall_time_end - wall_time_start
+                cpu_time = cpu_time_end - cpu_time_start
+                logging.debug("ABA_Dispute_Tree wall_time %s seconds", wall_time)
+                logging.debug("ABA_Dispute_Tree cpu_time  %s seconds", cpu_time)
+                
+        wall_time_start = time.perf_counter()
+        cpu_time_start = time.process_time()
+        
         self.__determine_dispute_tree_is_ideal()
+
+        wall_time_end = time.perf_counter()
+        cpu_time_end = time.process_time()
+        wall_time = wall_time_end - wall_time_start
+        cpu_time = cpu_time_end - cpu_time_start
+        logging.debug("__determine_dispute_tree_is_ideal wall_time %s seconds", wall_time)
+        logging.debug("__determine_dispute_tree_is_ideal cpu_time  %s seconds", cpu_time)
+
+
+        wall_time_start = time.perf_counter()
+        cpu_time_start = time.process_time()
+
         self.__determine_dispute_tree_is_complete()
+
+        wall_time_end = time.perf_counter()
+        cpu_time_end = time.process_time()
+        wall_time = wall_time_end - wall_time_start
+        cpu_time = cpu_time_end - cpu_time_start
+        logging.debug("__determine_dispute_tree_is_complete wall_time %s seconds", wall_time)
+        logging.debug("__determine_dispute_tree_is_complete cpu_time  %s seconds", cpu_time)
 
     def __determine_dispute_tree_is_ideal(self):
         for tree in self.dispute_trees:
