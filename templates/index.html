@@ -320,6 +320,9 @@ contrary(c, r).
             });
         });
         function handleTabShown(e) {
+            if (e.target.hash === "#statistics") {
+                return;
+            }
             var el_name = e.target.hash.replace("#output-", ""),
                 graph = lazy_graph_data[el_name],
                 curvy = lazy_properties[el_name].curvy;
@@ -331,6 +334,9 @@ contrary(c, r).
 
             if (e.relatedTarget) {
                 var old_el_name = e.relatedTarget.hash;
+                if (old_el_name === "#statistics") {
+                    return;
+                }
                 $(old_el_name).html("");
             }
             
