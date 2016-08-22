@@ -137,9 +137,32 @@ footer {
     </header>
     <main id="main" class="container">
         <div id="help" class="nav-main" style="display: none;">
-            <h2>Introduction</h2>
             <h2>Features</h2>
+            <p>Using dispute tree approach, this project implements assumption-based argumentation and is able to compute the following semantics: </p>
+            <ul>
+                <li>Conflict-free: An argument is conflict-free iff it does not attack itself.</li>
+                <li>Admissible: An argument is admissible iff it is conflict-free and attacks all arguments attacking it.</li>
+                <li>Complete: An argument is complete iff it is admissible and contains all arguments it can defend (by attacking every arguments attacking them)</li> 
+                <li>Grounded: An argument is grounded iff it is minimally (with respect to set inclusion) complete.</li>
+                <li>Stable: An argument is stable iff conflict-free and attacks every argument that does not belong to itself.</li>
+                <li>Ideal: An argument is ideal iff admissible and there are no admissible arguments attacking it.</li>
+            </ul>
             <h2>Syntax</h2>
+            <p>Syntax for input area consists of multiple lines of codes, where each line can only be a single type of expression. There are three types of expression supported in the project, namely: </p>
+            <ul>
+                <li>Rule<br />
+                <code>supporting |- claim.</code><br />
+                <p>Supporting symbols (supporting) are comma-separated symbols, meanwhile claim can only contains one symbol. A symbol is a string of continuous string of characters. A valid rule has supporting symbols appeared in other supported symbols or assumptions. </p>
+                </li> 
+                <li>Contrary<br />
+                <code>contrary(a, b).</code><br />
+                <p>Meaning that argument containing a as assumption can be attacked by argument with b as its claim.</p></li>
+                <li>Assumption<br />
+                <code>assumption(a).</code><br />
+                <p>Explicitly states that a is an assumption. Every assumption need to have its contrary.</p></li>
+            </ul>
+            <h2>About</h2>
+            A final year project by <a href="https://kenrick95.org">Kenrick</a>. Source is available on <a href="https://github.com/kenrick95/aba-web">GitHub</a> (private repo).
         </div>
         <div id="home" class="nav-main">
             <div class="row">
