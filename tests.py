@@ -339,6 +339,79 @@ class TestCraven(unittest.TestCase):
         parser.parse()
         aba = parser.construct_aba()
         self.assertCountEqual([x[0].root for x in aba.arguments], ['a', 'b', 'r', 'r', 's', 's'])
+    def test_example_3(self):
+        """
+        Adapted from Example 3 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        q, r |- p.
+        s |- q.
+        s, a |- r.
+        |- s.
+        r |- t.
+        contrary(a, x).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['t', 'p', 'q', 'r', 's', 'a'])
+
+    def test_example_4(self):
+        """
+        Adapted from Example 4 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        a, q |- p.
+        b, r |- p.
+        p |- q.
+        b |- r.
+        c |- r.
+        contrary(a, z).
+        contrary(b, z).
+        contrary(c, z).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['r', 'r', 'b', 'c', 'a'])
+
+    def test_example_6(self):
+        """
+        Adapted from Example 6 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        p |- p.
+        a |- p.
+        contrary(a, x).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['a'])
+
+    def test_example_7(self):
+        """
+        Adapted from Example 7 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        a |- p.
+        b |- p.
+        y |- x.
+        c |- y.
+        contrary(a, y).
+        contrary(b, z).
+        contrary(c, y).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'p', 'x', 'y', 'a', 'b', 'c'])
+
+
 
 
 if __name__ == '__main__':

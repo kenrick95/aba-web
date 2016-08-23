@@ -136,8 +136,9 @@ class ABA_Dispute_Tree():
                 self.is_admissible[index] = False
         self.graphs[index].node[node]['label'] = label
         self.graphs[index].node[node]['text_label'] = "(%s) Argument %s" % (label, node.root)
-        if len(node.assumptions[self.arg_index]) > 0:
-            self.graphs[index].node[node]['text_label'] += "\nwith assumption(s): %s" % (", ".join(node.assumptions[self.arg_index]))
+
+        if len(node.assumptions[index]) > 0:
+            self.graphs[index].node[node]['text_label'] += "\nwith assumption(s): %s" % (", ".join(node.assumptions[index]))
         if 'depth' not in self.graphs[index].node[node]:
             self.graphs[index].node[node]['depth'] = self.__depth
             logging.debug("Tree depth of node <%s> is <%s>", node.root, self.__depth)
