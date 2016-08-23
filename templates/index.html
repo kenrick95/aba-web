@@ -310,6 +310,9 @@ contrary(c, r).
                     }
                     $('a[data-toggle="tab"]').off('shown.bs.tab', handleTabShown);
                     $('a[data-toggle="tab"]').on('shown.bs.tab', handleTabShown);
+
+                    var el_name = "argument", graph = lazy_graph_data["argument"];
+                    drawD3(graph, el_name);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR);
@@ -326,6 +329,7 @@ contrary(c, r).
             var el_name = e.target.hash.replace("#output-", ""),
                 graph = lazy_graph_data[el_name],
                 curvy = lazy_properties[el_name].curvy;
+            console.log(el_name);
 
             drawD3(graph, el_name, curvy);
             if (lazy_properties[el_name].hasOwnProperty("properties")) {
@@ -399,7 +403,7 @@ contrary(c, r).
                 'curvy': false
             };
             
-            drawD3(graph, el_name);
+            // drawD3(graph, el_name);
         }
         function drawD3_dt_adapter(raw_graph, name) {
             var graph = JSON.parse(raw_graph);
@@ -473,6 +477,8 @@ contrary(c, r).
                     console.log(d);
                     return d;
                 });
+            
+            d3.select("#output-" + el_name).select("svg").remove();
 
             var svg = d3.select("#output-" + el_name).append("svg")
                 .attr("width", width)
