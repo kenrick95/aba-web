@@ -411,6 +411,88 @@ class TestCraven(unittest.TestCase):
         aba = parser.construct_aba()
         self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'p', 'x', 'y', 'a', 'b', 'c'])
 
+    def test_example_8(self):
+        """
+        Adapted from Example 8 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        a |- p.
+        p |- q.
+        b |- r.
+        contrary(a, r).
+        contrary(b, p).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'q', 'r', 'a', 'b'])
+
+        for argument, i in aba.arguments:
+            self.assertEqual(argument.is_conflict_free, [True])
+        
+        for dispute_tree in aba.dispute_trees:
+            self.assertEqual(dispute_tree.is_admissible, [True])
+            
+            if dispute_tree.root_arg.root == 'p':
+                self.assertEqual(dispute_tree.is_complete, [False])
+            else:
+                self.assertEqual(dispute_tree.is_complete, [True])
+            
+            self.assertEqual(dispute_tree.is_grounded, [False])
+
+    def test_example_9(self):
+        """
+        Adapted from Example 9 of Craven, Toni (2016) paper
+        TODO: Investigate why runtime took ~3s 
+        """
+
+        raw = """
+        a |- p.
+        p, b |- q.
+        p, d |- q.
+        c |- y.
+        e |- z.
+        contrary(a, x).
+        contrary(b, y).
+        contrary(c, q).
+        contrary(d, z).
+        contrary(e, p).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'q', 'q', 'y', 'z', 'a', 'b', 'c', 'd', 'e'])
+
+        # for argument, i in aba.arguments:
+        #     self.assertEqual(argument.is_conflict_free, [True])
+
+    def test_example_10(self):
+        """
+        Adapted from Example 10 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        a |- p.
+        b |- p.
+        c |- q.
+        d |- r.
+        assumption(e).
+        assumption(f).
+        contrary(a, x).
+        contrary(b, x).
+        contrary(c, p).
+        contrary(d, q).
+        contrary(e, f).
+        contrary(f, e).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'p', 'q', 'r', 'a', 'b', 'c', 'd', 'e', 'f'])
+
+        # for argument, i in aba.arguments:
+        #     self.assertEqual(argument.is_conflict_free, [True])
 
 
 
