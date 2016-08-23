@@ -297,11 +297,16 @@ contrary(c, r).
                     
                     $("#debug").text(JSON.stringify(data));
                     global_data = data;
-                    console.log(data);
+
                     drawD3_arg_adapter(data.arguments, "argument");
-                    for (var key in data.dispute_trees) {
-                        if (data.dispute_trees.hasOwnProperty(key)) {
-                            add_tab_dt(key, data.dispute_trees);
+
+                    var keys = Object.keys(data.dispute_trees),
+                        key_len = keys.length;
+                    keys.sort();
+
+                    for (var i = 0; i < key_len; i++) {
+                        if (data.dispute_trees.hasOwnProperty(keys[i])) {
+                            add_tab_dt(keys[i], data.dispute_trees);
                         }
                     }
                     $("#parse-errors").html("");
@@ -329,7 +334,6 @@ contrary(c, r).
             var el_name = e.target.hash.replace("#output-", ""),
                 graph = lazy_graph_data[el_name],
                 curvy = lazy_properties[el_name].curvy;
-            console.log(el_name);
 
             drawD3(graph, el_name, curvy);
             if (lazy_properties[el_name].hasOwnProperty("properties")) {
