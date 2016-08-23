@@ -273,56 +273,73 @@ class TestDungMancarellaToni(unittest.TestCase):
 
         
 
-class TestCraven1(unittest.TestCase):
-    """
-    This test is adapted from Example 1 of Craven, Toni (2016) paper
-
-    |- q.
-    q, r |- p.
-    a |- r.
-    b |- s.
-    contrary(a, s).
-    contrary(b, p).
-
-    """
+class TestCraven(unittest.TestCase):
     def setUp(self):
         logging.debug(self.id())
-        #logging.basicConfig(filename='TestCraven1.log',level=logging.DEBUG) 
-    
-        self.aba = ABA()
-        self.aba.symbols = ('p', 'q', 'r', 's', 'a', 'b')
-        self.aba.rules.append(ABA_Rule(['q', 'r'], 'p'))
-        self.aba.rules.append(ABA_Rule([None], 'q')) # ground truth, not assumption
-        self.aba.rules.append(ABA_Rule(['a'], 'r'))
-        self.aba.rules.append(ABA_Rule(['b'], 's'))
+        
+    def test_example_1(self):
+        """
+        Adapted from Example 1 of Craven, Toni (2016) paper
+
+        |- q.
+        q, r |- p.
+        a |- r.
+        b |- s.
+        contrary(a, s).
+        contrary(b, p).
+
+        """
+        aba = ABA()
+        aba.symbols = ('p', 'q', 'r', 's', 'a', 'b')
+        aba.rules.append(ABA_Rule(['q', 'r'], 'p'))
+        aba.rules.append(ABA_Rule([None], 'q')) # ground truth, not assumption
+        aba.rules.append(ABA_Rule(['a'], 'r'))
+        aba.rules.append(ABA_Rule(['b'], 's'))
         
         # for each assumptions, what node can attack it?
         # "total function": synonym for function, i.e. one assumption can only be attacked by one sentence
-        self.aba.contraries['a'] = 's'
-        self.aba.contraries['b'] = 'p'
+        aba.contraries['a'] = 's'
+        aba.contraries['b'] = 'p'
 
         # assumptions are determined from contraries
-        self.aba.infer_assumptions()
-        
-        self.aba.construct_arguments()
-        
-        self.aba.construct_dispute_trees()
+        aba.infer_assumptions()
+        aba.construct_arguments()
+        aba.construct_dispute_trees()
         
 
-    def test_conflict_free(self):
-        for argument, i in self.aba.arguments:
+        for argument, i in aba.arguments:
             self.assertEqual(argument.is_conflict_free, [True])
-            
-    def test_admissible(self):
-        for dispute_tree in self.aba.dispute_trees:
+        
+        for dispute_tree in aba.dispute_trees:
             self.assertEqual(dispute_tree.is_admissible, [True])
-    
-    def test_grounded(self):
-        for dispute_tree in self.aba.dispute_trees:
+        
+        for dispute_tree in aba.dispute_trees:
             if dispute_tree.root_arg.root == 'q':
                 self.assertEqual(dispute_tree.is_grounded, [True])
             else:
                 self.assertEqual(dispute_tree.is_grounded, [False])
+    def test_example_2(self):
+        """
+        Adapted from Example 2 of Craven, Toni (2016) paper
+        Showing "circularity" of argument graph and hence can't be constructed as an actual argument
+        """
+
+        raw = """
+        q, r |- p.
+        b |- p.
+        p |- q.
+        r |- q.
+        a |- r.
+        b |- r.
+        r |- s.
+        contrary(a, x).
+        contrary(b, x).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['a', 'b', 'r', 'r', 's', 's'])
+
 
 if __name__ == '__main__':
     unittest.main()
