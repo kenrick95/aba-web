@@ -610,13 +610,14 @@ class TestCraven(unittest.TestCase):
         b, r |- p.
         b, s |- p.
         |- q.
+        assumption(a).
         contrary(a, p).
         contrary(b, q).
         """
         parser = ABA_Parser(raw)
         parser.parse()
         aba = parser.construct_aba()
-        self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'p', 'q', 'a', 'b'])
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['q', 'a', 'b'])
 
 
 
