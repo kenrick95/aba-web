@@ -494,6 +494,130 @@ class TestCraven(unittest.TestCase):
         # for argument, i in aba.arguments:
         #     self.assertEqual(argument.is_conflict_free, [True])
 
+    def test_example_11(self):
+        """
+        Adapted from Example 11 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        q, r |- p.
+        a |- q.
+        t, a, b |- r.
+        b |- s.
+        |- t.
+        contrary(a, x).
+        contrary(b, y).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'q', 'r', 's', 't', 'a', 'b'])
+    
+    def test_example_12(self):
+        """
+        Adapted from Example 12 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        a |- p.
+        a |- q.
+        b |- q.
+        contrary(a, z).
+        contrary(b, z).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'q', 'q', 'a', 'b'])
+
+    def test_example_13(self):
+        """
+        Adapted from Example 13 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        b |- p.
+        |- q.
+        assumption(a).
+        contrary(a, p).
+        contrary(b, q).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'q', 'a', 'b'])
+
+    def test_example_14(self):
+        """
+        Adapted from Example 14 of Craven, Toni (2016) paper
+        TODO: Shouldn't 'p' still be an argument with "a |- p" only?
+        """
+
+        raw = """
+        q |- p.
+        a |- p.
+        contrary(a, z).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'a'])
+
+
+    def test_example_15(self):
+        """
+        Adapted from Example 15 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        a |- p.
+        b, c |- z.
+        a |- q.
+        |- r.
+        contrary(a, z).
+        contrary(b, q).
+        contrary(c, r).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['a', 'b' , 'c', 'p', 'q', 'r', 'z'])
+
+    def test_example_16(self):
+        """
+        Adapted from Example 16 of Craven, Toni (2016) paper
+        """
+
+        raw = """
+        q |- p.
+        a |- q.
+        p |- r.
+        contrary(a, b).
+        contrary(b, r).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['a', 'p', 'q', 'r'])
+
+    def test_example_17(self):
+        """
+        Adapted from Example 17 of Craven, Toni (2016) paper
+        TODO: 'r', and 's' are undefined!; 'p' cannot be an argument!
+        """
+
+        raw = """
+        b, r |- p.
+        b, s |- p.
+        |- q.
+        contrary(a, p).
+        contrary(b, q).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['p', 'p', 'q', 'a', 'b'])
+
 
 
 if __name__ == '__main__':
