@@ -1,0 +1,24 @@
+d1 |- y1.
+q1,r1 |- p1.
+d1 |- t1.
+a1 |- s1.
+w1,x1 |- q1.
+a1,e1 |- v1.
+c1,r1 |- w1.
+r1,u1 |- x1.
+b1,r1 |- x1.
+
+assumption(a1).
+assumption(b1).
+assumption(c1).
+assumption(d1).
+assumption(e1).
+assumption(f1).
+
+contrary(a1, x1).
+contrary(b1, x1).
+contrary(c1, b1).
+contrary(d1, t1).
+contrary(e1, r1).
+contrary(f1, t1).
+

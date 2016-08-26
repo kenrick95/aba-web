@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import re
 from .aba_rule import ABA_Rule
 from .aba import ABA

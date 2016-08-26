@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import unittest
 from aba.aba_rule import ABA_Rule
 from aba.aba import ABA
@@ -603,7 +605,6 @@ class TestCraven(unittest.TestCase):
     def test_example_17(self):
         """
         Adapted from Example 17 of Craven, Toni (2016) paper
-        TODO: 'r', and 's' are undefined!; 'p' cannot be an argument!
         """
 
         raw = """

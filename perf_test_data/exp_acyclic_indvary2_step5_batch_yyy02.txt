@@ -1,0 +1,336 @@
+a1,a2,c2,c3,f1 |- z2.
+a1,a3,b3,e1,e2 |- z2.
+b2,d1 |- z2.
+b3,c2,e1,f1 |- z2.
+e2,f1,q1,z1 |- z2.
+p3,s2,t1,t2,w2 |- z2.
+a3,c2,r3 |- z2.
+a3,b3,c1,c2,d1,e1 |- z2.
+p1,v2 |- z2.
+p1,q1,s1,u1,u2 |- z2.
+r1,w1 |- z2.
+r2,r3,t1,v2,x1,z1 |- z2.
+a1,a2,b1,c2,x1 |- z2.
+b2,b3,c1,d1 |- z2.
+d1 |- t1.
+a2,b1,b2,d2,e2,q1 |- t1.
+a3,r1,y2 |- t1.
+a1,c1,p1,s2,t2,v1 |- t1.
+e2 |- t1.
+a1,b2,c2,r2 |- t1.
+p3,q2,r1,r3,s1,x2 |- t1.
+a3,b3,d1,e2 |- t1.
+b1,b3,f1,p2,p3 |- t1.
+a1,a2 |- t1.
+p1,r1,s1,w1 |- t1.
+r2,s2 |- t1.
+a2,a3,b3,c3,e1,q3 |- t1.
+d2,f2,p2,q1,r1,s1 |- t1.
+a3 |- r1.
+r2,u2,v1 |- r1.
+q1,s1,v2 |- r1.
+b3,r2,r3 |- r1.
+c2,e1,q1,s1,w2,z1 |- r1.
+b3,e1 |- r1.
+b3,d1,e1,f2 |- r1.
+c1,e2 |- r1.
+a3,b1,c1,c3,f1 |- r1.
+b1,v2 |- r1.
+b3,c1,d1,f1 |- r1.
+q3,x1 |- r1.
+a3,d2,f1,r3,y2,z1 |- r1.
+p2,q2,q3,w1 |- r1.
+b3,c1,c3,d2,e1 |- r1.
+a2,r3,w1 |- v2.
+p1,v1,w2 |- v2.
+a1,b1,e1 |- v2.
+w1,x2 |- v2.
+b3 |- v2.
+q3 |- v2.
+f2,s1,z1 |- v2.
+a2,b1,c3,d1,e1,r3 |- v2.
+q2,s1,t2,u2,x2,z1 |- v2.
+a1,a3,b3,c1,p2,z1 |- v2.
+p3,s1,x2,y1,y2,z1 |- v2.
+a1,a3,d1,e1 |- v2.
+a2,b3,p2,r2 |- v2.
+c1,q1,t2,y2 |- v2.
+p3,s1,s2,w1 |- v2.
+c3 |- v2.
+b2,c1,p3,r3 |- v2.
+a2,b3,s1,u2,x1,y1 |- v1.
+r2,t2,x2,z1 |- v1.
+q1 |- v1.
+b3,c2 |- v1.
+a1,a2,b2,b3,c1,e2 |- v1.
+b1,p1 |- v1.
+a2,c1,u2,y1 |- v1.
+c2,q2 |- v1.
+b3,c2,p1,u2 |- v1.
+a3 |- v1.
+e2,s2,t2,u2,w2 |- v1.
+s2 |- v1.
+b1,d1,e2 |- v1.
+a1,a3,b2,e1 |- v1.
+b1,w2 |- v1.
+q1 |- q2.
+s1 |- q2.
+q1,t2,u2,w2,x2 |- q2.
+a1,c2,d2,t2,x2 |- q2.
+d2 |- q2.
+a3,c1,e1 |- q2.
+b3,c2,d1,q3,r2,w1 |- q2.
+b2,b3,d2,e2,f2 |- q2.
+p1 |- q2.
+a2,c2,p1,r3 |- q2.
+a1 |- q2.
+a1,c1 |- q2.
+a2,c3,d2,z1 |- q2.
+x1 |- q2.
+a3,b1,b2,c1,d1,s2 |- q2.
+b2 |- q2.
+c1,p3 |- w2.
+e2,r2 |- w2.
+a3,c1,q1,u1 |- w2.
+a1 |- w2.
+a3,f1,r3,s2 |- w2.
+a2,a3,b3,c3,e2 |- w2.
+d1,s2,z1 |- w2.
+a3,c1,e1 |- w2.
+b1,c1,c3,d2,z1 |- w2.
+d2,p1,q1,q3,u1,w1 |- w2.
+a1,s1 |- w2.
+a2,u2 |- w2.
+c1,r2 |- w2.
+a2,a3,d1,d2 |- w2.
+f2 |- w2.
+e1,q3,s1,y1 |- w2.
+c3,d2,s2,u1 |- w1.
+a2,b1,r3 |- w1.
+a3,c2,p1,s2,u1,y2 |- w1.
+b2 |- w1.
+a1,b3,c2,q3 |- w1.
+b3,d1,e1,p3,s1 |- w1.
+a2,c1,c2 |- w1.
+p1,r3,t2 |- w1.
+p2 |- w1.
+p1,y2 |- w1.
+a2,d2 |- w1.
+t2,z1 |- w1.
+a3,p1,q1 |- w1.
+b3 |- w1.
+d2,q3,u1 |- t2.
+f1 |- t2.
+a3,c1,e1,s1 |- t2.
+s2 |- t2.
+a1,a3,b2,c2,d1,e1 |- t2.
+a3,b1,c1,c2,f2 |- t2.
+c3 |- t2.
+a3,b3,e1,f2,q1,u2 |- t2.
+c3,r3,u1,u2 |- t2.
+c1,d2,e2,q1 |- t2.
+b1 |- t2.
+a2,c2,d1,u1,y1 |- t2.
+q1,s1,u1,z1 |- t2.
+a3,b2,e1,r2,y1 |- t2.
+u2,y1 |- t2.
+x1 |- s1.
+c1,d2,p2,x2,y1 |- s1.
+q1,s2 |- s1.
+a2,d1,f1,f2,r3,x2 |- s1.
+a1,a2,a3,b2,c2,e1 |- s1.
+q1,z1 |- s1.
+a3 |- s1.
+q3,r3,s2,u2,y1,y2 |- s1.
+s2,u1,u2,x1,y2 |- s1.
+r2,u2 |- s1.
+p1,p2,u2,y2,z1 |- s1.
+p2,q1,q3,r3,x2 |- s1.
+a3,b1,f1,y1 |- s1.
+a2,a3,e2,x2,y2 |- s1.
+a2,a3,c1,c2,f1 |- s1.
+c3,f2,p2,u1,y2 |- s1.
+d2,q1,x2 |- r2.
+b1,c3,e2,p1,u1,y1 |- r2.
+p3,r3,s2,u1,u2,y1 |- r2.
+c2,p3,s2,u1,u2,y2 |- r2.
+a1,q1,q3,s2,x2,z1 |- r2.
+c3,p3,y2 |- r2.
+c1,d1,f2 |- r2.
+c2,d1,f2,p1,s2 |- r2.
+x2 |- r2.
+p3 |- r2.
+d2 |- r2.
+a3,b2,d2,p2,s2,x2 |- r2.
+b2,p3,r3,y1 |- r2.
+a3 |- r2.
+a2,b1,b3,f2,q1,x2 |- r2.
+p1,p2,x1,x2,y1,y2 |- r2.
+a3,b2,c3,e1,z1 |- r2.
+f2,q1,u2 |- p3.
+a1,a2,c2,c3,d1 |- p3.
+b2,c1,d2,e1 |- p3.
+p1,p2,q1,r3,y1,y2 |- p3.
+a3,b3,d2,p1 |- p3.
+a2,r3 |- p3.
+a1,b1,c1,c2,f2,s2 |- p3.
+e1,q3,u1 |- p3.
+b3,c2,p1 |- p3.
+q1,y1 |- p3.
+p2,s2,u1,u2 |- p3.
+s2,x2,y2 |- p3.
+x2 |- p3.
+a1,d2,f1,u1,y1 |- p3.
+a3,e1,f1 |- p3.
+a1,b1,c3,d2,x1 |- p3.
+q3 |- x1.
+c2,f2,q3,s2,x2,z1 |- x1.
+c3 |- x1.
+a2,b1,f2 |- x1.
+a1 |- x1.
+b2,p2,q1,s2,u2,x2 |- x1.
+p1,x2,z1 |- x1.
+a1,b2,c1 |- x1.
+u1 |- x1.
+a1,a2,b2,d2,e2,u1 |- x1.
+p1,p2,r3,y1 |- x1.
+p1 |- x1.
+p2 |- x1.
+r3,u1,x2,y1 |- x1.
+q1,u2,x2,z1 |- x1.
+p1,q3,z1 |- x1.
+y2 |- x2.
+c2,e1,p1 |- x2.
+a2,b2,f2,p2,y2,z1 |- x2.
+a3,b3,d1,f2,p1 |- x2.
+p1,q3 |- x2.
+u2 |- x2.
+b3,f2,s2 |- x2.
+u1,z1 |- x2.
+a3,b3,c1,c2,f1 |- x2.
+a3,d1,p1,q3,z1 |- x2.
+b3,c2,d2,p1,s2 |- x2.
+p1,u1 |- x2.
+p1 |- x2.
+p1,y2 |- x2.
+e2,f1,q3,s2,u2 |- x2.
+a3,b1,c1,d1 |- u2.
+c3,p1,u1 |- u2.
+a1,a3,b1,e1,e2,f1 |- u2.
+q1,y1,z1 |- u2.
+c1,q3,u1 |- u2.
+a2,b2,d2,e2 |- u2.
+b1,b3,c3,d1,e1,f1 |- u2.
+a1 |- u2.
+a3,c2,e1 |- u2.
+a3,p2,y2,z1 |- u2.
+b2,d1,r3,s2,z1 |- u2.
+a1,s2 |- u2.
+a1,c2,f2,p1 |- u2.
+a1,c2,e1,e2,f1,s2 |- u2.
+f2,q1,q3,s2 |- u2.
+b2,d2,y1 |- u2.
+b2,c1,c3,d2,e1 |- u2.
+a2,b3,c2,e1,e2,y2 |- u1.
+e2,q1,q3,y1,y2,z1 |- u1.
+b1,y1 |- u1.
+p1,p2,q3,y2 |- u1.
+b2,b3,c3,d2 |- u1.
+p1,s2 |- u1.
+s2 |- u1.
+c1,c3,d1,e2,p2 |- u1.
+a2,b1,e2,p2,r3 |- u1.
+b2,b3,y2,z1 |- u1.
+p2,q1,q3,y1,y2 |- u1.
+c1,f2 |- u1.
+p2,q1,r3,s2,y2,z1 |- u1.
+c3,f1,f2,y2,z1 |- u1.
+c2,f1,q1,s2 |- p1.
+e1 |- p1.
+b1,c2,r3,y2 |- p1.
+y1,y2,z1 |- p1.
+a1,b2,c1,d1,e2,f2 |- p1.
+r3,y2 |- p1.
+e2,f2,y2 |- p1.
+b3,e2,p2,q3,r3,y1 |- p1.
+a1 |- p1.
+a1,a2,b1,b2,c1,q1 |- p1.
+b3,p2,q1,y2 |- p1.
+q1,q3,y2 |- p1.
+f1,y2 |- p1.
+a1,b2,c1,f2 |- p1.
+z1 |- p1.
+a1,a2,b1,c3,e2,y1 |- p1.
+a3,q3 |- r3.
+a1,b1,b3 |- r3.
+d1,q1,y1,z1 |- r3.
+p2,q1,q3,z1 |- r3.
+b2,d1,d2,q1,y1 |- r3.
+q1 |- r3.
+a1,a2,e2,y1,y2,z1 |- r3.
+f2,p2,q1 |- r3.
+b1,p2,q1,s2,y1,z1 |- r3.
+c2,s2 |- r3.
+a2,e1,y2 |- r3.
+q1,q3,y1 |- r3.
+c3 |- r3.
+a1,d1,f2 |- r3.
+a3,b1,q3,s2,y1 |- y2.
+d2,p2,q3,s2,y1 |- y2.
+c3,p2,y1 |- y2.
+f2 |- y2.
+q1,q3,s2,z1 |- y2.
+a1,f1,q3 |- y2.
+b1,b2,c1,q1 |- y2.
+c1,e2,q3,s2 |- y2.
+a1,b2,b3,d2,y1,z1 |- y2.
+y1,z1 |- y2.
+a3,c2,d1,p2,q1 |- y2.
+a1,b1,b3,c2,c3,f1 |- y2.
+a2,c3,e1,e2,f1 |- y2.
+a2,p2 |- q3.
+b3,d2,f2 |- q3.
+p2,s2,y1 |- q3.
+b2,d1,s2,y1 |- q3.
+p2,y1,z1 |- q3.
+a1,b2,f1,q1,s2,y1 |- q3.
+b2,p2,s2,y1,z1 |- q3.
+b3,e1,f1 |- q3.
+b3,d2,q1,s2 |- q3.
+p2 |- q3.
+p2,q1,y1,z1 |- q3.
+b1,f1,f2,y1 |- q3.
+f1 |- q3.
+
+assumption(a1).
+assumption(b1).
+assumption(c1).
+assumption(d1).
+assumption(e1).
+assumption(f1).
+assumption(a2).
+assumption(b2).
+assumption(c2).
+assumption(d2).
+assumption(e2).
+assumption(f2).
+assumption(a3).
+assumption(b3).
+assumption(c3).
+
+contrary(a1, y2).
+contrary(a2, c3).
+contrary(a3, x2).
+contrary(b1, p3).
+contrary(b2, v2).
+contrary(b3, a3).
+contrary(c1, x2).
+contrary(c2, u1).
+contrary(c3, w2).
+contrary(d1, f2).
+contrary(d2, s1).
+contrary(e1, z2).
+contrary(e2, b2).
+contrary(f1, f2).
+contrary(f2, p1).
+

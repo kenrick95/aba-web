@@ -1,0 +1,88 @@
+a2,a3,c3,e1 |- z6.
+a2,b1,e2,f1 |- z6.
+a2,c2,v7,y4 |- z6.
+a1 |- z6.
+a3,b3,d1,d2,f2,p2 |- v7.
+a1,a2,f2 |- p6.
+a2,f1 |- p6.
+x5 |- y5.
+e1 |- y5.
+a1,d1,e1,t6,y4 |- w2.
+z2 |- w2.
+d1 |- w2.
+a2,a3,e1 |- w2.
+q2,q4,u2,z6 |- u7.
+b3,f1,q6 |- u7.
+c2,d2,e1,p3,q6,u7 |- r3.
+b2,f2,r6,t7 |- y3.
+c2,e1,f1,y2 |- y3.
+r1,s2,z4 |- p3.
+q6,t1,x4 |- p3.
+f1,p5,s3,t4,u1,y4 |- v3.
+f2,z2 |- v3.
+a1,c1,e2 |- v3.
+a1,b3,c2,d1,e2 |- v3.
+c3 |- x5.
+b2,y3 |- x5.
+a1,a3,d2 |- x5.
+a2,b2,b3,c3,d1,f2 |- x5.
+s7,x6 |- t6.
+c1,e2 |- t6.
+a1,c1 |- t6.
+d2,y4 |- t6.
+a3,e2,q5,w7,x3,z4 |- q2.
+d2 |- x7.
+q2,t6,y1,z3 |- x7.
+p1,s1,t1,t7 |- s5.
+b2,p5,v4,x5 |- s5.
+a1,s6,u4,v4,v7 |- s5.
+p1 |- s5.
+a2,s2,v4,w3 |- s5.
+b2,c1,c3 |- x6.
+b2,c1,c2,d1,e1,e2 |- x6.
+z1 |- x6.
+a2,q2 |- w1.
+q4,u2,v4,x7,z1,z6 |- w1.
+b1,v6 |- w1.
+b1,b2,q1,u6,v5 |- t7.
+a3,c1,c3,d1,q7 |- t7.
+d2,s2,w3,y2,z5 |- t7.
+s1,t7,u5 |- u2.
+a2,b2,c3 |- u2.
+p2,v7 |- q5.
+r3,x3 |- q5.
+r3,r6,t4,v5,w4,z6 |- q5.
+p5,r2 |- q5.
+
+assumption(a1).
+assumption(b1).
+assumption(c1).
+assumption(d1).
+assumption(e1).
+assumption(f1).
+assumption(a2).
+assumption(b2).
+assumption(c2).
+assumption(d2).
+assumption(e2).
+assumption(f2).
+assumption(a3).
+assumption(b3).
+assumption(c3).
+
+contrary(a1, v2).
+contrary(a2, v7).
+contrary(a3, y6).
+contrary(b1, x7).
+contrary(b2, w2).
+contrary(b3, v3).
+contrary(c1, c3).
+contrary(c2, r3).
+contrary(c3, x5).
+contrary(d1, u5).
+contrary(d2, u2).
+contrary(e1, x5).
+contrary(e2, q4).
+contrary(f1, r6).
+contrary(f2, r2).
+

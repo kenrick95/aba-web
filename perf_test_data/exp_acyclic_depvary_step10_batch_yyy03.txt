@@ -1,0 +1,340 @@
+c2,c3,c6,d2,f4 |- z3.
+d4,e2,p3,q4,q5,r3,t2,v4,w1,w3,y2,y5 |- z3.
+c5 |- z3.
+d1,d2,d3,d5,e4,f5,v5 |- z3.
+a1,b2,b3,p1,p2,r2,r3,t1,v2,w1,w2,y3,z1 |- z3.
+a1,b1,c6,d2,d4,d5,f3,f5,r1,s5,z2,z4 |- z3.
+a3,e5 |- z3.
+p2,r5,s1,s5,w1,z4 |- z3.
+r5 |- z3.
+p2,r1,r5,s2,u1,v5,x4 |- z3.
+p1,r2,t2,v4,v5,z2 |- q2.
+a1,p2,p4,r4,u4,v3,w1,x1,z1 |- q2.
+q4,s1,x5,y4,y5 |- q2.
+a2,a5,a6,b1,b5,b6,c4,d2,e2,f1,f3,f5 |- p4.
+c3,c5,d3,z1 |- p4.
+a6,b6,c3,f2,s3,u5,x1,x3 |- r3.
+p2,q3,r4,s2,u2,u4,u5,v1,v5,w2,x3,x5 |- r3.
+b5,d2,f3 |- y2.
+a1,a3,b3,c2,c6,d2,e2 |- y2.
+c1,d3,e2 |- u3.
+a2,b5,c4,e1,e2,r4,s4,s5 |- u3.
+f5,u1,y4,z1 |- u3.
+f4 |- u3.
+c5 |- u3.
+a2,d2,p5,q5,r2,s4,u1,v2,x4 |- x5.
+b6,d1,r2,r4,u1,u5 |- x5.
+c1,c4,d1,t2,v5 |- x5.
+q3,q5,s4,u5,v2,w5,y1,z2 |- x5.
+r4,u4,v2,x4 |- x5.
+b3,b4,c6,d5,e1,e4,f1,s1 |- x5.
+a4,a5,a6,b3,d1,e1 |- x5.
+p2,q1,q3,s1,s5,t1,t2,u4,w3,x1,x3,z5 |- q4.
+p2,q1,q5,r1,r4,s5,w3,x4,y3,z1,z4 |- q4.
+p3,q3,q5,s1,s2,s3,s4,t2,v2,v3,v5,x2,x3 |- q4.
+b1,b5,b6,c5,c6,d2,e1,p1,w2,w5 |- q4.
+a2,a6,b4,c5,c6,e3,e4,f1,z5 |- q4.
+a1,b1,e3,f1,p2,s2,s5,t2,t3,x4,y1,z2 |- q4.
+b1,p1,p3,q1,s2,s3,t5,w4,w5,z1,z2 |- q4.
+s1,u4,z4 |- q4.
+b1,b5,c1,d3,e3,f2,y1 |- q4.
+a5,a6,b2,b5,b6,d3,p5 |- q4.
+a4,b1,c2,e4,e5,f1,f5,v3,y1 |- s1.
+a5,r2 |- s1.
+c6,f2,q1,u2,u5,w5,x4,y3 |- s1.
+b2 |- s1.
+f1,p3 |- s1.
+b1,b3,b6,d3,d4,d5,e1,f3 |- s1.
+a4,b2,b3,b4,b6,c1,d4,e2,e3,e4,f4,f5,y3 |- s1.
+a4,c6,e4,f1,f5,p3,p5,q1,q5,w3,x2 |- s1.
+b2,s5,t3,t4,u5,v5,w2,w4,x1,y3 |- s1.
+a3,a5,a6,d2,d3,e1,f5,w1,w3 |- s1.
+a1,a2,c4,c6,f4,r1,t4,u5,v1,w2,w4 |- r5.
+q5,r1,r4,s5,t5,w4,w5,z1 |- r5.
+p2,s4,v3,v5,z1 |- r5.
+a4,b3,c6,e1,q5,u5,v3,y5 |- r5.
+f1,u2,v4,x1,x4,z1,z5 |- r5.
+b1,b2,c1,c3,c6,w2 |- r5.
+f2,p2,s4,s5,u1,u4,v1,w2,x1,x2 |- r5.
+s5,z2 |- r5.
+e3,f1,v4,y4,y5,z1 |- r5.
+b1,e4,s2,s3,t3,u2,v3,x3,x4,y3,z1 |- t2.
+b6,c1,e3,e5,f5 |- t2.
+a5,t5,v5,z1 |- t2.
+a6,b4,r4,u1,v1,v3,v5,w3,y1,z1 |- t2.
+b2,w3 |- t2.
+a2,b2,b5,c3,d3,d5 |- t2.
+a1,b4,b5,c2,c3,c5,c6,d2,d5,s4,t3,y1,z1 |- t2.
+a5,d3,d4,e3,f3,p5,s2,s4,z1 |- t2.
+a2,a3,a5,b4,b6,c2,c5,d3,e1,f2,f3,f4 |- t2.
+d1,e2,s2 |- r4.
+a3,a5,b5,c5,d1,e2 |- r4.
+c1,q5,r2,t3,v1,x1,y1,z1 |- r4.
+a5,b5,d2,e1,e4,f3,f5,s2,z4 |- r4.
+d1,d2,d5,e2,t3,w4 |- r4.
+b4,c1,f3,p2,q5,u2,v4,w3,z4 |- r4.
+c1,p2,p3,s2,s3,t1,t4,x3,y1,z1 |- r4.
+p3,q5,t5,v3,w2,w5,y5 |- r4.
+b5,d4,e1,f2,x1 |- q1.
+q5,r2,s4,v4,w1,y3,y5,z4,z5 |- q1.
+c2,d1,d2,e3,e5,f1,v4 |- q1.
+c5 |- q1.
+a2,c3,d3,e3,s3,t1,u1,v3,v4,v5,x1 |- q1.
+b5,p1,p5,x4 |- q1.
+b4,f5 |- q1.
+a3,b1,b6,c6,d3,e1,e3,e4,f5,t1,w5 |- q1.
+c1,e1,f5,p1,p3,p5,s5,w3,x3,x4,z5 |- q1.
+a4,a6,b1,c1,d1,d2,d3,d4,f4,p3,y5 |- q1.
+f3 |- q1.
+p1,p2,p5,q3,s2,x4,y4,y5,z2 |- v3.
+a3,p2,t4,u1,y1 |- v3.
+a3,a6,d1,d4,d5,f2,x2 |- p1.
+e5,f3,f4 |- p1.
+d3,q5,r1,s4,t5,u2,u4,x2,x4,y5 |- w5.
+c2 |- w5.
+a1,c3,c6,e3,f3,f5 |- t3.
+f3,p3,t1,t4,v1,v4,w4,x2,x3 |- t3.
+a2,a3,b3,b4,b5,c3,d3,e5,f2,f5 |- t3.
+b6,c3,c6,d1,d3,d4,d5,e1,e2,e5,f1,w1,y1 |- t3.
+b3,b6,d1,f2,f4,y1 |- t3.
+a2,b4,c1,c2,c3,c4,d1,d2,f3 |- t3.
+a2,a3,a4,b3,c3,c4,d2,e5,f2,r1,u1,y5,z5 |- t3.
+w2 |- t3.
+d1,q5,t1,v5,x3 |- t3.
+a2,b5,d4,e4,q3,s2,v2,v4,y1 |- t4.
+r1,s4,u2,w3,y4 |- t4.
+b1,b5,c2,c3,f3 |- t4.
+c1,y3 |- t4.
+a5,e4,f4,f5,u1,y3 |- v5.
+a4,b6,d2,f2,u2,w3,x3,z5 |- v5.
+a4,c1,u2 |- v5.
+b3,c2,d4,e5,f3,r1,v2,y3,y5 |- v5.
+d4,p5,v2,v4,w1,w4,x4 |- v5.
+f2 |- v5.
+c5,t1,v1,z1 |- v5.
+s5,z1,z5 |- v5.
+p2,p3,u2 |- v4.
+c4,r1,s2,x3,z5 |- v4.
+b5,b6,f3,f5,u5 |- v4.
+d3,d4,u1 |- v4.
+b3,b4,b5,c6,d4,e1,e3,f1,f2 |- v4.
+p5,q3,s4,t5,w1,w2,w4,x2,y4 |- v4.
+r1 |- v4.
+q3,s2,t5,u2,u5,v2,w2,w3,y1,z4 |- v4.
+e3,x2 |- u1.
+f1,p2,p5,s2 |- u1.
+b6,s4,z5 |- u1.
+a1,a5,b5,c3,d4,x2 |- u1.
+f5 |- u1.
+a4,b5,p5,s2,u5 |- u1.
+a3,b2,e3,f3,f4,v2 |- u1.
+b5,d1,d5,e1,e5,f5,p2,v2,w3,x2,y4,y5,z5 |- u1.
+a3,f3,v1 |- u1.
+a3,a5,b1,c6,d5,e2,f2,p3,q5,r1,s4,w2,z5 |- u1.
+d1,p3,u4,u5,w1,w2,x2,z2 |- x4.
+c1,f5 |- x4.
+e4,q3,r2,s4,z1,z2 |- x4.
+a6,b2,b5,c2,c4,c6,d5,e1,e5,t1,w4 |- w3.
+a6,b2,c6,d4,f2,r2,s4,u2 |- w3.
+a1,b4,b6,c3,c5,e3,f2,f4,w4 |- w3.
+a5,b6,c2,c3,c5,c6,d1,d3,d4,f1,f2,f4 |- w3.
+a1,b2,b3,b4,d4,d5,e4,e5,f1,q5 |- w3.
+a5,b5,d1,d2,s5,v2,z4 |- w3.
+a5,b6,c5,r2,s4,v1,z1 |- w3.
+a3,b3,b4,b5,d4,f2,f3,p5,q3,t1,y1 |- w3.
+b4,c5,d5,e3,p3,r2,s5,u4,u5,v1 |- w3.
+a6,b1,d1,q3,t5,u2,u4,w2,y1,z1,z2,z5 |- w3.
+a6,z4 |- w1.
+d3,e4,p5,s5,t1,x3 |- w1.
+a1,a2,a6,b2,b3,c1,c2,d2,d3,d4,e2,f3,q5 |- w1.
+b4,e2,p3,p5,r1,r2,s4,s5,w2,w4,x1,y4,z4 |- w1.
+a4,b3,b4,b6,c1,d3,d4,e1,e4,f1,f4 |- w1.
+q3,s2,s4,t1,v1,w2,y3,y4,z4 |- w1.
+d5,e5,f4,s4,v1,x1 |- w1.
+a4,b2,d1,e1,e3,e5,f1,f2 |- w1.
+c5,e5,p2,r2,t5,u4,u5,x1,x3,y1,z4 |- w1.
+a4,a6,b1,b2,b4,c6,d3,e3,e4,f3 |- y5.
+b1,f4,p5,s3,u2,w4,x3 |- y5.
+a2,b2,b6,c6,x2,z5 |- y5.
+z4 |- y5.
+c5,c6,d1,p2,p5,r2,w2,y3 |- y5.
+a1,a3,a5,b6,c2,c6,d2,d3,d4,e5,f2,p3,r2 |- y5.
+c6,d5,q3 |- s2.
+a3,b1,x3 |- s2.
+q5,r1,y4 |- s2.
+a1,a4,b4,c4,c5,c6,d5,f3,p3 |- s2.
+b5,c4,e2,f2,p2,p5,q3,t5,u4,x2 |- s2.
+d2,d3,e3,e4,f1,f2,q5,r1,r2,s5,u4 |- s2.
+a5,e1,q5,s4,t5,u4,u5,w4,x1,y3,y4 |- t1.
+z2 |- t1.
+d4 |- t1.
+a2,a3,c2,c6,d2,d3,e1,f2,f3,s3,s5,u2,y1 |- t1.
+a6,c5,p5,q3,q5,v2,w2,y3,z2 |- x3.
+c4,f4,r2,s3,t5,u4,v1,y1,y4,z1,z5 |- x3.
+e5,p5,r1,s3,s4,u4,x1,y1,z5 |- x2.
+b6,u5 |- x2.
+b1,c4,d3,d4,f1,f3,p3,u2,w4,x1,z1,z4 |- x2.
+a5,c4,e2 |- x2.
+a1,a4,e5,f4 |- x2.
+b2,z1 |- x2.
+c1,f5,u2,z2 |- p2.
+b2,w4 |- p2.
+d3 |- p2.
+d5,z1 |- p2.
+b3,b6,c6,r2 |- p2.
+a1,b3,c4,c6,e4,f3,r1,u5,y1 |- p2.
+a1,a6,b5,c1,c3,d3,e3,f2,f4 |- p2.
+a4,c3,u4,w2 |- p2.
+p5,q3,s5,u2,u5,w2,w4,z1,z2,z4,z5 |- p2.
+s5,t5,u2,u4,y1,y4 |- p2.
+a2,b5,b6,c1,c6,e2,f1,f2,f3,q3,t5,w2 |- p2.
+q5,s4 |- x1.
+b2,b3,b4 |- x1.
+a4,e4,p3,q3,r2,s3,s4,s5,w4,y3,z5 |- x1.
+a2,a3,c3,d1,d5,e1,e5,q3,y1 |- x1.
+a3,b5,c5,c6,d4,e5 |- u5.
+s3,v1,v2,y4,z2,z4,z5 |- u5.
+d5 |- u5.
+s4,u4,w4 |- u5.
+a1,a5,b2,c2,c4,d1,e4,p3,p5,r2,u4,v2,y3 |- u5.
+e1,f5,p5,q3,q5,r1,s3,s4,v1,v2,z1,z2 |- u5.
+d1,p3,q3,s3,u4,v2,w4,y3,y4,z2,z4,z5 |- u5.
+b4,c5,d4,d5,f1,f2,f5 |- u5.
+b2,c1,e2,f3,q3,r1,t5,v2,y1,y3,z4,z5 |- u5.
+a2,b4,c3,c4,c6,d5 |- u5.
+a2,c3,d3,d4,r1,u2 |- p5.
+a4,b2,b5,c2,c6,d2 |- p5.
+a1 |- p5.
+a1,a3,a5,b5,c5,c6,d4,e1,f1,f2,f4,w2,y1 |- p3.
+b6,c3,f2,q5,u2,y1,z2 |- p3.
+a3,a6,b3,e5,f2,f3,s5,v1,y3,z2 |- t5.
+s5,w4,y1,y3,z5 |- t5.
+e1 |- t5.
+q3,r1,r2,s3,s4,s5,u2,v2,z4,z5 |- t5.
+q5,r2,w2,z4 |- t5.
+a4,b3,c5,d3,d4,e4,e5,f3 |- t5.
+b4,b5,c6,s3,v1 |- t5.
+e2,e3,f3,z1 |- t5.
+q3,q5,r1,r2,u4,v2,w2,y1,y3,z1,z4 |- t5.
+a1,b1,c2,c5,c6,d4,d5,e3,e4,f2 |- v1.
+c3,c6,q3,z2,z4,z5 |- v1.
+s4,s5,u4,v2,y4 |- v1.
+a1,a5,d2,d3,e3,e5,f3,f5,q5,w2 |- v1.
+a4,b1,b2,b5,f1,f5,q3,r1,s5,v2,z1,z5 |- v1.
+c1,s3,u4,v2,y1,y4 |- v1.
+u2,z5 |- v1.
+a5,a6,b2,b4,b5,d1,d5,e5 |- v1.
+a2,a3,b5,b6,c1,c5,c6,d1,e5,r2,z5 |- v1.
+a1,a6,b2,f4,z4 |- q3.
+a3,a4,c4,f3 |- q3.
+a1,r1,w4,y1,y4 |- q3.
+d1,e3,e4,s4,s5,y3,z2 |- q3.
+y4,z1,z2 |- q3.
+c5 |- y3.
+b2,r1 |- y3.
+a6,b3,d1,d4,d5,e4,f2,s3 |- y3.
+a2,a6,b4,d2,f2,f3,s5,w2 |- y3.
+b3,c4,f2 |- s4.
+c3,d3,d4,e5,q5,r2,s3,s5,u2,v2,y4,z4 |- s4.
+s3,u2,u4,y4,z4 |- s4.
+q5,r1,s3,s5,u2,u4,w2,w4,y1,y4,z2,z4,z5 |- s4.
+a5,b4,c3,f3,y1,z2,z4 |- s4.
+a5 |- y4.
+c2,d4,e1,f3,u4 |- y4.
+a4,w4,z4 |- y4.
+a6,b1,b3,b6,d4 |- q5.
+b2,c1,c6,u4,v2,y1,z4 |- q5.
+a2,a4,a6,b1,b3,b5,c2,c3,e1,e2,f2 |- q5.
+b1,v2 |- q5.
+a6,c1,c6,d1,e1,e4,f2,s5 |- q5.
+a6,b3,e2,r1,w4,z2 |- q5.
+a1,a3,a4,b3,b4,c2,c5,d3,d5,e3,e5,f3 |- q5.
+z2 |- q5.
+r1,z5 |- q5.
+a2,a3,b1,c2,c3,d3,e2,e5,f1,z5 |- r1.
+a2,u2 |- r1.
+c6,u4 |- r1.
+s3,u4,v2,w2,w4,y1,z1,z4,z5 |- r1.
+c2,c4,s5,u2 |- r1.
+r2,s5,u2,u4,y1,z1,z4 |- z5.
+b6,c1 |- z5.
+a2,b5,c6,r2 |- z5.
+d3,r2,s3,w2,w4,y1,z1,z4 |- z5.
+b4,d5,r2,s5,u2,u4,v2,w2,w4,y1,z2,z4 |- z5.
+a3,a6,c6,d1,e5,f4,u4,z2 |- z5.
+a1,b1,c2,c4,r2,s3,s5,u2,w2,w4,y1,z1,z4 |- v2.
+a1,a2,a6,b4,b6,c1,d4,d5,e2,e3,e4,u2 |- v2.
+c1,e2,r2,u4,w2,z1,z4 |- v2.
+z4 |- v2.
+a2,b1,b2,c3,d2,f1,f5,u4,w2,w4,z1,z2,z4 |- v2.
+r2,s3,s5,u2,w2,w4,y1,z1,z2,z4 |- v2.
+b2,c2,e4,r2,s5,u2,w2,w4,z1,z2,z4 |- v2.
+
+assumption(a1).
+assumption(b1).
+assumption(c1).
+assumption(d1).
+assumption(e1).
+assumption(f1).
+assumption(a2).
+assumption(b2).
+assumption(c2).
+assumption(d2).
+assumption(e2).
+assumption(f2).
+assumption(a3).
+assumption(b3).
+assumption(c3).
+assumption(d3).
+assumption(e3).
+assumption(f3).
+assumption(a4).
+assumption(b4).
+assumption(c4).
+assumption(d4).
+assumption(e4).
+assumption(f4).
+assumption(a5).
+assumption(b5).
+assumption(c5).
+assumption(d5).
+assumption(e5).
+assumption(f5).
+assumption(a6).
+assumption(b6).
+assumption(c6).
+
+contrary(a1, r2).
+contrary(a2, c6).
+contrary(a3, t5).
+contrary(a4, x2).
+contrary(a5, b4).
+contrary(a6, e3).
+contrary(b1, b2).
+contrary(b2, b4).
+contrary(b3, q5).
+contrary(b4, r2).
+contrary(b5, b3).
+contrary(b6, f4).
+contrary(c1, p1).
+contrary(c2, d5).
+contrary(c3, v3).
+contrary(c4, x5).
+contrary(c5, s1).
+contrary(c6, c3).
+contrary(d1, u5).
+contrary(d2, t3).
+contrary(d3, z5).
+contrary(d4, d1).
+contrary(d5, u4).
+contrary(e1, e3).
+contrary(e2, r3).
+contrary(e3, s4).
+contrary(e4, s2).
+contrary(e5, b2).
+contrary(f1, p3).
+contrary(f2, b4).
+contrary(f3, r4).
+contrary(f4, w1).
+contrary(f5, b2).
+

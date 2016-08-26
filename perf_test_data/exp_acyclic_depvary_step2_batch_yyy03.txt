@@ -1,0 +1,47 @@
+p1,q1,u1 |- r2.
+a1,f1,s2 |- y1.
+x1 |- y1.
+s2,u1,v1 |- p2.
+a2,e1,f1 |- p2.
+x1 |- u1.
+a1,b2 |- u1.
+r1,v1,z1 |- s1.
+r1 |- s1.
+a2 |- q1.
+b2,e1 |- q1.
+t1,w1 |- q1.
+t1,x1 |- p1.
+b1,d1,e1 |- p1.
+c2,d1,e1 |- p1.
+t1,v1,z1 |- q2.
+c2,e1,z1 |- q2.
+a2,b1,c1 |- q2.
+c1,c2 |- x1.
+a1,a2,w1 |- x1.
+b1,f1,t1 |- z1.
+w1 |- z1.
+b1,d1 |- z1.
+d1,e1 |- r1.
+s2,v1,w1 |- t1.
+b1,d1,e1 |- t1.
+
+assumption(a1).
+assumption(b1).
+assumption(c1).
+assumption(d1).
+assumption(e1).
+assumption(f1).
+assumption(a2).
+assumption(b2).
+assumption(c2).
+
+contrary(a1, p2).
+contrary(a2, f1).
+contrary(b1, q2).
+contrary(b2, f1).
+contrary(c1, s1).
+contrary(c2, v1).
+contrary(d1, v1).
+contrary(e1, r2).
+contrary(f1, b1).
+

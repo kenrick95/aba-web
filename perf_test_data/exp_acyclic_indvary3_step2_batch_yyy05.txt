@@ -1,0 +1,102 @@
+q1,q2,u2,v3,y1 |- z3.
+b2,b3,c2,d2,e1 |- z3.
+e2,f2,s1,z1 |- z3.
+f2,q1,r1 |- z3.
+b2,e2,f2 |- v1.
+q2,r2,v3,w2,y2,z1 |- v1.
+a1,t3,z1 |- v1.
+a2,b3,c1,c2,f2 |- v1.
+a3,b1,b2,e1,q4,z2 |- v1.
+b3,c1,d2,e1,e2,z2 |- r1.
+d1,d2,f1 |- r1.
+b2,e1,e2 |- r1.
+f2,u2,w2 |- r3.
+a3,d1,d2 |- r3.
+d1,f1,p3 |- u2.
+a1,p4,q1,w1 |- u2.
+a1,d1,q3,w3,y3 |- q4.
+a2,a3,c3,d1,d2,e1 |- q4.
+c1,f1,t1,w2,z1 |- q4.
+v3,w1,w3 |- q4.
+b1,d2,s2,v2,x1,y2 |- q4.
+c1,c2,e2 |- u3.
+p1,s1,s3,x1 |- u3.
+a2,a3,b1,d1,d2,f1 |- u3.
+p4,u1,y1,y2 |- v2.
+b3,c1,e1 |- v2.
+b3,c1,d2,e2,f2 |- v2.
+c3,e1,s1,t1,v3,x3 |- v2.
+f2,q1,t1,w2,z1 |- v2.
+f1,r2,u1,x2 |- y2.
+a1,b2,d1,u1 |- y2.
+d1,f2,q3,s1,x3 |- y2.
+e1,p1,q3,t2,u1,y3 |- x2.
+p1,p4,q2,t3,z1 |- x2.
+b2,c3,e1,f1,q3,w1 |- x2.
+c1,p1,t3,w2 |- x2.
+a1,b1,b3,u1,w1 |- x2.
+a1,a2,c3,f1 |- u1.
+p3,p4,q3,w2,x1 |- u1.
+a1,a2,b2,c1,c3,p3 |- u1.
+p3,s3,t3,y1 |- t1.
+a2,d1,e1,f1,f2,s3 |- t1.
+b2,p2,s3,x3 |- t1.
+a3,b3,d2,f1,t2 |- s3.
+a3,d2,e2,f2 |- s3.
+a2,b2,c3,q2,w3 |- s3.
+c3,d1,p3,r2,s1,w3 |- s3.
+a3,q1,q2,w1 |- t2.
+e2,q1,q2,z2 |- t2.
+a3,p3,q2,t3,w1,w2 |- t2.
+a1,d1,e2,w1,z1 |- w2.
+b1,b2,f1 |- w2.
+a3,p1,p3,q1,q3 |- w2.
+a1,c1,f2,s1,x1 |- s2.
+a1,c3,d1,f2,p4 |- s2.
+a2,d2,x1 |- p2.
+b3,p3,p4,t3,y1 |- p2.
+b1,d1,e1,f2 |- p2.
+a1,b1,c3,p3 |- p2.
+q3,v3,w1 |- p2.
+b3,c3,d1,f1 |- x3.
+p4,q3,r2,v3,w1,y3 |- x3.
+c1,e2,f1,p4,q3,z1 |- y1.
+b3,q2,q3,r2,v3 |- y1.
+d1,p4,z2 |- y3.
+p3,t3,x1,z1 |- y3.
+a2,d1,s1,w3 |- y3.
+b2,q1,z1 |- y3.
+f1,p4,q1,v3,w3,z2 |- y3.
+
+assumption(a1).
+assumption(b1).
+assumption(c1).
+assumption(d1).
+assumption(e1).
+assumption(f1).
+assumption(a2).
+assumption(b2).
+assumption(c2).
+assumption(d2).
+assumption(e2).
+assumption(f2).
+assumption(a3).
+assumption(b3).
+assumption(c3).
+
+contrary(a1, z2).
+contrary(a2, s3).
+contrary(a3, b2).
+contrary(b1, x2).
+contrary(b2, y1).
+contrary(b3, p2).
+contrary(c1, r3).
+contrary(c2, z1).
+contrary(c3, q4).
+contrary(d1, x2).
+contrary(d2, b3).
+contrary(e1, v1).
+contrary(e2, t1).
+contrary(f1, q2).
+contrary(f2, s3).
+

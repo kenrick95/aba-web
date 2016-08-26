@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import networkx as nx
 from .aba_constants import *
 import logging

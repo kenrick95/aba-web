@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 class ABA_Rule(dict):
     def __init__(self, symbols, result = None):
         dict.__init__(self, symbols = symbols, result = result) # to make it JSON-serializable
