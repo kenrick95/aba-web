@@ -119,3 +119,13 @@ http://www.sciencedirect.com/science/article/pii/000437029400041X
 > A preferred extension of an argumentation framework (AF) is a maximal (w.r.t. set inclusion) admissible set of AF.
 
 http://logcom.oxfordjournals.org.ezlibproxy1.ntu.edu.sg/content/13/3/377.short 
+
+### Notes
+
+`requirements.txt` contains libraries needed for setting up the project.
+
+The following files are related to deployment in Microsoft Azure, please disregard them when evaluating the project:
+
+- `ptvs_virtualenv_proxy.py`
+- `runtime.txt`
+- `web.config`
