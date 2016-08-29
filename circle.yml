@@ -3,3 +3,6 @@ machine:
     Asia/Singapore
   python:
     version: 3.4.5
+test:
+  override:
+    - nosetests tests
