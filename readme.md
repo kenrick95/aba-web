@@ -1,4 +1,5 @@
 # Web-based Argumentation
+Test status: [![CircleCI](https://circleci.com/gh/kenrick95/aba-web/tree/master.svg?style=svg&circle-token=3eee74022841f7537e825b583d3459b0ef10df4d)](https://circleci.com/gh/kenrick95/aba-web/tree/master)
 
 - Assumption-based Argumentation
 - Interface to web
