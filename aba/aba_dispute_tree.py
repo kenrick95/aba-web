@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import networkx as nx
-import ujson
+import pickle
 from .aba_constants import *
 import logging
 
@@ -55,20 +55,24 @@ class ABA_Dispute_Tree():
         self.__current_index = index
 
         if len(node.assumptions) > 1:
+            #level_graphs_copy = pickle.loads(pickle.dumps(self.graphs[index], -1))
+            #level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) 
             level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy; TODO, check if still okay; deep copy is too slow
-            level_history_copy = ujson.loads(ujson.dumps(self.__history[index]))
-            level_depth_copy = ujson.loads(ujson.dumps(self.__depth[index]))
-            level_is_grounded_copy = ujson.loads(ujson.dumps(self.is_grounded[index]))
-            level_is_admissible_copy = ujson.loads(ujson.dumps(self.is_admissible[index]))
+            level_history_copy = pickle.loads(pickle.dumps(self.__history[index], -1))
+            level_depth_copy = pickle.loads(pickle.dumps(self.__depth[index], -1))
+            level_is_grounded_copy = pickle.loads(pickle.dumps(self.is_grounded[index], -1))
+            level_is_admissible_copy = pickle.loads(pickle.dumps(self.is_admissible[index], -1))
         
 
         for idx, assumptions in enumerate(node.assumptions):
             if idx > 0: # "OR" branch, create new dispute tree
+                #self.graphs.append(level_graphs_copy.copy()) # normal copy
+                #self.graphs.append(pickle.loads(pickle.dumps(level_graphs_copy, -1)))
                 self.graphs.append(nx.DiGraph(level_graphs_copy)) # shallow copy
-                self.__history.append(ujson.loads(ujson.dumps(level_history_copy)))
-                self.__depth.append(ujson.loads(ujson.dumps(level_depth_copy)))
-                self.is_grounded.append(ujson.loads(ujson.dumps(level_is_grounded_copy)))
-                self.is_admissible.append(ujson.loads(ujson.dumps(level_is_admissible_copy)))
+                self.__history.append(pickle.loads(pickle.dumps(level_history_copy, -1)))
+                self.__depth.append(pickle.loads(pickle.dumps(level_depth_copy, -1)))
+                self.is_grounded.append(pickle.loads(pickle.dumps(level_is_grounded_copy, -1)))
+                self.is_admissible.append(pickle.loads(pickle.dumps(level_is_admissible_copy, -1)))
                 self.is_complete.append(None)
                 self.is_ideal.append(None)
                 self.__current_index += 1
@@ -81,7 +85,10 @@ class ABA_Dispute_Tree():
                 
                 
                 self.graphs[self.__current_index].add_edge(node, opponent_node, text_label = "Opponent node <%s> attacking assumption <%s> of Proponent node <%s>" % (opponent_node.root, assumption, node.root))
-                self.__add_label(self.__current_index, opponent_node, DT_OPPONENT)
+                self.__add_label(self.__current_index, opponent_node, DT_OPPONENT, assumption_index=idx)
+
+                if self.__is_infinity(self.__current_index, opponent_node, DT_OPPONENT):
+                    break
                 
                 self.__depth[self.__current_index] += 1
                 self.__history[self.__current_index].append((opponent_node, DT_OPPONENT))
@@ -101,11 +108,13 @@ class ABA_Dispute_Tree():
         self.__current_index = index
         for idx, assumptions in enumerate(node.assumptions):
             if idx > 0: # "OR" branch, create new dispute tree
+                #self.graphs.append(self.graphs[index].copy()) # normal copy
                 self.graphs.append(nx.DiGraph(self.graphs[index])) # shallow copy
-                self.__history.append(ujson.loads(ujson.dumps(self.__history[index])))
-                self.__depth.append(ujson.loads(ujson.dumps(self.__depth[index])))
-                self.is_grounded.append(ujson.loads(ujson.dumps(self.is_grounded[index])))
-                self.is_admissible.append(ujson.loads(ujson.dumps(self.is_admissible[index])))
+                #self.graphs.append(pickle.loads(pickle.dumps(self.graphs[index], -1)))
+                self.__history.append(pickle.loads(pickle.dumps(self.__history[index], -1)))
+                self.__depth.append(pickle.loads(pickle.dumps(self.__depth[index], -1)))
+                self.is_grounded.append(pickle.loads(pickle.dumps(self.is_grounded[index], -1)))
+                self.is_admissible.append(pickle.loads(pickle.dumps(self.is_admissible[index], -1)))
                 self.is_complete.append(None)
                 self.is_ideal.append(None)
                 self.__current_index += 1
@@ -117,7 +126,7 @@ class ABA_Dispute_Tree():
                 logging.debug("Pro node <%s> attacking assumption <%s> of Opp node <%s>", proponent_node.root, assumption, node.root)
                 
                 self.graphs[self.__current_index].add_edge(node, proponent_node, text_label = "Proponent node <%s> attacking assumption <%s> of Opponent node <%s>" % (proponent_node.root, assumption, node.root))
-                self.__add_label(self.__current_index, proponent_node, DT_PROPONENT)
+                self.__add_label(self.__current_index, proponent_node, DT_PROPONENT, assumption_index=idx)
                 
                 if self.__is_infinity(self.__current_index, proponent_node, DT_PROPONENT):
                     break
@@ -131,7 +140,14 @@ class ABA_Dispute_Tree():
                 break
         
     def __is_infinity(self, index, node, label):
-        value = (node, label) in self.__history[index]
+        logging.debug("<%s, %s, %s>, history: %s", index, node, label, self.__history[index])
+        
+        value = False
+        for history_node, history_label in self.__history[index]:
+            if history_node.root == node.root and history_label == label:
+                value = True
+                break
+        # value = (node, label) in self.__history[index]
         if value:
             logging.debug("Infinity detected in node <%s> of <%s, %s>", node.root, index, label)
             self.is_grounded[index] = False
@@ -139,7 +155,7 @@ class ABA_Dispute_Tree():
         return value
             
         
-    def __add_label(self, index, node, label):
+    def __add_label(self, index, node, label, assumption_index = 0):
         if 'label' in self.graphs[index].node[node]:
             logging.debug("Label already present in node <%s>", node.root)
             if self.graphs[index].node[node]['label'] != label:
@@ -148,8 +164,8 @@ class ABA_Dispute_Tree():
         self.graphs[index].node[node]['label'] = label
         self.graphs[index].node[node]['text_label'] = "(%s) Argument %s" % (label, node.root)
 
-        if len(node.assumptions[index]) > 0:
-            self.graphs[index].node[node]['text_label'] += "\nwith assumption(s): %s" % (", ".join(node.assumptions[index]))
+        if len(node.assumptions[assumption_index]) > 0:
+            self.graphs[index].node[node]['text_label'] += "\nwith assumption(s): %s" % (", ".join(node.assumptions[assumption_index]))
         if 'depth' not in self.graphs[index].node[node]:
             self.graphs[index].node[node]['depth'] = self.__depth
             logging.debug("Tree depth of node <%s> is <%s>", node.root, self.__depth)

@@ -169,6 +169,32 @@ class TestAssumptionOnlyArguments(unittest.TestCase):
     def test_arguments(self):
         self.assertCountEqual([x[0].root for x in self.aba.arguments], ['a', 'b', 'c'])
 
+class TestMultipleDisputeTrees(unittest.TestCase):
+    def setUp(self):
+        logging.debug(self.id())
+    
+    def test_1(self):
+
+        aba = ABA()
+        aba.symbols = ('a1', 'a2', 'b1', 'b2', 'c', 'd')
+        aba.rules.append(ABA_Rule(['a1'], 'c'))
+        aba.rules.append(ABA_Rule(['a2'], 'c'))
+        aba.rules.append(ABA_Rule(['b1'], 'd'))
+        aba.rules.append(ABA_Rule(['b2'], 'd'))
+        aba.contraries['a1'] = 'd'
+        aba.contraries['a2'] = 'd'
+        aba.contraries['b1'] = 'c'
+        aba.contraries['b2'] = 'c'
+
+        aba.infer_assumptions()
+        aba.construct_arguments()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['a1', 'a2', 'b1', 'b2', 'c', 'c', 'd', 'd'])
+
+
+        aba.construct_dispute_trees()
+
+        
+
 
 class TestCircularTwoSymbols(unittest.TestCase):
     def setUp(self):
