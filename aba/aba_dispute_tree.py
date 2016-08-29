@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import networkx as nx
-import ujson
+import json
 from .aba_constants import *
 import logging
 
@@ -56,19 +56,19 @@ class ABA_Dispute_Tree():
 
         if len(node.assumptions) > 1:
             level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy; TODO, check if still okay; deep copy is too slow
-            level_history_copy = ujson.loads(ujson.dumps(self.__history[index]))
-            level_depth_copy = ujson.loads(ujson.dumps(self.__depth[index]))
-            level_is_grounded_copy = ujson.loads(ujson.dumps(self.is_grounded[index]))
-            level_is_admissible_copy = ujson.loads(ujson.dumps(self.is_admissible[index]))
+            level_history_copy = json.loads(json.dumps(self.__history[index]))
+            level_depth_copy = json.loads(json.dumps(self.__depth[index]))
+            level_is_grounded_copy = json.loads(json.dumps(self.is_grounded[index]))
+            level_is_admissible_copy = json.loads(json.dumps(self.is_admissible[index]))
         
 
         for idx, assumptions in enumerate(node.assumptions):
             if idx > 0: # "OR" branch, create new dispute tree
                 self.graphs.append(nx.DiGraph(level_graphs_copy)) # shallow copy
-                self.__history.append(ujson.loads(ujson.dumps(level_history_copy)))
-                self.__depth.append(ujson.loads(ujson.dumps(level_depth_copy)))
-                self.is_grounded.append(ujson.loads(ujson.dumps(level_is_grounded_copy)))
-                self.is_admissible.append(ujson.loads(ujson.dumps(level_is_admissible_copy)))
+                self.__history.append(json.loads(json.dumps(level_history_copy)))
+                self.__depth.append(json.loads(json.dumps(level_depth_copy)))
+                self.is_grounded.append(json.loads(json.dumps(level_is_grounded_copy)))
+                self.is_admissible.append(json.loads(json.dumps(level_is_admissible_copy)))
                 self.is_complete.append(None)
                 self.is_ideal.append(None)
                 self.__current_index += 1
@@ -102,10 +102,10 @@ class ABA_Dispute_Tree():
         for idx, assumptions in enumerate(node.assumptions):
             if idx > 0: # "OR" branch, create new dispute tree
                 self.graphs.append(nx.DiGraph(self.graphs[index])) # shallow copy
-                self.__history.append(ujson.loads(ujson.dumps(self.__history[index])))
-                self.__depth.append(ujson.loads(ujson.dumps(self.__depth[index])))
-                self.is_grounded.append(ujson.loads(ujson.dumps(self.is_grounded[index])))
-                self.is_admissible.append(ujson.loads(ujson.dumps(self.is_admissible[index])))
+                self.__history.append(json.loads(json.dumps(self.__history[index])))
+                self.__depth.append(json.loads(json.dumps(self.__depth[index])))
+                self.is_grounded.append(json.loads(json.dumps(self.is_grounded[index])))
+                self.is_admissible.append(json.loads(json.dumps(self.is_admissible[index])))
                 self.is_complete.append(None)
                 self.is_ideal.append(None)
                 self.__current_index += 1
