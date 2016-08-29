@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import networkx as nx
-import json
+import ujson
 import logging
 import time
 
@@ -69,14 +69,14 @@ class ABA_Graph():
 
         if len(rules_supporting_node) > 1:
             level_graph_copy = self.graphs[index].copy()
-            level_history_copy = json.loads(json.dumps(self.__history[index]))
-            level_is_cyclical_copy = json.loads(json.dumps(self.__is_cyclical[index]))
+            level_history_copy = ujson.loads(ujson.dumps(self.__history[index]))
+            level_is_cyclical_copy = ujson.loads(ujson.dumps(self.__is_cyclical[index]))
 
         for i, rule in enumerate(rules_supporting_node):
             if i > 0: # "OR" branch, create new argument graph
                 self.graphs.append(level_graph_copy.copy())
-                self.__history.append(json.loads(json.dumps(level_history_copy)))
-                self.__is_cyclical.append(json.loads(json.dumps(level_is_cyclical_copy)))
+                self.__history.append(ujson.loads(ujson.dumps(level_history_copy)))
+                self.__is_cyclical.append(ujson.loads(ujson.dumps(level_is_cyclical_copy)))
                 self.assumptions.append({})
                 self.is_conflict_free.append(None)
                 self.is_stable.append(None)
