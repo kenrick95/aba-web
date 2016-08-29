@@ -65,11 +65,18 @@ class ABA_Graph():
         
     def __propagate(self, index, node):
         self.__current_index = index
-        for i, rule in enumerate([x for x in self.__aba.rules if x.result == node]):
+        rules_supporting_node = [x for x in self.__aba.rules if x.result == node]
+
+        if len(rules_supporting_node) > 0:
+            level_graph_copy = self.graphs[index].copy()
+            level_history_copy = copy.deepcopy(self.__history[index])
+            level_is_cyclical_copy = copy.deepcopy(self.__is_cyclical[index])
+
+        for i, rule in enumerate(rules_supporting_node):
             if i > 0: # "OR" branch, create new argument graph
-                self.graphs.append(self.graphs[index].copy())
-                self.__history.append(copy.deepcopy(self.__history[index]))
-                self.__is_cyclical.append(copy.deepcopy(self.__is_cyclical[index]))
+                self.graphs.append(level_graph_copy)
+                self.__history.append(level_history_copy)
+                self.__is_cyclical.append(level_is_cyclical_copy)
                 self.assumptions.append({})
                 self.is_conflict_free.append(None)
                 self.is_stable.append(None)
