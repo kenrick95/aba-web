@@ -68,13 +68,15 @@ class ABA_Graph():
         rules_supporting_node = [x for x in self.__aba.rules if x.result == node]
 
         if len(rules_supporting_node) > 1:
-            level_graph_copy = self.graphs[index].copy()
+            #level_graph_copy = self.graphs[index].copy()
+            level_graph_copy = nx.DiGraph(self.graphs[index]) # shallow copy
             level_history_copy = ujson.loads(ujson.dumps(self.__history[index]))
             level_is_cyclical_copy = ujson.loads(ujson.dumps(self.__is_cyclical[index]))
 
         for i, rule in enumerate(rules_supporting_node):
             if i > 0: # "OR" branch, create new argument graph
-                self.graphs.append(level_graph_copy.copy())
+                #self.graphs.append(level_graph_copy.copy())
+                self.graphs.append(nx.DiGraph(level_graph_copy)) # shallow copy
                 self.__history.append(ujson.loads(ujson.dumps(level_history_copy)))
                 self.__is_cyclical.append(ujson.loads(ujson.dumps(level_is_cyclical_copy)))
                 self.assumptions.append({})

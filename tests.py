@@ -200,10 +200,79 @@ class TestMultipleDisputeTrees(unittest.TestCase):
         aba.construct_arguments()
         self.assertCountEqual([x[0].root for x in aba.arguments], ['a1', 'a2', 'b1', 'b2', 'c', 'c', 'd', 'd'])
 
-
         aba.construct_dispute_trees()
 
-        
+class TestLongArguments(unittest.TestCase):
+    def setUp(self):
+        logging.debug(self.id())
+    
+    def test_1(self):
+        raw = """
+        a1 |- c.
+        a2 |- c.
+        a3 |- c.
+        a4 |- c.
+        a5 |- c.
+        x1 |- c.
+        x2 |- c.
+        x3 |- c.
+        x4 |- c.
+        x5 |- c.
+        b1 |- d.
+        b2 |- d.
+        b3 |- d.
+        b4 |- d.
+        b5 |- d.
+        e1 |- f.
+        e2 |- f.
+        e3 |- f.
+        e4 |- f.
+        e5 |- f.
+        y1 |- f.
+        y2 |- f.
+        y3 |- f.
+        y4 |- f.
+        y5 |- f.
+        g1 |- h.
+        g2 |- h.
+        g3 |- h.
+        g4 |- h.
+        g5 |- h.
+        contrary(a1, d).
+        contrary(a2, d).
+        contrary(a3, d).
+        contrary(a4, d).
+        contrary(a5, d).
+        contrary(x1, h).
+        contrary(x2, h).
+        contrary(x3, h).
+        contrary(x4, h).
+        contrary(x5, h).
+        contrary(y1, h).
+        contrary(y2, h).
+        contrary(y3, h).
+        contrary(y4, h).
+        contrary(y5, h).
+        contrary(b1, c).
+        contrary(b2, c).
+        contrary(b3, c).
+        contrary(b4, c).
+        contrary(b5, c).
+        contrary(e1, c).
+        contrary(e2, c).
+        contrary(e3, c).
+        contrary(e4, c).
+        contrary(e5, c).
+        contrary(g1, c).
+        contrary(g2, c).
+        contrary(g3, c).
+        contrary(g4, c).
+        contrary(g5, c).
+        """
+        parser = ABA_Parser(raw)
+        parser.parse()
+        aba = parser.construct_aba()
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'd', 'd', 'd', 'd', 'd', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'h', 'h', 'h', 'h', 'h', 'a1', 'a2', 'a3', 'a4', 'a5', 'x1', 'x2', 'x3', 'x4', 'x5', 'b1', 'b2', 'b3', 'b4', 'b5', 'e1', 'e2', 'e3', 'e4', 'e5', 'g1', 'g2', 'g3', 'g4', 'g5', 'y1', 'y2', 'y3', 'y4', 'y5'])
 
 
 class TestCircularTwoSymbols(unittest.TestCase):

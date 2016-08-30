@@ -143,10 +143,6 @@ class ABA_Dispute_Tree():
         logging.debug("<%s, %s, %s>, history: %s", index, node, label, self.__history[index])
         
         value = False
-        # for history_node, history_label in self.__history[index]:
-        #     if history_node == node.root and history_label == label:
-        #         value = True
-        #         break
         value = [node.root, label] in self.__history[index]
         if value:
             logging.debug("Infinity detected in node <%s> of <%s, %s>", node.root, index, label)
