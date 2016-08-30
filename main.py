@@ -17,7 +17,7 @@ def main():
     
 @app.route("/api", methods=['POST'])
 def api():
-    logging.basicConfig(filename='main.log',level=logging.DEBUG) 
+    logging.basicConfig(filename='logs/main.log',level=logging.DEBUG,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
     
     wall_time_start = time.perf_counter()
     cpu_time_start = time.process_time()

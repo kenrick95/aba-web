@@ -6,7 +6,7 @@ import logging
 import time
 from aba.aba_parser import ABA_Parser
 
-logging.basicConfig(filename='PerfTest.log',level=logging.INFO)
+logging.basicConfig(filename='logs/PerfTest.log',level=logging.INFO,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
 logging.info("Start performance test")
 global_wall_time_start = time.perf_counter()
 global_cpu_time_start = time.process_time()

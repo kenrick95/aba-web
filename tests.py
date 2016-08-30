@@ -13,7 +13,7 @@ python -m unittest
 
 https://docs.python.org/3.4/library/unittest.html
 """
-logging.basicConfig(filename='Tests.log',level=logging.DEBUG) 
+logging.basicConfig(filename='logs/Tests.log',level=logging.DEBUG,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
 
 class TestPotentialArgument(unittest.TestCase):
     def setUp(self):
