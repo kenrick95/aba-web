@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import networkx as nx
-import pickle
+import pickle, ujson
 from .aba_constants import *
 import logging
 
@@ -58,10 +58,10 @@ class ABA_Dispute_Tree():
             #level_graphs_copy = pickle.loads(pickle.dumps(self.graphs[index], -1))
             #level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) 
             level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy; TODO, check if still okay; deep copy is too slow
-            level_history_copy = pickle.loads(pickle.dumps(self.__history[index], -1))
-            level_depth_copy = pickle.loads(pickle.dumps(self.__depth[index], -1))
-            level_is_grounded_copy = pickle.loads(pickle.dumps(self.is_grounded[index], -1))
-            level_is_admissible_copy = pickle.loads(pickle.dumps(self.is_admissible[index], -1))
+            level_history_copy = ujson.loads(ujson.dumps(self.__history[index]))
+            level_depth_copy = ujson.loads(ujson.dumps(self.__depth[index]))
+            level_is_grounded_copy = ujson.loads(ujson.dumps(self.is_grounded[index]))
+            level_is_admissible_copy = ujson.loads(ujson.dumps(self.is_admissible[index]))
         
 
         for idx, assumptions in enumerate(node.assumptions):
@@ -69,10 +69,10 @@ class ABA_Dispute_Tree():
                 #self.graphs.append(level_graphs_copy.copy()) # normal copy
                 #self.graphs.append(pickle.loads(pickle.dumps(level_graphs_copy, -1)))
                 self.graphs.append(nx.DiGraph(level_graphs_copy)) # shallow copy
-                self.__history.append(pickle.loads(pickle.dumps(level_history_copy, -1)))
-                self.__depth.append(pickle.loads(pickle.dumps(level_depth_copy, -1)))
-                self.is_grounded.append(pickle.loads(pickle.dumps(level_is_grounded_copy, -1)))
-                self.is_admissible.append(pickle.loads(pickle.dumps(level_is_admissible_copy, -1)))
+                self.__history.append(ujson.loads(ujson.dumps(level_history_copy)))
+                self.__depth.append(ujson.loads(ujson.dumps(level_depth_copy)))
+                self.is_grounded.append(ujson.loads(ujson.dumps(level_is_grounded_copy)))
+                self.is_admissible.append(ujson.loads(ujson.dumps(level_is_admissible_copy)))
                 self.is_complete.append(None)
                 self.is_ideal.append(None)
                 self.__current_index += 1
@@ -91,7 +91,7 @@ class ABA_Dispute_Tree():
                     break
                 
                 self.__depth[self.__current_index] += 1
-                self.__history[self.__current_index].append((opponent_node, DT_OPPONENT))
+                self.__history[self.__current_index].append([opponent_node.root, DT_OPPONENT])
                 self.__propagate_tree_opponent(self.__current_index, opponent_node)
                 self.__history[self.__current_index].pop()
                 self.__depth[self.__current_index] -= 1
@@ -111,10 +111,10 @@ class ABA_Dispute_Tree():
                 #self.graphs.append(self.graphs[index].copy()) # normal copy
                 self.graphs.append(nx.DiGraph(self.graphs[index])) # shallow copy
                 #self.graphs.append(pickle.loads(pickle.dumps(self.graphs[index], -1)))
-                self.__history.append(pickle.loads(pickle.dumps(self.__history[index], -1)))
-                self.__depth.append(pickle.loads(pickle.dumps(self.__depth[index], -1)))
-                self.is_grounded.append(pickle.loads(pickle.dumps(self.is_grounded[index], -1)))
-                self.is_admissible.append(pickle.loads(pickle.dumps(self.is_admissible[index], -1)))
+                self.__history.append(ujson.loads(ujson.dumps(self.__history[index])))
+                self.__depth.append(ujson.loads(ujson.dumps(self.__depth[index])))
+                self.is_grounded.append(ujson.loads(ujson.dumps(self.is_grounded[index])))
+                self.is_admissible.append(ujson.loads(ujson.dumps(self.is_admissible[index])))
                 self.is_complete.append(None)
                 self.is_ideal.append(None)
                 self.__current_index += 1
@@ -132,7 +132,7 @@ class ABA_Dispute_Tree():
                     break
                 
                 self.__depth[self.__current_index] += 1
-                self.__history[self.__current_index].append((proponent_node, DT_PROPONENT))
+                self.__history[self.__current_index].append([proponent_node.root, DT_PROPONENT])
                 self.__propagate_tree_proponent(self.__current_index, proponent_node)
                 self.__history[self.__current_index].pop()
                 self.__depth[self.__current_index] -= 1
@@ -143,11 +143,11 @@ class ABA_Dispute_Tree():
         logging.debug("<%s, %s, %s>, history: %s", index, node, label, self.__history[index])
         
         value = False
-        for history_node, history_label in self.__history[index]:
-            if history_node.root == node.root and history_label == label:
-                value = True
-                break
-        # value = (node, label) in self.__history[index]
+        # for history_node, history_label in self.__history[index]:
+        #     if history_node == node.root and history_label == label:
+        #         value = True
+        #         break
+        value = [node.root, label] in self.__history[index]
         if value:
             logging.debug("Infinity detected in node <%s> of <%s, %s>", node.root, index, label)
             self.is_grounded[index] = False

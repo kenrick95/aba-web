@@ -174,6 +174,16 @@ class TestMultipleDisputeTrees(unittest.TestCase):
         logging.debug(self.id())
     
     def test_1(self):
+        """
+        a1 |- c.
+        a2 |- c.
+        b1 |- d.
+        b2 |- d.
+        contrary(a1, d).
+        contrary(a2, d).
+        contrary(b1, c).
+        contrary(b2, c).
+        """
 
         aba = ABA()
         aba.symbols = ('a1', 'a2', 'b1', 'b2', 'c', 'd')
@@ -366,7 +376,7 @@ class TestCraven(unittest.TestCase):
         parser = ABA_Parser(raw)
         parser.parse()
         aba = parser.construct_aba()
-        self.assertCountEqual([x[0].root for x in aba.arguments], ['a', 'b', 'r', 'r', 's', 's'])
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['a', 'b', 'r', 'r', 's', 's', 'p', 'p', 'p', 'p', 'q', 'q', 'q'])
     def test_example_3(self):
         """
         Adapted from Example 3 of Craven, Toni (2016) paper
@@ -403,7 +413,7 @@ class TestCraven(unittest.TestCase):
         parser = ABA_Parser(raw)
         parser.parse()
         aba = parser.construct_aba()
-        self.assertCountEqual([x[0].root for x in aba.arguments], ['r', 'r', 'b', 'c', 'a'])
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['r', 'r', 'b', 'c', 'a', 'p', 'p', 'q', 'q'])
 
     def test_example_6(self):
         """
@@ -418,7 +428,7 @@ class TestCraven(unittest.TestCase):
         parser = ABA_Parser(raw)
         parser.parse()
         aba = parser.construct_aba()
-        self.assertCountEqual([x[0].root for x in aba.arguments], ['a'])
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['a', 'p'])
 
     def test_example_7(self):
         """
@@ -472,7 +482,6 @@ class TestCraven(unittest.TestCase):
     def test_example_9(self):
         """
         Adapted from Example 9 of Craven, Toni (2016) paper
-        TODO: Investigate why runtime took ~3s 
         """
 
         raw = """
