@@ -76,8 +76,7 @@ class ABA():
                 cpu_time_end = time.process_time()
                 wall_time = wall_time_end - wall_time_start
                 cpu_time = cpu_time_end - cpu_time_start
-                logging.debug("ABA_Dispute_Tree wall_time %s seconds", wall_time)
-                logging.debug("ABA_Dispute_Tree cpu_time  %s seconds", cpu_time)
+                logging.info("ABA_Dispute_Tree wall_time %s seconds\tcpu_time:  %s seconds", wall_time, cpu_time)
                 
         wall_time_start = time.perf_counter()
         cpu_time_start = time.process_time()
@@ -88,8 +87,7 @@ class ABA():
         cpu_time_end = time.process_time()
         wall_time = wall_time_end - wall_time_start
         cpu_time = cpu_time_end - cpu_time_start
-        logging.debug("__determine_dispute_tree_is_ideal wall_time %s seconds", wall_time)
-        logging.debug("__determine_dispute_tree_is_ideal cpu_time  %s seconds", cpu_time)
+        logging.info("__determine_dispute_tree_is_ideal wall_time %s seconds\tcpu_time:  %s seconds", wall_time, cpu_time)
 
 
         wall_time_start = time.perf_counter()
@@ -101,8 +99,7 @@ class ABA():
         cpu_time_end = time.process_time()
         wall_time = wall_time_end - wall_time_start
         cpu_time = cpu_time_end - cpu_time_start
-        logging.debug("__determine_dispute_tree_is_complete wall_time %s seconds", wall_time)
-        logging.debug("__determine_dispute_tree_is_complete cpu_time  %s seconds", cpu_time)
+        logging.info("__determine_dispute_tree_is_complete wall_time %s seconds\tcpu_time:  %s seconds", wall_time, cpu_time)
 
     def __determine_dispute_tree_is_ideal(self):
         for tree in self.dispute_trees:

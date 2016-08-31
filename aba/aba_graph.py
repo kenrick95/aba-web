@@ -45,8 +45,7 @@ class ABA_Graph():
         cpu_time_end = time.process_time()
         wall_time = wall_time_end - wall_time_start
         cpu_time = cpu_time_end - cpu_time_start
-        logging.debug("__determine_is_conflict_free <arg %s> wall_time %s seconds", root, wall_time)
-        logging.debug("__determine_is_conflict_free <arg %s> cpu_time  %s seconds", root, cpu_time)
+        logging.info("__determine_is_conflict_free <arg %s> wall_time %s\tcpu_time:  %s seconds", root, wall_time, cpu_time)
 
 
         wall_time_start = time.perf_counter()
@@ -58,8 +57,7 @@ class ABA_Graph():
         cpu_time_end = time.process_time()
         wall_time = wall_time_end - wall_time_start
         cpu_time = cpu_time_end - cpu_time_start
-        logging.debug("__determine_is_stable <arg %s> wall_time %s seconds", root, wall_time)
-        logging.debug("__determine_is_stable <arg %s> cpu_time  %s seconds", root, cpu_time)
+        logging.info("__determine_is_stable <arg %s> wall_time: %s seconds\tcpu_time:  %s seconds", root, wall_time, cpu_time)
         
         
         
@@ -70,15 +68,15 @@ class ABA_Graph():
         if len(rules_supporting_node) > 1:
             #level_graph_copy = self.graphs[index].copy()
             level_graph_copy = nx.DiGraph(self.graphs[index]) # shallow copy
-            level_history_copy = ujson.loads(ujson.dumps(self.__history[index]))
-            level_is_cyclical_copy = ujson.loads(ujson.dumps(self.__is_cyclical[index]))
+            level_history_copy = ujson.dumps(self.__history[index])
+            level_is_cyclical_copy = ujson.dumps(self.__is_cyclical[index])
 
         for i, rule in enumerate(rules_supporting_node):
             if i > 0: # "OR" branch, create new argument graph
                 #self.graphs.append(level_graph_copy.copy())
                 self.graphs.append(nx.DiGraph(level_graph_copy)) # shallow copy
-                self.__history.append(ujson.loads(ujson.dumps(level_history_copy)))
-                self.__is_cyclical.append(ujson.loads(ujson.dumps(level_is_cyclical_copy)))
+                self.__history.append(ujson.loads(level_history_copy))
+                self.__is_cyclical.append(ujson.loads(level_is_cyclical_copy))
                 self.assumptions.append({})
                 self.is_conflict_free.append(None)
                 self.is_stable.append(None)
