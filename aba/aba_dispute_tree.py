@@ -163,5 +163,5 @@ class ABA_Dispute_Tree():
         if len(node.assumptions[assumption_index]) > 0:
             self.graphs[index].node[node]['text_label'] += "\nwith assumption(s): %s" % (", ".join(node.assumptions[assumption_index]))
         if 'depth' not in self.graphs[index].node[node]:
-            self.graphs[index].node[node]['depth'] = self.__depth
-            logging.debug("Tree depth of node <%s> is <%s>", node.root, self.__depth)
+            self.graphs[index].node[node]['depth'] = self.__depth[index]
+            logging.debug("Tree depth of node <%s> is <%s>", node.root, self.__depth[index])
