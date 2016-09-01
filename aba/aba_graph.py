@@ -33,6 +33,8 @@ class ABA_Graph():
         self.__propagate(0, root)
         self.__history[0].pop()
 
+        self.__sort_graphs()
+
         self.__propagate_assumptions()
         self.__determine_is_conflict_free()
 
@@ -58,8 +60,19 @@ class ABA_Graph():
         wall_time = wall_time_end - wall_time_start
         cpu_time = cpu_time_end - cpu_time_start
         logging.info("__determine_is_stable <arg %s> wall_time: %s seconds\tcpu_time:  %s seconds", root, wall_time, cpu_time)
-        
-        
+    
+    def __sort_graphs(self):
+        graphs_and_is_cyclical = [[x, False] for x in self.graphs]
+        for i, item in enumerate(graphs_and_is_cyclical):
+            item[1] = self.__is_cyclical[i]
+
+        graphs_and_is_cyclical.sort(key=self.__key_graph_sort)
+
+        self.graphs = [x[0] for x in graphs_and_is_cyclical]
+        self.__is_cyclical = [x[1] for x in graphs_and_is_cyclical]
+
+    def __key_graph_sort(self, x):
+        return len(x[0].edges())
         
     def __propagate(self, index, node):
         self.__current_index = index
@@ -147,3 +160,15 @@ class ABA_Graph():
         
     def __repr__(self):
         return str(self)
+
+    
+    def __lt__(self, other):
+        return len(self.graphs[0].nodes()) < len(other.graphs[0].nodes())
+    def __ne__(self, other):
+        return self < other or other < self
+    def __gt__(self, other):
+        return other < self
+    def __ge__(self, other):
+        return not self < other
+    def __le__(self, other):
+        return not other < self
