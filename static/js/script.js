@@ -185,10 +185,9 @@ $(document).ready(function () {
     function drawD3_dt_adapter(raw_graph, name) {
         var graph = JSON.parse(raw_graph);
         for (var i = 0; i < graph.nodes.length; i++) {
-            var new_label = "(" + graph.nodes[i].label + ") " +  graph.nodes[i].id.root;
+            var new_label = "(" + graph.nodes[i].label + ") " +  graph.nodes[i].id;
             
-            
-            if (graph.nodes[i].id.root == name) {
+            if (graph.nodes[i].id == name.substr(0, name.indexOf("_"))) {
                 graph.nodes[i].group = "root";
             }
             
@@ -228,6 +227,7 @@ $(document).ready(function () {
     function drawD3(graph, el_name) {
         var width = 750,
             height = 500,
+            radius = 6,
             curvy = false;
         if (arguments.length === 3) {
             curvy = arguments[2];
@@ -350,7 +350,7 @@ $(document).ready(function () {
                 }
             });
 
-            node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            node.attr("transform", function(d) { return "translate(" + Math.max(radius, Math.min(width - radius, d.x)) + "," + Math.max(radius, Math.min(height - radius, d.y)) + ")"; });
 
             link.attr("d", function(d) {
                 var dx = d.target.x - d.source.x,
