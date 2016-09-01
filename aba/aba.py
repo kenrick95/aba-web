@@ -109,7 +109,7 @@ class ABA():
                     ideal = True
                     for node in graph.nodes(data = True):
                         if node[1]['label'] == DT_OPPONENT:
-                            opponent_dispute_tree = self.get_dispute_tree(node[0].root, tree.arg_index)
+                            opponent_dispute_tree = self.get_dispute_tree(node[0], tree.arg_index)
                             if opponent_dispute_tree and opponent_dispute_tree.is_admissible:
                                 ideal = False
                                 break
