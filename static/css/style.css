@@ -1,0 +1,102 @@
+#source_code {
+    font-family: monospace;
+}
+/* http://bl.ocks.org/mbostock/4062045 GNU GPL v3, Mike Bostock */
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+  stroke-opacity: .6;
+}
+circle {
+  fill: #ccc;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+text {
+  font: 12px sans-serif;
+  pointer-events: none;
+}
+
+/* http://bl.ocks.org/Caged/6476579 */
+.d3-tip {
+  line-height: 1.2em;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 4px;
+  text-align: center;
+}
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 12px;
+  width: 100%;
+  line-height: 10px;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -2px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+svg {
+    display: block;
+    margin: 0 auto;
+}
+#debug {
+    display: none;
+}
+#header {
+    margin-top: 0px;
+}
+footer {
+    margin-top: 50px;
+    padding-top: 25px;
+    border-top: 1px solid #EEEEEE;
+}
+
+.CodeMirror {
+    /* Bootstrap Settings */
+    box-sizing: border-box;
+    margin: 1em 0;
+    font: inherit;
+    overflow: auto;
+    font-family: inherit;
+    display: block;
+    width: 100%;
+    padding: 0px 12px 0px 0px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    /* Code Mirror Settings */
+    font-family: monospace;
+    position: relative;
+    overflow: hidden;
+}
+
+.CodeMirror-focused {
+    /* Bootstrap Settings */
+    border-color: #66afe9;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.tab-pane {
+    min-height: 500px;
+}
