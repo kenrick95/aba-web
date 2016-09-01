@@ -226,7 +226,7 @@ $(document).ready(function () {
     }
     function drawD3(graph, el_name) {
         var width = 750,
-            height = 500,
+            height = 600,
             radius = 6,
             curvy = false;
         if (arguments.length === 3) {
@@ -251,7 +251,6 @@ $(document).ready(function () {
                 return [this.getBBox().height / 2 - 10, 0]
             })
             .attr('class', 'd3-tip').html(function(d) {
-                console.log(d);
                 return d;
             });
         
@@ -348,6 +347,10 @@ $(document).ready(function () {
                     d.source.y -= k;
                     d.target.y += k;
                 }
+                d.source.x = Math.max(radius, Math.min(width - radius, d.source.x));
+                d.target.x = Math.max(radius, Math.min(width - radius, d.target.x));
+                d.source.y = Math.max(radius, Math.min(width - radius, d.source.y));
+                d.target.y = Math.max(radius, Math.min(width - radius, d.target.y));
             });
 
             node.attr("transform", function(d) { return "translate(" + Math.max(radius, Math.min(width - radius, d.x)) + "," + Math.max(radius, Math.min(height - radius, d.y)) + ")"; });
