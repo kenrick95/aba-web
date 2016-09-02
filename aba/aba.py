@@ -152,7 +152,7 @@ class ABA():
                                 all_in_argument = False
                                 break
                         complete = all_in_argument
-                        logging.debug("DT<%s> Defendable arguments: %s", tree.root_arg.root, defendable_arguments)
+                        # logging.debug("DT<%s> Defendable arguments: %s", tree.root_arg.root, defendable_arguments)
 
 
                 tree.is_complete[tree_idx] = complete
