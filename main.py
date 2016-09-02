@@ -30,6 +30,9 @@ def api():
     data = dict()
     try:
         aba = parser.construct_aba()
+    except MemoryError:
+        data['errors'] = str(exp)
+        return json.dumps(data)
     except Exception as exp:
         data['errors'] = str(exp)
         return json.dumps(data)

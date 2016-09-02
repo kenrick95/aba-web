@@ -37,8 +37,10 @@ for file in test_files:
         else:
             try:
                 parser.construct_aba()
+            except MemoryError:
+                logging.error("Out of memory!")
             except Exception as exp:
-                logging.info("Runtime error: %s", str(exp))
+                logging.error("Runtime error: %s", str(exp))
 
         perf_logger.end()
 
