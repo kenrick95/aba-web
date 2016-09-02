@@ -47,9 +47,7 @@ class ABA_Graph():
 
         perf_logger = ABA_Perf_Logger("__determine_is_stable <arg %s>" % root)
         perf_logger.start()
-
         self.__determine_is_stable()
-
         perf_logger.end()
     
     def __sort_graphs(self):

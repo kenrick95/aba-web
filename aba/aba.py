@@ -8,6 +8,7 @@ from .aba_perf_logger import ABA_Perf_Logger
 import networkx as nx
 import logging
 import time
+import functools
 
 class ABA():
     """
@@ -66,13 +67,25 @@ class ABA():
         if not self.is_all_assumption_have_contrary():
             raise Exception("All assumptions must have contrary")
         
+        args_grounded = {}
+
         for argument, i in self.arguments:
             if argument:
+                if argument.root not in args_grounded:
+                    args_grounded[argument.root] = False
+                if args_grounded[argument.root]: # if grounded, then also must be admissible
+                    logging.debug("Skipping DT <%s, %d>", argument.root, i)
+                    # Skipping DT generation if previously a grounded DT has been found
+                    continue
+
                 perf_logger = ABA_Perf_Logger("ABA_Dispute_Tree <%s>" % argument)
                 perf_logger.start()
-
-                self.dispute_trees.append(ABA_Dispute_Tree(self, argument, i))
+                dt = ABA_Dispute_Tree(self, argument, i)
                 perf_logger.end()
+
+                self.dispute_trees.append(dt)
+
+                args_grounded[argument.root] = functools.reduce(lambda x,y: x or y, dt.is_grounded)
 
                 
         perf_logger = ABA_Perf_Logger("__determine_dispute_tree_is_ideal")

@@ -81,10 +81,10 @@ class ABA_Dispute_Tree():
                 opponent_node, i = self.__aba.get_argument(symbol, idx)
                 if opponent_node is None:
                     continue
-                logging.debug("Opp node <%s> attacking assumption <%s> of Pro node <%s>", opponent_node.root, assumption, node.root)
+                logging.debug("Opp node <%s, %d> attacking assumption <%s> of Pro node <%s, %d>", opponent_node.root, i, assumption, node.root, index)
                 
                 
-                self.graphs[self.__current_index].add_edge(node.root, opponent_node.root, text_label = "Opponent node <%s> attacking assumption <%s> of Proponent node <%s>" % (opponent_node.root, assumption, node.root))
+                self.graphs[self.__current_index].add_edge(node.root, opponent_node.root, text_label = "Opponent node <%s, %d> attacking assumption <%s> of Proponent node <%s, %d>" % (opponent_node.root, i, assumption, node.root, index))
                 self.__add_label(self.__current_index, opponent_node, DT_OPPONENT, assumption_index=idx)
 
                 if self.__is_infinity(self.__current_index, opponent_node, DT_OPPONENT):
@@ -132,11 +132,11 @@ class ABA_Dispute_Tree():
                 proponent_node, i = self.__aba.get_argument(symbol, idx)
                 if proponent_node is None:
                     continue
-                logging.debug("Pro node <%s> attacking assumption <%s> of Opp node <%s>", proponent_node.root, assumption, node.root)
+                logging.debug("Pro node <%s, %d> attacking assumption <%s> of Opp node <%s, %d>", proponent_node.root, i, assumption, node.root, index)
                 
                 # TODO, here I can actually search for other DTs with root_arg = opponent_node and arg_index = idx; copy and then pluck that tree as the nodes below
                 
-                self.graphs[self.__current_index].add_edge(node.root, proponent_node.root, text_label = "Proponent node <%s> attacking assumption <%s> of Opponent node <%s>" % (proponent_node.root, assumption, node.root))
+                self.graphs[self.__current_index].add_edge(node.root, proponent_node.root, text_label = "Proponent node <%s, %d> attacking assumption <%s> of Opponent node <%s, %d>" % (proponent_node.root, i, assumption, node.root, index))
                 self.__add_label(self.__current_index, proponent_node, DT_PROPONENT, assumption_index=idx)
                 
                 if self.__is_infinity(self.__current_index, proponent_node, DT_PROPONENT):
@@ -154,7 +154,7 @@ class ABA_Dispute_Tree():
         value = False
         value = [node.root, label] in self.__history[index]
         if value:
-            logging.debug("Infinity detected in node <%s> of <%s, %s>", node.root, index, label)
+            logging.debug("Infinity detected in node <%s, %d> of <%s>", node.root, index, label)
             self.is_grounded[index] = False
             
         return value
