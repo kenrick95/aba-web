@@ -5,6 +5,7 @@ import pickle
 import ujson
 from .aba_constants import *
 import logging
+import functools
 
 class ABA_Dispute_Tree():
     """
@@ -30,6 +31,8 @@ class ABA_Dispute_Tree():
         self.__add_label(0, root_arg, DT_PROPONENT)
         self.__depth[0] += 1
         
+        self.__found_grounded = False
+
         self.is_grounded = [True]
         self.is_admissible = [True]
         self.is_complete = [None]
@@ -45,7 +48,11 @@ class ABA_Dispute_Tree():
         logging.debug("Admissible?      %s", self.is_admissible)
         logging.debug("Grounded?        %s", self.is_grounded)
         logging.debug('End dispute tree\n\n')
+
+        ## TODO [IMPORTANT]: WHEN A GROUNDED-DT HAS BEEN FOUND, DO NOT CONTINUE SEARCHING!
     
+    def __handle_leaf(self):
+        self.__found_grounded = functools.reduce(lambda x,y: x or y, self.is_grounded)
     
     def __propagate_tree_proponent(self, index, node):
         """
@@ -54,6 +61,9 @@ class ABA_Dispute_Tree():
         Add (zero or more) Opponent_nodes to Proponent_node as a child
         """
         self.__current_index = index
+        
+        if self.__found_grounded:
+            return
 
         if len(node.assumptions) > 1:
             #level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) 
@@ -63,7 +73,8 @@ class ABA_Dispute_Tree():
             level_depth_copy = ujson.dumps(self.__depth[index])
             level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
             level_is_admissible_copy = ujson.dumps(self.is_admissible[index])
-        
+        elif len(node.assumptions) == 0:
+            self.__handle_leaf()
 
         for idx, assumptions in enumerate(node.assumptions):
             if idx > 0: # "OR" branch, create new dispute tree
@@ -108,6 +119,9 @@ class ABA_Dispute_Tree():
         """
         self.__current_index = index
 
+        if self.__found_grounded:
+            return
+
         if len(node.assumptions) > 1:
             level_graphs_copy = pickle.dumps(self.graphs[index], -1)
             #level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy;
@@ -115,6 +129,8 @@ class ABA_Dispute_Tree():
             level_depth_copy = ujson.dumps(self.__depth[index])
             level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
             level_is_admissible_copy = ujson.dumps(self.is_admissible[index])
+        elif len(node.assumptions) == 0:
+            self.__handle_leaf()
 
         for idx, assumptions in enumerate(node.assumptions):
             if idx > 0: # "OR" branch, create new dispute tree

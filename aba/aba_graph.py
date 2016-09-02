@@ -111,7 +111,7 @@ class ABA_Graph():
                     conflict_free = False
                     break
             self.is_conflict_free[index] = conflict_free
-            logging.debug("Argument <%s> index <%d> is conflict free: %s", self.root, index, self.is_conflict_free)
+            logging.debug("Argument <%s, %d> is conflict free: %s", self.root, index, self.is_conflict_free[index])
 
     def __determine_is_stable(self):
         for index, graph in enumerate(self.graphs):
@@ -125,7 +125,7 @@ class ABA_Graph():
                             break
             
             self.is_stable[index] = stable
-            logging.debug("Argument <%s> index <%d> is stable: %s", self.root, index, self.is_stable)
+            logging.debug("Argument <%s, %d> is stable: %s", self.root, index, self.is_stable[index])
 
     def __process_is_actual_argument(self, index, node):
         graph = self.graphs[index]
