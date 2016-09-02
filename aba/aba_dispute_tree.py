@@ -54,14 +54,14 @@ class ABA_Dispute_Tree():
         """
         self.__current_index = index
 
-        # if len(node.assumptions) > 1:
-        #level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) 
-        level_graphs_copy = pickle.dumps(self.graphs[index], -1)
-        #level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy;
-        level_history_copy = ujson.dumps(self.__history[index])
-        level_depth_copy = ujson.dumps(self.__depth[index])
-        level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
-        level_is_admissible_copy = ujson.dumps(self.is_admissible[index])
+        if len(node.assumptions) > 1:
+            #level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) 
+            level_graphs_copy = pickle.dumps(self.graphs[index], -1)
+            #level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy;
+            level_history_copy = ujson.dumps(self.__history[index])
+            level_depth_copy = ujson.dumps(self.__depth[index])
+            level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
+            level_is_admissible_copy = ujson.dumps(self.is_admissible[index])
         
 
         for idx, assumptions in enumerate(node.assumptions):
@@ -107,12 +107,13 @@ class ABA_Dispute_Tree():
         """
         self.__current_index = index
 
-        level_graphs_copy = pickle.dumps(self.graphs[index], -1)
-        #level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy;
-        level_history_copy = ujson.dumps(self.__history[index])
-        level_depth_copy = ujson.dumps(self.__depth[index])
-        level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
-        level_is_admissible_copy = ujson.dumps(self.is_admissible[index])
+        if len(node.assumptions) > 1:
+            level_graphs_copy = pickle.dumps(self.graphs[index], -1)
+            #level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy;
+            level_history_copy = ujson.dumps(self.__history[index])
+            level_depth_copy = ujson.dumps(self.__depth[index])
+            level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
+            level_is_admissible_copy = ujson.dumps(self.is_admissible[index])
 
         for idx, assumptions in enumerate(node.assumptions):
             if idx > 0: # "OR" branch, create new dispute tree

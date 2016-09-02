@@ -4,6 +4,7 @@ from .aba_rule import ABA_Rule
 from .aba_graph import ABA_Graph
 from .aba_dispute_tree import ABA_Dispute_Tree
 from .aba_constants import *
+from .aba_perf_logger import ABA_Perf_Logger
 import networkx as nx
 import logging
 import time
@@ -67,39 +68,22 @@ class ABA():
         
         for argument, i in self.arguments:
             if argument:
-                wall_time_start = time.perf_counter()
-                cpu_time_start = time.process_time()
+                perf_logger = ABA_Perf_Logger("ABA_Dispute_Tree <%s>" % argument)
+                perf_logger.start()
 
                 self.dispute_trees.append(ABA_Dispute_Tree(self, argument, i))
+                perf_logger.end()
 
-                wall_time_end = time.perf_counter()
-                cpu_time_end = time.process_time()
-                wall_time = wall_time_end - wall_time_start
-                cpu_time = cpu_time_end - cpu_time_start
-                logging.info("ABA_Dispute_Tree wall_time %s seconds\tcpu_time:  %s seconds", wall_time, cpu_time)
                 
-        wall_time_start = time.perf_counter()
-        cpu_time_start = time.process_time()
-        
+        perf_logger = ABA_Perf_Logger("__determine_dispute_tree_is_ideal")
+        perf_logger.start()
         self.__determine_dispute_tree_is_ideal()
+        perf_logger.end()
 
-        wall_time_end = time.perf_counter()
-        cpu_time_end = time.process_time()
-        wall_time = wall_time_end - wall_time_start
-        cpu_time = cpu_time_end - cpu_time_start
-        logging.info("__determine_dispute_tree_is_ideal wall_time %s seconds\tcpu_time:  %s seconds", wall_time, cpu_time)
-
-
-        wall_time_start = time.perf_counter()
-        cpu_time_start = time.process_time()
-
+        perf_logger = ABA_Perf_Logger("__determine_dispute_tree_is_complete")
+        perf_logger.start()
         self.__determine_dispute_tree_is_complete()
-
-        wall_time_end = time.perf_counter()
-        cpu_time_end = time.process_time()
-        wall_time = wall_time_end - wall_time_start
-        cpu_time = cpu_time_end - cpu_time_start
-        logging.info("__determine_dispute_tree_is_complete wall_time %s seconds\tcpu_time:  %s seconds", wall_time, cpu_time)
+        perf_logger.end()
 
     def __determine_dispute_tree_is_ideal(self):
         for tree in self.dispute_trees:

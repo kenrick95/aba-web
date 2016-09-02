@@ -4,6 +4,7 @@ import networkx as nx
 import ujson
 import logging
 import time
+from .aba_perf_logger import ABA_Perf_Logger
 
 class ABA_Graph():
     """
@@ -38,28 +39,18 @@ class ABA_Graph():
         self.__propagate_assumptions()
         self.__determine_is_conflict_free()
 
-        wall_time_start = time.perf_counter()
-        cpu_time_start = time.process_time()
-
+        perf_logger = ABA_Perf_Logger("__determine_is_conflict_free <arg %s>" % root)
+        perf_logger.start()
         self.__determine_is_conflict_free()
-
-        wall_time_end = time.perf_counter()
-        cpu_time_end = time.process_time()
-        wall_time = wall_time_end - wall_time_start
-        cpu_time = cpu_time_end - cpu_time_start
-        logging.info("__determine_is_conflict_free <arg %s> wall_time %s\tcpu_time:  %s seconds", root, wall_time, cpu_time)
+        perf_logger.end()
 
 
-        wall_time_start = time.perf_counter()
-        cpu_time_start = time.process_time()
+        perf_logger = ABA_Perf_Logger("__determine_is_stable <arg %s>" % root)
+        perf_logger.start()
 
         self.__determine_is_stable()
 
-        wall_time_end = time.perf_counter()
-        cpu_time_end = time.process_time()
-        wall_time = wall_time_end - wall_time_start
-        cpu_time = cpu_time_end - cpu_time_start
-        logging.info("__determine_is_stable <arg %s> wall_time: %s seconds\tcpu_time:  %s seconds", root, wall_time, cpu_time)
+        perf_logger.end()
     
     def __sort_graphs(self):
         graphs_and_is_cyclical = [[x, False] for x in self.graphs]
