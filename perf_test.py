@@ -1,15 +1,23 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from os import listdir
+from os import listdir, getpid
 from os.path import isfile, join, splitext
 import logging
-import time
 from aba.aba_parser import ABA_Parser
+from aba.aba_perf_logger import ABA_Perf_Logger
+
+## Safety measure so that the process won't overshoot my RAM limit
+import sys
+if sys.platform == "win32":
+    import perf_memory_limiter
+    five_gb = 5 * 1024 * 1024 * 1024
+    perf_memory_limiter.set_limit(getpid(), five_gb)
 
 logging.basicConfig(filename='logs/PerfTest.log',level=logging.INFO,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
+
 logging.info("Start performance test")
-global_wall_time_start = time.perf_counter()
-global_cpu_time_start = time.process_time()
+global_perf_logger = ABA_Perf_Logger("Overall performance test")
+global_perf_logger.start()
 
 path = "perf_test_data"
 test_files = [f for f in listdir(path) if isfile(join(path, f)) and splitext(f)[1] == ".txt"]
@@ -18,8 +26,8 @@ for file in test_files:
     with open(join(path, file), 'r') as f:
         source_code = f.read()
         logging.info("Start running %s", file)
-        wall_time_start = time.perf_counter()
-        cpu_time_start = time.process_time()
+        perf_logger = ABA_Perf_Logger("%s" % file)
+        perf_logger.start()
 
         parser = ABA_Parser(source_code)
         parse_errors = parser.parse()
@@ -32,20 +40,6 @@ for file in test_files:
             except Exception as exp:
                 logging.info("Runtime error: %s", str(exp))
 
-        wall_time_end = time.perf_counter()
-        cpu_time_end = time.process_time()
-        wall_time = wall_time_end - wall_time_start
-        cpu_time = cpu_time_end - cpu_time_start
-        logging.info("End running %s", file)
-        logging.info("   cpu_time is: \t %s seconds", cpu_time)
-        logging.info("   wall_time is: \t %s seconds", wall_time)
+        perf_logger.end()
 
-
-
-global_wall_time_end = time.perf_counter()
-global_cpu_time_end = time.process_time()
-global_wall_time = global_wall_time_end - global_wall_time_start
-global_cpu_time = global_cpu_time_end - global_cpu_time_start
-logging.info("End performance test")
-logging.info("   global_cpu_time is: \t %s seconds", global_cpu_time)
-logging.info("   global_wall_time is: \t %s seconds", global_wall_time)
+global_perf_logger.end()

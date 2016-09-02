@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import networkx as nx
-import pickle, ujson
+import pickle
+import ujson
 from .aba_constants import *
 import logging
 

@@ -3,7 +3,7 @@
 import networkx as nx
 import ujson
 import logging
-import time
+import pickle
 from .aba_perf_logger import ABA_Perf_Logger
 
 class ABA_Graph():
@@ -68,15 +68,17 @@ class ABA_Graph():
         rules_supporting_node = [x for x in self.__aba.rules if x.result == node]
 
         # if len(rules_supporting_node) > 1:
-        level_graph_copy = self.graphs[index].copy()
-        #level_graph_copy = nx.DiGraph(self.graphs[index]) # shallow copy
+        level_graph_copy = pickle.dumps(self.graphs[index], -1)
+        # level_graph_copy = self.graphs[index].copy()
+        # level_graph_copy = nx.DiGraph(self.graphs[index]) # shallow copy
         level_history_copy = ujson.dumps(self.__history[index])
         level_is_cyclical_copy = ujson.dumps(self.__is_cyclical[index])
 
         for i, rule in enumerate(rules_supporting_node):
             if i > 0: # "OR" branch, create new argument graph
-                self.graphs.append(level_graph_copy.copy())
-                #self.graphs.append(nx.DiGraph(level_graph_copy)) # shallow copy
+                self.graphs.append(pickle.loads(level_graph_copy))
+                # self.graphs.append(level_graph_copy.copy())
+                # self.graphs.append(nx.DiGraph(level_graph_copy)) # shallow copy
                 self.__history.append(ujson.loads(level_history_copy))
                 self.__is_cyclical.append(ujson.loads(level_is_cyclical_copy))
                 self.assumptions.append({})
