@@ -24,7 +24,7 @@ class ABA_Graph():
         
         self.root = root
         self.__aba = aba
-        self.__current_index = 0
+        self.__max_index = 0
 
         self.graphs.append(nx.DiGraph())
         self.__branches = 1
@@ -64,7 +64,7 @@ class ABA_Graph():
         return len(x[0].edges())
         
     def __propagate(self, index, node):
-        self.__current_index = index
+        # self.__max_index = index
         rules_supporting_node = [x for x in self.__aba.rules if x.result == node]
 
         # if len(rules_supporting_node) > 1:
@@ -84,17 +84,17 @@ class ABA_Graph():
                 self.assumptions.append({})
                 self.is_conflict_free.append(None)
                 self.is_stable.append(None)
-                self.__current_index += 1
+                self.__max_index += 1
             
             for symbol in rule.symbols:
-                self.graphs[self.__current_index].add_edge(node, symbol)
+                self.graphs[self.__max_index].add_edge(node, symbol)
                 if symbol is not None:
-                    if symbol in self.__history[self.__current_index]:
-                        self.__is_cyclical[self.__current_index] = True
+                    if symbol in self.__history[self.__max_index]:
+                        self.__is_cyclical[self.__max_index] = True
                         break
-                    self.__history[self.__current_index].append(symbol)
-                    self.__propagate(self.__current_index, symbol)
-                    self.__history[self.__current_index].pop()
+                    self.__history[self.__max_index].append(symbol)
+                    self.__propagate(self.__max_index, symbol)
+                    self.__history[self.__max_index].pop()
  
     def __propagate_assumptions(self):
         for assumption, symbol in self.__aba.contraries.items():
