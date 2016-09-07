@@ -11,7 +11,6 @@ import logging
 import os
 
 app = Flask(__name__)
-protect_ram = False
 
 @app.route("/")
 def main():
@@ -22,11 +21,11 @@ def api():
     logging.basicConfig(filename=os.path.join('logs', 'main.log'),level=logging.DEBUG,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
 
     ## Safety measure so that the process won't overshoot my RAM limit
-    import sys
-    if sys.platform == "win32" and protect_ram:
-        import perf_memory_limiter
-        five_gb = 5 * 1024 * 1024 * 1024
-        perf_memory_limiter.set_limit(os.getpid(), five_gb)
+    # import sys
+    # if sys.platform == "win32" and protect_ram:
+    #     import perf_memory_limiter
+    #     five_gb = 5 * 1024 * 1024 * 1024
+    #     perf_memory_limiter.set_limit(os.getpid(), five_gb)
 
     global_perf_logger = ABA_Perf_Logger("Request handler")
     global_perf_logger.start()
