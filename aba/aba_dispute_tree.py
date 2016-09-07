@@ -1,9 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import networkx as nx
-import pickle, ujson
+import pickle
+import ujson
 from .aba_constants import *
 import logging
+import functools
 
 class ABA_Dispute_Tree():
     """
@@ -24,11 +26,22 @@ class ABA_Dispute_Tree():
         self.__history = [[]]
         self.__depth = [0]
 
-        self.__current_index = 0
+        self.__cache = {}
+        # key: <argument, arg_index>;
+        # value: {
+        #   tree: DT with <argument, arg_index> as root_arg (proponent)
+        #   is_grounded:
+        #   is_admissible:
+        # }
+
+
+        self.__max_index = 0
         self.graphs[0].add_node(root_arg.root)
         self.__add_label(0, root_arg, DT_PROPONENT)
         self.__depth[0] += 1
         
+        self.__found_grounded = False
+
         self.is_grounded = [True]
         self.is_admissible = [True]
         self.is_complete = [None]
@@ -45,58 +58,82 @@ class ABA_Dispute_Tree():
         logging.debug("Grounded?        %s", self.is_grounded)
         logging.debug('End dispute tree\n\n')
     
+    def __handle_leaf(self):
+        logging.debug("Leaf, DT <%s, %s>, grounded: %s", self.root_arg, self.__max_index, self.is_grounded)
+        self.__found_grounded = functools.reduce(lambda x,y: x or y, self.is_grounded)
+        if self.__found_grounded:
+            logging.debug("I shall delete the rest")
     
-    def __propagate_tree_proponent(self, index, node):
+    def __propagate_tree_proponent(self, index, node, arg_idx=0):
         """
         Attack by opponents
         
         Add (zero or more) Opponent_nodes to Proponent_node as a child
         """
-        self.__current_index = index
+
+        if self.__found_grounded:
+            return
 
         if len(node.assumptions) > 1:
             #level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) 
-            level_graphs_copy = pickle.loads(pickle.dumps(self.graphs[index], -1))
-            #level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy; TODO, check if still okay; deep copy is too slow
-            level_history_copy = ujson.loads(ujson.dumps(self.__history[index]))
-            level_depth_copy = ujson.loads(ujson.dumps(self.__depth[index]))
-            level_is_grounded_copy = ujson.loads(ujson.dumps(self.is_grounded[index]))
-            level_is_admissible_copy = ujson.loads(ujson.dumps(self.is_admissible[index]))
-        
+            level_graphs_copy = pickle.dumps(self.graphs[index], -1)
+            #level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy;
+            level_history_copy = ujson.dumps(self.__history[index])
+            level_depth_copy = ujson.dumps(self.__depth[index])
+            level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
+            level_is_admissible_copy = ujson.dumps(self.is_admissible[index])
 
-        for idx, assumptions in enumerate(node.assumptions):
+        for idx, assumptions in enumerate(node.assumptions): # For an argument, there may be >1 assumptions from "OR" rules; can do branching
+            index_used = index
             if idx > 0: # "OR" branch, create new dispute tree
                 #self.graphs.append(level_graphs_copy.copy()) # normal copy
-                self.graphs.append(pickle.loads(pickle.dumps(level_graphs_copy, -1)))
+                self.graphs.append(pickle.loads(level_graphs_copy))
                 #self.graphs.append(nx.DiGraph(level_graphs_copy)) # shallow copy
-                self.__history.append(ujson.loads(ujson.dumps(level_history_copy)))
-                self.__depth.append(ujson.loads(ujson.dumps(level_depth_copy)))
-                self.is_grounded.append(ujson.loads(ujson.dumps(level_is_grounded_copy)))
-                self.is_admissible.append(ujson.loads(ujson.dumps(level_is_admissible_copy)))
+                self.__history.append(ujson.loads(level_history_copy))
+                self.__depth.append(ujson.loads(level_depth_copy))
+                self.is_grounded.append(ujson.loads(level_is_grounded_copy))
+                self.is_admissible.append(ujson.loads(level_is_admissible_copy))
                 self.is_complete.append(None)
                 self.is_ideal.append(None)
-                self.__current_index += 1
+                self.__max_index += 1
+                index_used = self.__max_index
+                if self.__max_index > 1000:
+                    logging.error("Too much branching in this DT <%s, %s>; idx: %s, assumptions: %s", self.root_arg, self.__max_index, idx, assumptions)
+                    return
                 
-            for assumption, symbol in assumptions.items():
-                opponent_node, i = self.__aba.get_argument(symbol, idx)
+            logging.debug("ONE idx %s, assumptions %s", idx, assumptions)
+            for assumption, symbol in assumptions.items(): # I can branch here, for an assumption attacker, it may be coming from >1 arg idx; but I don't, cause not necessary I guess ._.
+                opponent_node, i = self.__aba.get_argument(symbol, 0)
+                logging.debug("TWO assumption %s, symbol %s", assumption, symbol)
                 if opponent_node is None:
+                    logging.debug("THREE opponent_node %s, i %s", opponent_node, i)
+                    self.__handle_leaf()
+                    if self.__found_grounded:
+                        return
                     continue
-                logging.debug("Opp node <%s> attacking assumption <%s> of Pro node <%s>", opponent_node.root, assumption, node.root)
+                logging.debug("Opp node <%s, %d> attacking assumption <%s> of Pro node <%s, %d>", opponent_node.root, i, assumption, node.root, index)
                 
                 
-                self.graphs[self.__current_index].add_edge(node.root, opponent_node.root, text_label = "Opponent node <%s> attacking assumption <%s> of Proponent node <%s>" % (opponent_node.root, assumption, node.root))
-                self.__add_label(self.__current_index, opponent_node, DT_OPPONENT, assumption_index=idx)
+                self.graphs[index_used].add_edge(node.root, opponent_node.root, text_label = "Opponent node <%s, %d> attacking assumption <%s> of Proponent node <%s, %d>" % (opponent_node.root, i, assumption, node.root, index))
+                self.__add_label(index_used, opponent_node, DT_OPPONENT, assumption_index=0)
 
-                if self.__is_infinity(self.__current_index, opponent_node, DT_OPPONENT):
+                if self.__is_infinity(index_used, opponent_node, DT_OPPONENT):
                     break
                 
-                self.__depth[self.__current_index] += 1
-                self.__history[self.__current_index].append([opponent_node.root, DT_OPPONENT])
-                self.__propagate_tree_opponent(self.__current_index, opponent_node)
-                self.__history[self.__current_index].pop()
-                self.__depth[self.__current_index] -= 1
+                self.__depth[index_used] += 1
+                self.__history[index_used].append([opponent_node.root, DT_OPPONENT])
+                self.__propagate_tree_opponent(index_used, opponent_node, i)
+                self.__history[index_used].pop()
+                self.__depth[index_used] -= 1
         
-    def __propagate_tree_opponent(self, index, node):
+        
+        self.__cache[(node.root, arg_idx)] = {
+            "tree": pickle.dumps(self.graphs[index], -1),
+            "is_grounded": self.is_grounded[index],
+            "is_admissible": self.is_admissible[index],
+        }
+        
+    def __propagate_tree_opponent(self, index, node, arg_idx=0):
         """
         Counter-attack by proponent
         
@@ -105,49 +142,72 @@ class ABA_Dispute_Tree():
         Question: should we choose a proponent child such that infinity tree is avoided?
             >> Will not happen, as the ABA contraries is a "total function", meaning that for one assumption, it is guaranteed that there is only one argument that can attack this assumption.
         """
-        self.__current_index = index
+
+        if self.__found_grounded:
+            return
+
+        if len(node.assumptions) > 1:
+            level_graphs_copy = pickle.dumps(self.graphs[index], -1)
+            #level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy;
+            level_history_copy = ujson.dumps(self.__history[index])
+            level_depth_copy = ujson.dumps(self.__depth[index])
+            level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
+            level_is_admissible_copy = ujson.dumps(self.is_admissible[index])
+
         for idx, assumptions in enumerate(node.assumptions):
+            index_used = index
             if idx > 0: # "OR" branch, create new dispute tree
-                #self.graphs.append(self.graphs[index].copy()) # normal copy
-                self.graphs.append(pickle.loads(pickle.dumps(self.graphs[index], -1)))
-                #self.graphs.append(nx.DiGraph(self.graphs[index])) # shallow copy
-                self.__history.append(ujson.loads(ujson.dumps(self.__history[index])))
-                self.__depth.append(ujson.loads(ujson.dumps(self.__depth[index])))
-                self.is_grounded.append(ujson.loads(ujson.dumps(self.is_grounded[index])))
-                self.is_admissible.append(ujson.loads(ujson.dumps(self.is_admissible[index])))
+                #self.graphs.append(level_graphs_copy.copy()) # normal copy
+                self.graphs.append(pickle.loads(level_graphs_copy))
+                #self.graphs.append(nx.DiGraph(level_graphs_copy)) # shallow copy
+                self.__history.append(ujson.loads(level_history_copy))
+                self.__depth.append(ujson.loads(level_depth_copy))
+                self.is_grounded.append(ujson.loads(level_is_grounded_copy))
+                self.is_admissible.append(ujson.loads(level_is_admissible_copy))
                 self.is_complete.append(None)
                 self.is_ideal.append(None)
-                self.__current_index += 1
+                self.__max_index += 1
+                index_used = self.__max_index
                 
             for assumption, symbol in assumptions.items():
-                proponent_node, i = self.__aba.get_argument(symbol, idx)
+                proponent_node, i = self.__aba.get_argument(symbol, 0)
                 if proponent_node is None:
+                    self.__handle_leaf()
+                    if self.__found_grounded:
+                        return
                     continue
-                logging.debug("Pro node <%s> attacking assumption <%s> of Opp node <%s>", proponent_node.root, assumption, node.root)
+                logging.debug("Pro node <%s, %d> attacking assumption <%s> of Opp node <%s, %d>", proponent_node.root, i, assumption, node.root, index)
                 
-                # TODO, here I can actually search for other DTs with root_arg = opponent_node and arg_index = idx; copy and then pluck that tree as the nodes below
+                # Search for trees generated with root_arg = proponent_node and arg_index = idx; copy and then pluck that tree as the nodes below
+                if (proponent_node.root, i) in self.__cache:
+                    cached_data = self.__cache[(proponent_node.root, i)]
+                    tree_from_cache = pickle.loads(cached_data["tree"])
+                    logging.debug("Cache hit [%s, %s], nodes <%s>; edges <%s>;\ncached is_admissible: %s\ncached is_grounded: %s", proponent_node.root, i, tree_from_cache.nodes(), tree_from_cache.edges(), cached_data["is_admissible"], cached_data["is_grounded"])
+
+                    self.graphs[index_used] = nx.compose(self.graphs[index_used], tree_from_cache)
+                    self.is_grounded[index_used] &= cached_data["is_grounded"]
+                    self.is_admissible[index_used] &= cached_data["is_admissible"]
+                    continue
                 
-                self.graphs[self.__current_index].add_edge(node.root, proponent_node.root, text_label = "Proponent node <%s> attacking assumption <%s> of Opponent node <%s>" % (proponent_node.root, assumption, node.root))
-                self.__add_label(self.__current_index, proponent_node, DT_PROPONENT, assumption_index=idx)
+                self.graphs[index_used].add_edge(node.root, proponent_node.root, text_label = "Proponent node <%s, %d> attacking assumption <%s> of Opponent node <%s, %d>" % (proponent_node.root, i, assumption, node.root, index))
+                self.__add_label(index_used, proponent_node, DT_PROPONENT, assumption_index=0)
                 
-                if self.__is_infinity(self.__current_index, proponent_node, DT_PROPONENT):
+                if self.__is_infinity(index_used, proponent_node, DT_PROPONENT):
                     break
                 
-                self.__depth[self.__current_index] += 1
-                self.__history[self.__current_index].append([proponent_node.root, DT_PROPONENT])
-                self.__propagate_tree_proponent(self.__current_index, proponent_node)
-                self.__history[self.__current_index].pop()
-                self.__depth[self.__current_index] -= 1
+                self.__depth[index_used] += 1
+                self.__history[index_used].append([proponent_node.root, DT_PROPONENT])
+                self.__propagate_tree_proponent(index_used, proponent_node, i)
+                self.__history[index_used].pop()
+                self.__depth[index_used] -= 1
                 
                 break
         
     def __is_infinity(self, index, node, label):
-        logging.debug("<%s, %s, %s>, history: %s", index, node, label, self.__history[index])
-        
         value = False
         value = [node.root, label] in self.__history[index]
         if value:
-            logging.debug("Infinity detected in node <%s> of <%s, %s>", node.root, index, label)
+            logging.debug("Infinity detected in node <%s, %d> of <%s>", node.root, index, label)
             self.is_grounded[index] = False
             
         return value
@@ -163,6 +223,7 @@ class ABA_Dispute_Tree():
         self.graphs[index].node[node.root]['text_label'] = "(%s) Argument %s" % (label, node.root)
 
         if len(node.assumptions[assumption_index]) > 0:
+            logging.debug("__add_label node %s, assumption_index: %s, node.assumptions: %s", node, assumption_index, node.assumptions)
             self.graphs[index].node[node.root]['text_label'] += "\nwith assumption(s): %s" % (", ".join(node.assumptions[assumption_index]))
         if 'depth' not in self.graphs[index].node[node.root]:
             self.graphs[index].node[node.root]['depth'] = self.__depth[index]

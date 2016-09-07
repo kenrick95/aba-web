@@ -3,7 +3,8 @@
 import networkx as nx
 import ujson
 import logging
-import time
+import pickle
+from .aba_perf_logger import ABA_Perf_Logger
 
 class ABA_Graph():
     """
@@ -23,7 +24,7 @@ class ABA_Graph():
         
         self.root = root
         self.__aba = aba
-        self.__current_index = 0
+        self.__max_index = 0
 
         self.graphs.append(nx.DiGraph())
         self.__branches = 1
@@ -38,28 +39,16 @@ class ABA_Graph():
         self.__propagate_assumptions()
         self.__determine_is_conflict_free()
 
-        wall_time_start = time.perf_counter()
-        cpu_time_start = time.process_time()
-
+        perf_logger = ABA_Perf_Logger("__determine_is_conflict_free <arg %s>" % root)
+        perf_logger.start()
         self.__determine_is_conflict_free()
-
-        wall_time_end = time.perf_counter()
-        cpu_time_end = time.process_time()
-        wall_time = wall_time_end - wall_time_start
-        cpu_time = cpu_time_end - cpu_time_start
-        logging.info("__determine_is_conflict_free <arg %s> wall_time %s\tcpu_time:  %s seconds", root, wall_time, cpu_time)
+        perf_logger.end()
 
 
-        wall_time_start = time.perf_counter()
-        cpu_time_start = time.process_time()
-
+        perf_logger = ABA_Perf_Logger("__determine_is_stable <arg %s>" % root)
+        perf_logger.start()
         self.__determine_is_stable()
-
-        wall_time_end = time.perf_counter()
-        cpu_time_end = time.process_time()
-        wall_time = wall_time_end - wall_time_start
-        cpu_time = cpu_time_end - cpu_time_start
-        logging.info("__determine_is_stable <arg %s> wall_time: %s seconds\tcpu_time:  %s seconds", root, wall_time, cpu_time)
+        perf_logger.end()
     
     def __sort_graphs(self):
         graphs_and_is_cyclical = [[x, False] for x in self.graphs]
@@ -75,35 +64,39 @@ class ABA_Graph():
         return len(x[0].edges())
         
     def __propagate(self, index, node):
-        self.__current_index = index
+        # self.__max_index = index
         rules_supporting_node = [x for x in self.__aba.rules if x.result == node]
 
-        if len(rules_supporting_node) > 1:
-            level_graph_copy = self.graphs[index].copy()
-            #level_graph_copy = nx.DiGraph(self.graphs[index]) # shallow copy
-            level_history_copy = ujson.dumps(self.__history[index])
-            level_is_cyclical_copy = ujson.dumps(self.__is_cyclical[index])
+        # if len(rules_supporting_node) > 1:
+        level_graph_copy = pickle.dumps(self.graphs[index], -1)
+        # level_graph_copy = self.graphs[index].copy()
+        # level_graph_copy = nx.DiGraph(self.graphs[index]) # shallow copy
+        level_history_copy = ujson.dumps(self.__history[index])
+        level_is_cyclical_copy = ujson.dumps(self.__is_cyclical[index])
 
         for i, rule in enumerate(rules_supporting_node):
+            index_used = index
             if i > 0: # "OR" branch, create new argument graph
-                self.graphs.append(level_graph_copy.copy())
-                #self.graphs.append(nx.DiGraph(level_graph_copy)) # shallow copy
+                self.graphs.append(pickle.loads(level_graph_copy))
+                # self.graphs.append(level_graph_copy.copy()) --> deep copy, slow
+                # self.graphs.append(nx.DiGraph(level_graph_copy)) # shallow copy --> fast but wrong
                 self.__history.append(ujson.loads(level_history_copy))
                 self.__is_cyclical.append(ujson.loads(level_is_cyclical_copy))
                 self.assumptions.append({})
                 self.is_conflict_free.append(None)
                 self.is_stable.append(None)
-                self.__current_index += 1
+                self.__max_index += 1
+                index_used = self.__max_index
             
             for symbol in rule.symbols:
-                self.graphs[self.__current_index].add_edge(node, symbol)
+                self.graphs[index_used].add_edge(node, symbol)
                 if symbol is not None:
-                    if symbol in self.__history[self.__current_index]:
-                        self.__is_cyclical[self.__current_index] = True
+                    if symbol in self.__history[index_used]:
+                        self.__is_cyclical[index_used] = True
                         break
-                    self.__history[self.__current_index].append(symbol)
-                    self.__propagate(self.__current_index, symbol)
-                    self.__history[self.__current_index].pop()
+                    self.__history[index_used].append(symbol)
+                    self.__propagate(index_used, symbol)
+                    self.__history[index_used].pop()
  
     def __propagate_assumptions(self):
         for assumption, symbol in self.__aba.contraries.items():
@@ -120,7 +113,7 @@ class ABA_Graph():
                     conflict_free = False
                     break
             self.is_conflict_free[index] = conflict_free
-            logging.debug("Argument <%s> index <%d> is conflict free: %s", self.root, index, self.is_conflict_free)
+            logging.debug("Argument <%s, %d> is conflict free: %s", self.root, index, self.is_conflict_free[index])
 
     def __determine_is_stable(self):
         for index, graph in enumerate(self.graphs):
@@ -134,7 +127,7 @@ class ABA_Graph():
                             break
             
             self.is_stable[index] = stable
-            logging.debug("Argument <%s> index <%d> is stable: %s", self.root, index, self.is_stable)
+            logging.debug("Argument <%s, %d> is stable: %s", self.root, index, self.is_stable[index])
 
     def __process_is_actual_argument(self, index, node):
         graph = self.graphs[index]

@@ -3,11 +3,13 @@
 from flask import Flask, render_template, request
 
 from aba.aba_parser import ABA_Parser
+from aba.aba_perf_logger import ABA_Perf_Logger
 from networkx.readwrite import json_graph
 import json
 import jsonpickle
 import logging
 import time
+import os
 
 app = Flask(__name__)
 
@@ -18,9 +20,16 @@ def main():
 @app.route("/api", methods=['POST'])
 def api():
     logging.basicConfig(filename='logs/main.log',level=logging.DEBUG,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
-    
-    wall_time_start = time.perf_counter()
-    cpu_time_start = time.process_time()
+
+    ## Safety measure so that the process won't overshoot my RAM limit
+    import sys
+    if sys.platform == "win32":
+        import perf_memory_limiter
+        five_gb = 5 * 1024 * 1024 * 1024
+        perf_memory_limiter.set_limit(os.getpid(), five_gb)
+
+    global_perf_logger = ABA_Perf_Logger("Request handler")
+    global_perf_logger.start()
 
     source_code = request.form['source_code']
     parser = ABA_Parser(source_code)
@@ -30,6 +39,9 @@ def api():
     data = dict()
     try:
         aba = parser.construct_aba()
+    except MemoryError:
+        data['errors'] = str(exp)
+        return json.dumps(data)
     except Exception as exp:
         data['errors'] = str(exp)
         return json.dumps(data)
@@ -56,15 +68,11 @@ def api():
                 data['dispute_trees_data'][dt_name]['is_ideal'] = dispute_tree.is_ideal[dt_index]
                 data['dispute_trees_data'][dt_name]['is_complete'] = dispute_tree.is_complete[dt_index]
     
-    wall_time_end = time.perf_counter()
-    cpu_time_end = time.process_time()
-
-    wall_time = wall_time_end - wall_time_start
-    cpu_time = cpu_time_end - cpu_time_start
+    global_perf_logger.end()
 
     data['statistics'] = dict()
-    data['statistics']['wall_time'] = wall_time
-    data['statistics']['cpu_time'] = cpu_time
+    data['statistics']['wall_time'] = global_perf_logger.wall_time
+    data['statistics']['cpu_time'] = global_perf_logger.cpu_time
     data['statistics']['symbols'] = len(aba.symbols)
     data['statistics']['assumptions'] = len(aba.assumptions)
     data['statistics']['arguments'] = len(aba.arguments)

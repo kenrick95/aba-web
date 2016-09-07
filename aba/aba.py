@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from .aba_rule import ABA_Rule
 from .aba_graph import ABA_Graph
 from .aba_dispute_tree import ABA_Dispute_Tree
 from .aba_constants import *
+from .aba_perf_logger import ABA_Perf_Logger
 import networkx as nx
 import logging
-import time
+import functools
 
 class ABA():
     """
@@ -65,41 +65,36 @@ class ABA():
         if not self.is_all_assumption_have_contrary():
             raise Exception("All assumptions must have contrary")
         
+        args_grounded = {}
+
         for argument, i in self.arguments:
             if argument:
-                wall_time_start = time.perf_counter()
-                cpu_time_start = time.process_time()
+                if argument.root not in args_grounded:
+                    args_grounded[argument.root] = False
+                if args_grounded[argument.root]: # if grounded, then also must be admissible
+                    logging.debug("Skipping DT <%s, %d>", argument.root, i)
+                    # Skipping DT generation if previously a grounded DT has been found
+                    continue
 
-                self.dispute_trees.append(ABA_Dispute_Tree(self, argument, i))
+                perf_logger = ABA_Perf_Logger("ABA_Dispute_Tree <%s>" % argument)
+                perf_logger.start()
+                dt = ABA_Dispute_Tree(self, argument, i)
+                perf_logger.end()
 
-                wall_time_end = time.perf_counter()
-                cpu_time_end = time.process_time()
-                wall_time = wall_time_end - wall_time_start
-                cpu_time = cpu_time_end - cpu_time_start
-                logging.info("ABA_Dispute_Tree wall_time %s seconds\tcpu_time:  %s seconds", wall_time, cpu_time)
+                self.dispute_trees.append(dt)
+
+                args_grounded[argument.root] = functools.reduce(lambda x,y: x or y, dt.is_grounded)
+
                 
-        wall_time_start = time.perf_counter()
-        cpu_time_start = time.process_time()
-        
+        perf_logger = ABA_Perf_Logger("__determine_dispute_tree_is_ideal")
+        perf_logger.start()
         self.__determine_dispute_tree_is_ideal()
+        perf_logger.end()
 
-        wall_time_end = time.perf_counter()
-        cpu_time_end = time.process_time()
-        wall_time = wall_time_end - wall_time_start
-        cpu_time = cpu_time_end - cpu_time_start
-        logging.info("__determine_dispute_tree_is_ideal wall_time %s seconds\tcpu_time:  %s seconds", wall_time, cpu_time)
-
-
-        wall_time_start = time.perf_counter()
-        cpu_time_start = time.process_time()
-
+        perf_logger = ABA_Perf_Logger("__determine_dispute_tree_is_complete")
+        perf_logger.start()
         self.__determine_dispute_tree_is_complete()
-
-        wall_time_end = time.perf_counter()
-        cpu_time_end = time.process_time()
-        wall_time = wall_time_end - wall_time_start
-        cpu_time = cpu_time_end - cpu_time_start
-        logging.info("__determine_dispute_tree_is_complete wall_time %s seconds\tcpu_time:  %s seconds", wall_time, cpu_time)
+        perf_logger.end()
 
     def __determine_dispute_tree_is_ideal(self):
         for tree in self.dispute_trees:
@@ -152,7 +147,7 @@ class ABA():
                                 all_in_argument = False
                                 break
                         complete = all_in_argument
-                        logging.debug("DT<%s> Defendable arguments: %s", tree.root_arg.root, defendable_arguments)
+                        # logging.debug("DT<%s> Defendable arguments: %s", tree.root_arg.root, defendable_arguments)
 
 
                 tree.is_complete[tree_idx] = complete
