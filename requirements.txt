@@ -1,6 +1,5 @@
+--find-links wheelhouse
 Flask==0.10.1
 networkx==1.11
 jsonpickle==0.9.3
-
---find-links wheelhouse
 ujson==1.35
