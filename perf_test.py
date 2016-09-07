@@ -13,7 +13,7 @@ if sys.platform == "win32":
     five_gb = 5 * 1024 * 1024 * 1024
     perf_memory_limiter.set_limit(getpid(), five_gb)
 
-logging.basicConfig(filename='logs/PerfTest.log',level=logging.INFO,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
+logging.basicConfig(filename=join('logs', 'PerfTests.log'),level=logging.INFO,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
 
 logging.info("Start performance test")
 global_perf_logger = ABA_Perf_Logger("Overall performance test")

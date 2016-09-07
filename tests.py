@@ -5,6 +5,7 @@ from aba.aba_rule import ABA_Rule
 from aba.aba import ABA
 from aba.aba_parser import ABA_Parser
 import logging
+import os
 
 """
 activate fyp
@@ -13,7 +14,7 @@ python -m unittest
 
 https://docs.python.org/3.4/library/unittest.html
 """
-logging.basicConfig(filename='logs/Tests.log',level=logging.DEBUG,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
+logging.basicConfig(filename=os.path.join('logs', 'Tests.log'),level=logging.DEBUG,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
 
 class TestPotentialArgument(unittest.TestCase):
     def setUp(self):
