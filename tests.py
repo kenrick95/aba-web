@@ -445,7 +445,7 @@ class TestCraven(unittest.TestCase):
         parser = ABA_Parser(raw)
         parser.parse()
         aba = parser.construct_aba()
-        self.assertCountEqual([x[0].root for x in aba.arguments], ['a', 'b', 'r', 'r', 's', 's', 'p', 'p', 'p', 'p', 'q', 'q', 'q'])
+        self.assertCountEqual([x[0].root for x in aba.arguments], ['a', 'b', 'r', 'r', 's', 's', 'p', 'p', 'p', 'q', 'q', 'q'])
     def test_example_3(self):
         """
         Adapted from Example 3 of Craven, Toni (2016) paper

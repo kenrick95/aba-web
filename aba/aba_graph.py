@@ -75,26 +75,28 @@ class ABA_Graph():
         level_is_cyclical_copy = ujson.dumps(self.__is_cyclical[index])
 
         for i, rule in enumerate(rules_supporting_node):
+            index_used = index
             if i > 0: # "OR" branch, create new argument graph
                 self.graphs.append(pickle.loads(level_graph_copy))
-                # self.graphs.append(level_graph_copy.copy())
-                # self.graphs.append(nx.DiGraph(level_graph_copy)) # shallow copy
+                # self.graphs.append(level_graph_copy.copy()) --> deep copy, slow
+                # self.graphs.append(nx.DiGraph(level_graph_copy)) # shallow copy --> fast but wrong
                 self.__history.append(ujson.loads(level_history_copy))
                 self.__is_cyclical.append(ujson.loads(level_is_cyclical_copy))
                 self.assumptions.append({})
                 self.is_conflict_free.append(None)
                 self.is_stable.append(None)
                 self.__max_index += 1
+                index_used = self.__max_index
             
             for symbol in rule.symbols:
-                self.graphs[self.__max_index].add_edge(node, symbol)
+                self.graphs[index_used].add_edge(node, symbol)
                 if symbol is not None:
-                    if symbol in self.__history[self.__max_index]:
-                        self.__is_cyclical[self.__max_index] = True
+                    if symbol in self.__history[index_used]:
+                        self.__is_cyclical[index_used] = True
                         break
-                    self.__history[self.__max_index].append(symbol)
-                    self.__propagate(self.__max_index, symbol)
-                    self.__history[self.__max_index].pop()
+                    self.__history[index_used].append(symbol)
+                    self.__propagate(index_used, symbol)
+                    self.__history[index_used].pop()
  
     def __propagate_assumptions(self):
         for assumption, symbol in self.__aba.contraries.items():
