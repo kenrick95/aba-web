@@ -13,7 +13,7 @@ if sys.platform == "win32":
     five_gb = 5 * 1024 * 1024 * 1024
     perf_memory_limiter.set_limit(getpid(), five_gb)
 
-logging.basicConfig(filename=join('logs', 'PerfTests.log'),level=logging.INFO,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S')
+logging.basicConfig(filename=join('logs', 'PerfTests.log'),level=logging.INFO,format='[%(asctime)s] %(levelname)s:%(name)s: %(message)s',datefmt='%Y-%m-%d %H:%M:%S') # Note: making debug level DEBUG will slow down the process A LOT due to disk I/O
 
 logging.info("Start performance test")
 global_perf_logger = ABA_Perf_Logger("Overall performance test")
@@ -39,7 +39,7 @@ for file in test_files:
                 parser.construct_aba()
             except MemoryError:
                 logging.error("Out of memory!")
-            except Exception as exp:
+            except Exception as exp: # "trick" to continue to next test even when exception occurs during runtime
                 logging.error("Runtime error: %s", str(exp))
 
         perf_logger.end()

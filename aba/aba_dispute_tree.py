@@ -75,9 +75,9 @@ class ABA_Dispute_Tree():
             return
 
         if len(node.assumptions) > 1:
-            #level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) 
-            level_graphs_copy = pickle.dumps(self.graphs[index], -1)
-            #level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy;
+            #level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) # nx deep copy; slow
+            level_graphs_copy = pickle.dumps(self.graphs[index], -1) # Python pickle, moderate
+            #level_graphs_copy = nx.DiGraph(self.graphs[index]) # nx shallow copy; fast but wrong
             level_history_copy = ujson.dumps(self.__history[index])
             level_depth_copy = ujson.dumps(self.__depth[index])
             level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
@@ -97,7 +97,7 @@ class ABA_Dispute_Tree():
                 self.is_ideal.append(None)
                 self.__max_index += 1
                 index_used = self.__max_index
-                if self.__max_index > 1000:
+                if self.__max_index > DT_MAX_BRANCH:
                     logging.error("Too much branching in this DT <%s, %s>; idx: %s, assumptions: %s", self.root_arg, self.__max_index, idx, assumptions)
                     return
                 

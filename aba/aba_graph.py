@@ -71,7 +71,7 @@ class ABA_Graph():
         level_graph_copy = pickle.dumps(self.graphs[index], -1)
         # level_graph_copy = self.graphs[index].copy()
         # level_graph_copy = nx.DiGraph(self.graphs[index]) # shallow copy
-        level_history_copy = ujson.dumps(self.__history[index])
+        level_history_copy = ujson.dumps(self.__history[index]) # copying via UJSON lib (faster than normal JSON) instead of copy.deepcopy (very slow)
         level_is_cyclical_copy = ujson.dumps(self.__is_cyclical[index])
 
         for i, rule in enumerate(rules_supporting_node):
