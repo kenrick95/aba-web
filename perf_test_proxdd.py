@@ -12,7 +12,7 @@ path_to_proxdd = "D:/Cloud/SCE/FYP-proxdd/proxdd/code/proxdd.pl"
 path_to_exp_file = "D:\\Cloud\\SCE\\FYP-randomaf\\frameworks"
 
 runonly = []
-with open("perf_test_runonly.txt", "r") as f:
+with open("perf_test_proxdd_setup.txt", "r") as f:
     runonly = f.readlines()
 runonly = [x.strip() for x in runonly]
 
@@ -20,12 +20,16 @@ logging.info("Start proxdd performance test")
 global_perf_logger = ABA_Perf_Logger("Overall proxdd performance test")
 global_perf_logger.start()
 
-for file in runonly:
-    perf_logger = ABA_Perf_Logger("%s" % file)
+for x in runonly:
+    y = x.split(',')
+    test_symbol = y[0]
+    file = y[1]
+
+    perf_logger = ABA_Perf_Logger("%s, testing symbol %s" % (file, test_symbol))
     perf_logger.start()
 
     p = Popen(path_to_sictus, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, cwd=path_to_exp_file)
-    cmd = "compile('" + path_to_proxdd + "').\nloadf(" + file + ").\nsxdd(s1, X)."
+    cmd = "compile('%s').\nloadf(%s).\nsxdd(%s, X)." % (path_to_proxdd, file, test_symbol)
     res = p.communicate(bytes(cmd, 'UTF-8'))
 
     for line in res:
