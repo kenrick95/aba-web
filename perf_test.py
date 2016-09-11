@@ -19,8 +19,13 @@ logging.info("Start performance test")
 global_perf_logger = ABA_Perf_Logger("Overall performance test")
 global_perf_logger.start()
 
+runonly = []
+with open("perf_test_runonly.txt", "r") as f:
+    runonly = f.readlines()
+runonly = [x.strip() for x in runonly]
+
 path = "perf_test_data"
-test_files = [f for f in listdir(path) if isfile(join(path, f)) and splitext(f)[1] == ".txt"]
+test_files = [f for f in listdir(path) if splitext(f)[0] in runonly and isfile(join(path, f)) and splitext(f)[1] == ".txt"]
 
 for file in test_files:
     with open(join(path, file), 'r') as f:
