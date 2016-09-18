@@ -78,7 +78,7 @@ class ABA_Graph():
             index_used = index
             if i > 0: # "OR" branch, create new argument graph
                 self.graphs.append(pickle.loads(level_graph_copy))
-                # self.graphs.append(level_graph_copy.copy()) --> deep copy, slow
+                # self.graphs.append(level_graph_copy.copy()) # --> deep copy, slow
                 # self.graphs.append(nx.DiGraph(level_graph_copy)) # shallow copy --> fast but wrong
                 self.__history.append(ujson.loads(level_history_copy))
                 self.__is_cyclical.append(ujson.loads(level_is_cyclical_copy))

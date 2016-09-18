@@ -75,9 +75,9 @@ class ABA_Dispute_Tree():
             return
 
         if len(node.assumptions) > 1:
-            #level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) # nx deep copy; slow
+            # level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) # nx deep copy; slow
             level_graphs_copy = pickle.dumps(self.graphs[index], -1) # Python pickle, moderate
-            #level_graphs_copy = nx.DiGraph(self.graphs[index]) # nx shallow copy; fast but wrong
+            # level_graphs_copy = nx.DiGraph(self.graphs[index]) # nx shallow copy; fast but wrong
             level_history_copy = ujson.dumps(self.__history[index])
             level_depth_copy = ujson.dumps(self.__depth[index])
             level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
@@ -86,9 +86,9 @@ class ABA_Dispute_Tree():
         for idx, assumptions in enumerate(node.assumptions): # For an argument, there may be >1 assumptions from "OR" rules; can do branching
             index_used = index
             if idx > 0: # "OR" branch, create new dispute tree
-                #self.graphs.append(level_graphs_copy.copy()) # normal copy
+                # self.graphs.append(level_graphs_copy.copy()) # normal copy
                 self.graphs.append(pickle.loads(level_graphs_copy))
-                #self.graphs.append(nx.DiGraph(level_graphs_copy)) # shallow copy
+                # self.graphs.append(nx.DiGraph(level_graphs_copy)) # shallow copy
                 self.__history.append(ujson.loads(level_history_copy))
                 self.__depth.append(ujson.loads(level_depth_copy))
                 self.is_grounded.append(ujson.loads(level_is_grounded_copy))
@@ -147,8 +147,9 @@ class ABA_Dispute_Tree():
             return
 
         if len(node.assumptions) > 1:
+            # level_graphs_copy = nx.DiGraph(self.graphs[index].copy()) # nx deep copy; slow
             level_graphs_copy = pickle.dumps(self.graphs[index], -1)
-            #level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy;
+            # level_graphs_copy = nx.DiGraph(self.graphs[index]) # shallow copy;
             level_history_copy = ujson.dumps(self.__history[index])
             level_depth_copy = ujson.dumps(self.__depth[index])
             level_is_grounded_copy = ujson.dumps(self.is_grounded[index])
@@ -157,7 +158,7 @@ class ABA_Dispute_Tree():
         for idx, assumptions in enumerate(node.assumptions):
             index_used = index
             if idx > 0: # "OR" branch, create new dispute tree
-                #self.graphs.append(level_graphs_copy.copy()) # normal copy
+                # self.graphs.append(level_graphs_copy.copy()) # normal copy
                 self.graphs.append(pickle.loads(level_graphs_copy))
                 #self.graphs.append(nx.DiGraph(level_graphs_copy)) # shallow copy
                 self.__history.append(ujson.loads(level_history_copy))

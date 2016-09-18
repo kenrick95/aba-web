@@ -46,6 +46,8 @@ for file in test_files:
                 logging.error("Out of memory!")
             except Exception as exp: # "trick" to continue to next test even when exception occurs during runtime
                 logging.error("Runtime error: %s", str(exp))
+            except BaseException as exp: # catch those that can't be caught
+                logging.error("Unexpected error: %s", str(exp))
 
         perf_logger.end()
 

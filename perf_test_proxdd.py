@@ -11,7 +11,7 @@ logging.basicConfig(filename=os.path.join('logs','ProxddPerfTest.log'),level=log
 path_to_sictus = "C:\\Program Files (x86)\\SICStus Prolog VC14 4.3.3\\bin\\sicstus-4.3.3"
 path_to_proxdd = "D:/Cloud/SCE/FYP-proxdd/proxdd/code/proxdd.pl"
 path_to_exp_file = "D:\\Cloud\\SCE\\FYP-randomaf\\frameworks"
-timeout = 120
+timeout = 120 # seconds
 
 # http://stackoverflow.com/a/25134985/917957
 def kill(proc_pid):
