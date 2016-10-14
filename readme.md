@@ -1,10 +1,13 @@
 # Web-based Argumentation
 Test status: [![CircleCI](https://circleci.com/gh/kenrick95/aba-web/tree/master.svg?style=svg&circle-token=3eee74022841f7537e825b583d3459b0ef10df4d)](https://circleci.com/gh/kenrick95/aba-web/tree/master)
 
-- Assumption-based Argumentation
-- Interface to web
-- input: argumentation rules
-- output: which argument is complete, grounded, admissible; with some visualization if possible
+Extra short summary of this project:
+
+- Assumption-based Argumentation solver
+- Plus a web interface
+- Input: argumentation rules
+- Output: which argument is conflict-free, stable, complete, admissible, ideal, grounded.
+- FYP report: link.
 
 ## Architecture
 - Static page served by Python Flask web-framework
@@ -65,7 +68,7 @@ Using Python unittest framework, tests mainly sourced from examples presented at
 
 ## Notes
 
-This work is based mainly on the paper Dung, Kowalski, Toni titled "Assumption-based Argumentation" (2009).
+This work is based mainly on the book chapter authored by Dung, Kowalski, Toni titled ["Assumption-based Argumentation"](http://www.doc.ic.ac.uk/~rak/papers/ABAfinal.pdf) (2009).
 
 `requirements.txt` contains libraries needed for setting up the project.
 
@@ -75,3 +78,10 @@ The following files are related to deployment in Microsoft Azure, please disrega
 - `runtime.txt`
 - `web.config`
 - `wheelhouse/ujson-1.35-cp34-none-win32`
+
+## Performance Testing
+- `perf_memory_limitter.py` is for limitting RAM usage, returning MemoryError if Python overshoot a certain amount of RAM usage
+- `perf_test.py` is the main file to test performance of this project.
+- `perf_test_runonly.txt` is the list of test cases used in `perf_test.py`
+- `pert_test_proxdd.py` is a wrapper to test the performance of [*proxdd*](http://robertcraven.org/proarg/proxdd.html), a Prolog program by Toni (2012).
+- `perf_test_proxdd_setup.txt` is the list of test cases used in `pert_test_proxdd.py`, essentially the same as `perf_test_runonly.txt`
