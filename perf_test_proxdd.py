@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+"""
+Perform performance testing of proxdd
+"""
 import logging
 import os
 from subprocess import Popen, PIPE, STDOUT, TimeoutExpired

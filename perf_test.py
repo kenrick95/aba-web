@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+"""
+Perform performance testing of aba-web
+"""
 from os import listdir, getpid
 from os.path import isfile, join, splitext
 import logging

@@ -105,8 +105,9 @@ class ABA_Dispute_Tree():
             for assumption, symbol in assumptions.items(): # I can branch here, for an assumption attacker, it may be coming from >1 arg idx; but I don't, cause not necessary I guess ._.
                 opponent_node, i = self.__aba.get_argument(symbol, 0)
                 logging.debug("TWO assumption %s, symbol %s", assumption, symbol)
+                # isn't all leaf must be grounded so the tree can be called as grounded?
                 if opponent_node is None:
-                    logging.debug("THREE opponent_node %s, i %s", opponent_node, i)
+                #     logging.debug("THREE opponent_node %s, i %s", opponent_node, i)
                     self.__handle_leaf()
                     if self.__found_grounded:
                         return
