@@ -7,7 +7,7 @@ Extra short summary of this project:
 - Plus a web interface
 - Input: argumentation rules
 - Output: which argument is conflict-free, stable, complete, admissible, ideal, grounded.
-- FYP report: [link](https://github.com/kenrick95/aba-web/files/532315/Final.report-2016-10-16-r3.pdf).
+- FYP report: [link](https://github.com/kenrick95/aba-web/files/585224/Amended-report-Kenrick-2016-11-11.pdf).
 
 ## Architecture
 - Static page served by Python Flask web-framework
