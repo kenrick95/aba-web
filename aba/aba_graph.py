@@ -9,9 +9,9 @@ from .aba_perf_logger import ABA_Perf_Logger
 class ABA_Graph():
     """
     An ABA_Graph object is an argument, i.e. a node, supported by sentences & assumptions
-    
+
     """
-        
+
     def __init__(self, aba = None, root = None):
         self.graphs = []
 
@@ -21,7 +21,7 @@ class ABA_Graph():
         self.assumptions = [{}]
         self.is_conflict_free = [None]
         self.is_stable = [None]
-        
+
         self.root = root
         self.__aba = aba
         self.__max_index = 0
@@ -49,7 +49,7 @@ class ABA_Graph():
         perf_logger.start()
         self.__determine_is_stable()
         perf_logger.end()
-    
+
     def __sort_graphs(self):
         graphs_and_is_cyclical = [[x, False] for x in self.graphs]
         for i, item in enumerate(graphs_and_is_cyclical):
@@ -62,7 +62,7 @@ class ABA_Graph():
 
     def __key_graph_sort(self, x):
         return len(x[0].edges())
-        
+
     def __propagate(self, index, node):
         # self.__max_index = index
         rules_supporting_node = [x for x in self.__aba.rules if x.result == node]
@@ -87,7 +87,7 @@ class ABA_Graph():
                 self.is_stable.append(None)
                 self.__max_index += 1
                 index_used = self.__max_index
-            
+
             for symbol in rule.symbols:
                 self.graphs[index_used].add_edge(node, symbol)
                 if symbol is not None:
@@ -97,14 +97,14 @@ class ABA_Graph():
                     self.__history[index_used].append(symbol)
                     self.__propagate(index_used, symbol)
                     self.__history[index_used].pop()
- 
+
     def __propagate_assumptions(self):
         for assumption, symbol in self.__aba.contraries.items():
             for index, graph in enumerate(self.graphs):
                 if assumption in graph.nodes():
                     # `assumption` is being attacked by `symbol`
                     self.assumptions[index][assumption] = symbol
-    
+
     def __determine_is_conflict_free(self):
         for index, graph in enumerate(self.graphs):
             conflict_free = True
@@ -125,7 +125,7 @@ class ABA_Graph():
                         if attacker not in graph.nodes():
                             stable = False
                             break
-            
+
             self.is_stable[index] = stable
             logging.debug("Argument <%s, %d> is stable: %s", self.root, index, self.is_stable[index])
 
@@ -139,7 +139,7 @@ class ABA_Graph():
             if node is None or node in self.__aba.assumptions:
                 return True
             return False
-        
+
         ret = True
         for neighbor in neighbors:
             ret = ret and self.__process_is_actual_argument(index, neighbor)
@@ -150,11 +150,11 @@ class ABA_Graph():
 
     def __str__(self):
         return "Argument '%s'" % self.root
-        
+
     def __repr__(self):
         return str(self)
 
-    
+
     def __lt__(self, other):
         return len(self.graphs[0].nodes()) < len(other.graphs[0].nodes())
     def __ne__(self, other):

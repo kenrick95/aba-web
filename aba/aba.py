@@ -23,11 +23,11 @@ class ABA():
         self.assumptions = []
         self.contraries = dict()
         self.nonassumptions = []
-        
+
         self.arguments = []
         self.potential_arguments = []
         self.dispute_trees = []
-    
+
     def is_all_assumption_have_contrary(self):
         """
         Each assumption must have a contrary.
@@ -38,18 +38,18 @@ class ABA():
                 all_assumption_have_contrary = False
                 break
         return all_assumption_have_contrary
-        
+
     def infer_assumptions(self):
         self.nonassumptions = list(self.symbols)
 
         for key in self.contraries:
             if key not in self.assumptions:
                 self.assumptions.append(key)
-        
+
         for assumption in self.assumptions:
             if assumption in self.nonassumptions:
                 self.nonassumptions.remove(assumption)
-                
+
     def construct_arguments(self):
         if not self.is_all_assumption_have_contrary():
             raise Exception("All assumptions must have contrary")
@@ -60,11 +60,11 @@ class ABA():
                 self.potential_arguments.append((potential_argument, i))
                 if potential_argument.is_actual_argument(i):
                     self.arguments.append((potential_argument, i))
-            
+
     def construct_dispute_trees(self):
         if not self.is_all_assumption_have_contrary():
             raise Exception("All assumptions must have contrary")
-        
+
         args_grounded = {}
 
         for argument, i in self.arguments:
@@ -85,7 +85,7 @@ class ABA():
 
                 args_grounded[argument.root] = functools.reduce(lambda x,y: x or y, dt.is_grounded)
 
-                
+
         perf_logger = ABA_Perf_Logger("__determine_dispute_tree_is_ideal")
         perf_logger.start()
         self.__determine_dispute_tree_is_ideal()
@@ -130,7 +130,7 @@ class ABA():
                 if tree.is_admissible[tree_idx]:
                     complete = True
                     if not tree.is_grounded[tree_idx]: # if tree is grounded, it is guaranteed to be complete
-                        
+
                         # 1. Get all arguments root_arg can attack --> assign as x
                         # 2. Get all arguments that can be attacked by x --> assign as y
                         # 3. If ALL y inside root_arg, then complete
@@ -153,7 +153,7 @@ class ABA():
                 tree.is_complete[tree_idx] = complete
                 logging.debug("Dispute Tree <%s, %s> is complete: %s", tree.root_arg.root, tree_idx, tree.is_complete[tree_idx])
 
-            
+
 
     def get_argument(self, symbol, index = 0, allow_potential = False):
         source = self.arguments
@@ -164,24 +164,24 @@ class ABA():
         if len(argument) > 0:
             return argument[0]
         return None, None
-    
+
     def get_dispute_tree(self, symbol, index = 0):
         dispute_tree = [x for x in self.dispute_trees if x.root_arg.root == symbol and x.arg_index == index]
         if len(dispute_tree) > 0:
             return dispute_tree[0]
         return None
-        
+
     def get_combined_argument_graph(self):
         combined = nx.DiGraph()
         for potential_argument, index in self.potential_arguments:
             symbol = potential_argument.root
             argument, i = self.get_argument(symbol, index = index, allow_potential = True)
-            
+
             if argument is None:
                 arg_root = "τ"
                 combined.add_node(symbol + "_" + arg_root, group = arg_root)
                 continue
-            
+
             arg_root = argument.root
             for node in argument.graphs[i].nodes():
                 if node is None:
@@ -195,6 +195,5 @@ class ABA():
                 if edge1 is None:
                     edge1 = "τ"
                 combined.add_edge(edge0 + "_" + arg_root, edge1 + "_" + arg_root)
-            
+
         return combined
-        

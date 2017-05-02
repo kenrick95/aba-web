@@ -10,19 +10,19 @@ import functools
 class ABA_Dispute_Tree():
     """
     ABA_Dispute_Tree
-    
+
     Vertices: <argument + label>
     Edges: attacks
-    
+
     """
-        
+
     def __init__(self, aba = None, root_arg = None, arg_index = 0):
         self.graphs = [nx.DiGraph()] # Directed graph
-        
+
         self.root_arg = root_arg
         self.arg_index = arg_index
         self.__aba = aba
-        
+
         self.__history = [[]]
         self.__depth = [0]
 
@@ -39,35 +39,35 @@ class ABA_Dispute_Tree():
         self.graphs[0].add_node(root_arg.root)
         self.__add_label(0, root_arg, DT_PROPONENT)
         self.__depth[0] += 1
-        
+
         self.__found_grounded = False
 
         self.is_grounded = [True]
         self.is_admissible = [True]
         self.is_complete = [None]
         self.is_ideal = [None]
-        
+
         logging.debug("Dispute tree for '%s'", root_arg.root)
         self.__propagate_tree_proponent(0, root_arg)
-        
+
         logging.debug(self.graphs[0].nodes(data = True))
         logging.debug(self.graphs[0].edges())
-        
+
         logging.debug("\n")
         logging.debug("Admissible?      %s", self.is_admissible)
         logging.debug("Grounded?        %s", self.is_grounded)
         logging.debug('End dispute tree\n\n')
-    
+
     def __handle_leaf(self):
         logging.debug("Leaf, DT <%s, %s>, grounded: %s", self.root_arg, self.__max_index, self.is_grounded)
         self.__found_grounded = functools.reduce(lambda x,y: x or y, self.is_grounded)
         if self.__found_grounded:
             logging.debug("I shall delete the rest")
-    
+
     def __propagate_tree_proponent(self, index, node, arg_idx=0):
         """
         Attack by opponents
-        
+
         Add (zero or more) Opponent_nodes to Proponent_node as a child
         """
 
@@ -100,7 +100,7 @@ class ABA_Dispute_Tree():
                 if self.__max_index > DT_MAX_BRANCH:
                     logging.error("Too much branching in this DT <%s, %s>; idx: %s, assumptions: %s", self.root_arg, self.__max_index, idx, assumptions)
                     return
-                
+
             logging.debug("ONE idx %s, assumptions %s", idx, assumptions)
             for assumption, symbol in assumptions.items(): # I can branch here, for an assumption attacker, it may be coming from >1 arg idx; but I don't, cause not necessary I guess ._.
                 opponent_node, i = self.__aba.get_argument(symbol, 0)
@@ -113,33 +113,33 @@ class ABA_Dispute_Tree():
                         return
                     continue
                 logging.debug("Opp node <%s, %d> attacking assumption <%s> of Pro node <%s, %d>", opponent_node.root, i, assumption, node.root, index)
-                
-                
+
+
                 self.graphs[index_used].add_edge(node.root, opponent_node.root, text_label = "Opponent node <%s, %d> attacking assumption <%s> of Proponent node <%s, %d>" % (opponent_node.root, i, assumption, node.root, index))
                 self.__add_label(index_used, opponent_node, DT_OPPONENT, assumption_index=0)
 
                 if self.__is_infinity(index_used, opponent_node, DT_OPPONENT):
                     break
-                
+
                 self.__depth[index_used] += 1
                 self.__history[index_used].append([opponent_node.root, DT_OPPONENT])
                 self.__propagate_tree_opponent(index_used, opponent_node, i)
                 self.__history[index_used].pop()
                 self.__depth[index_used] -= 1
-        
-        
+
+
         self.__cache[(node.root, arg_idx)] = {
             "tree": pickle.dumps(self.graphs[index], -1),
             "is_grounded": self.is_grounded[index],
             "is_admissible": self.is_admissible[index],
         }
-        
+
     def __propagate_tree_opponent(self, index, node, arg_idx=0):
         """
         Counter-attack by proponent
-        
+
         Add one Proponent_node to Opponent_node as a child
-        
+
         Question: should we choose a proponent child such that infinity tree is avoided?
             >> Will not happen, as the ABA contraries is a "total function", meaning that for one assumption, it is guaranteed that there is only one argument that can attack this assumption.
         """
@@ -170,7 +170,7 @@ class ABA_Dispute_Tree():
                 self.is_ideal.append(None)
                 self.__max_index += 1
                 index_used = self.__max_index
-                
+
             for assumption, symbol in assumptions.items():
                 proponent_node, i = self.__aba.get_argument(symbol, 0)
                 if proponent_node is None:
@@ -179,7 +179,7 @@ class ABA_Dispute_Tree():
                         return
                     continue
                 logging.debug("Pro node <%s, %d> attacking assumption <%s> of Opp node <%s, %d>", proponent_node.root, i, assumption, node.root, index)
-                
+
                 # Search for trees generated with root_arg = proponent_node and arg_index = idx; copy and then pluck that tree as the nodes below
                 if (proponent_node.root, i) in self.__cache:
                     cached_data = self.__cache[(proponent_node.root, i)]
@@ -190,31 +190,31 @@ class ABA_Dispute_Tree():
                     self.is_grounded[index_used] &= cached_data["is_grounded"]
                     self.is_admissible[index_used] &= cached_data["is_admissible"]
                     continue
-                
+
                 self.graphs[index_used].add_edge(node.root, proponent_node.root, text_label = "Proponent node <%s, %d> attacking assumption <%s> of Opponent node <%s, %d>" % (proponent_node.root, i, assumption, node.root, index))
                 self.__add_label(index_used, proponent_node, DT_PROPONENT, assumption_index=0)
-                
+
                 if self.__is_infinity(index_used, proponent_node, DT_PROPONENT):
                     break
-                
+
                 self.__depth[index_used] += 1
                 self.__history[index_used].append([proponent_node.root, DT_PROPONENT])
                 self.__propagate_tree_proponent(index_used, proponent_node, i)
                 self.__history[index_used].pop()
                 self.__depth[index_used] -= 1
-                
+
                 break
-        
+
     def __is_infinity(self, index, node, label):
         value = False
         value = [node.root, label] in self.__history[index]
         if value:
             logging.debug("Infinity detected in node <%s, %d> of <%s>", node.root, index, label)
             self.is_grounded[index] = False
-            
+
         return value
-            
-        
+
+
     def __add_label(self, index, node, label, assumption_index = 0):
         if 'label' in self.graphs[index].node[node.root]:
             logging.debug("Label already present in node <%s>", node.root)
